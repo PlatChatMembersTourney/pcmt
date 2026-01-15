@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 body {
     margin: 0;
     padding: 0;
@@ -36,7 +34,7 @@ body {
     gap: 25px;
 }
 
-#about {
+.home-box {
     position: relative;
     display: flex;
     height: 500px;
@@ -88,12 +86,13 @@ body {
     height: 500px;
     margin: 30px;
     align-items: center;
+    justify-content: space-between;
 }
 
 #video {
     border: 2px solid transparent;
     border-radius: 15px;
-    width: 750px;
+    width: 650px;
     max-width: 80%;
     aspect-ratio: 16/9;
     margin-left: 100px;
@@ -109,7 +108,7 @@ body {
 
 #video video {
     width: 100%;
-    height: 100%;
+    height: auto;
     border-radius: 13px;
     display: block;
 }
@@ -119,4 +118,24 @@ body {
         margin-left: auto;
         margin-right: auto;
     }
+}
+
+#quote {
+    width: 500px;
+    max-width: 35%;
+    margin-right: 75px;
+    color: whitesmoke;
+    font-style: italic;
+    font-size: 24px;
+    font-family: Georgia, serif;
+    line-height: 1.6;
+}
+
+.quote-text {
+    margin-bottom: 10px;
+}
+
+.quote-author {
+    text-align: right;
+    font-size: 18px;
 }
