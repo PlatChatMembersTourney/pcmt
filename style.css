@@ -2,19 +2,36 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #3a3a3a;
 }
 
 .header-bar {
     height: 10vh;
     width: 100vw;
     background-color: #1a1a1a;
+    color: white;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
+    font-size: larger;
+    font-family: Arial, sans-serif;
+
 }
 
 .pcmt-logo {
     height: 10vh;
     width: auto;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-right: 50px;
+}
+
+.link-title {
+    gap: 25px;
 }
