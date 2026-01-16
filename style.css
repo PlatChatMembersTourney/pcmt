@@ -97,8 +97,10 @@ body {
     aspect-ratio: 16/9;
     margin-left: 100px;
 
+    position: relative;
+    overflow: hidden;
+
     background:
-            linear-gradient(white, white) padding-box,
             linear-gradient(
                     135deg,
                     #6dc5c7,
@@ -108,9 +110,12 @@ body {
 
 #video video {
     width: 100%;
-    height: auto;
-    border-radius: 13px;
+    height: 100%;
+    border-radius: 15px;
     display: block;
+    position: relative;
+    object-fit: cover;
+
 }
 
 @media (max-width: 1000px) {
