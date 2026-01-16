@@ -7,8 +7,8 @@ body {
 }
 
 #header-bar {
-    height: 10vh;
-    width: 100vw;
+    height: 8%;
+    width: 100%;
     background-color: #1e1e1e;
     color: white;
     display: flex;
