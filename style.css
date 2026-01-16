@@ -80,7 +80,7 @@ body {
     opacity: 0.3;
 }
 
-#highlights {
+.home-box-nc {
     position: relative;
     display: flex;
     height: 500px;
@@ -138,4 +138,106 @@ body {
 .quote-author {
     text-align: right;
     font-size: 18px;
+}
+
+#how-to-play-text {
+    position: relative;
+    z-index: 1;
+    width: 600px;
+    max-width: 80%;
+    margin-left: 100px;
+    padding: 30px;
+    color: whitesmoke;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+@media (max-width: 900px) {
+    #how-to-play-text {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.section-title {
+    font-size: 200%;
+    color: #6dc5c7;
+}
+
+.steps-list {
+    line-height: 1.8;
+    padding-left: 20px;
+}
+
+.steps-list li {
+    margin-bottom: 15px;
+}
+
+.plat-chat-link {
+    color: #6dc5c7;
+    text-decoration: none;
+}
+
+.disclaimer {
+    margin-top: 20px;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.pc-logo {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: auto;
+    transition: opacity 0.3s;
+}
+
+#latest-video {
+    margin-left: 100px;
+}
+
+.video-title {
+    font-size: 200%;
+    color: #6dc5c7;
+    margin-bottom: 20px;
+}
+
+#latest-video iframe {
+    border-radius: 15px;
+}
+
+#bronze-babble-text {
+    width: 600px;
+    max-width: 80%;
+    margin-right: 100px;
+    padding: 30px;
+    color: whitesmoke;
+    background: grey;
+    border-radius: 15px;
+}
+
+#latest-video {
+    margin-left: 100px;
+}
+
+.video-title {
+    font-size: 200%;
+    color: #6dc5c7;
+    margin-bottom: 20px;
+}
+
+#latest-video iframe {
+    border-radius: 15px;
+}
+
+#bronze-babble-text {
+    width: 500px;
+    max-width: 80%;
+    margin-right: 100px;
+    padding: 30px;
+    color: whitesmoke;
+    background: grey;
+    border-radius: 15px;
 }
