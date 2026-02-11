@@ -490,7 +490,7 @@
                 }
 
                 const workbook = toxicTeamWorkbooks[season];
-                const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data'));
+                const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
 
                 let html = '<div class="stats-table-container">';
                 html += '<div class="team-selector-bar">';
