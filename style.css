@@ -1,3 +1,7 @@
+html {
+    overflow-y: scroll;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -6,18 +10,20 @@ body {
     font-family: Arial, sans-serif;
 }
 #header-bar {
-    height: 10vh;
+    height: 64px;
     width: 100%;
     background-color: #1e1e1e;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+    position: sticky;
     top: 0;
+    z-index: 100;
     font-size: larger;
 }
 #pcmt-logo {
-    height: 10vh;
+    height: 64px;
     width: auto;
 }
 .header-content {
@@ -567,6 +573,84 @@ body {
     color: #6dc5c7;
     font-size: 22px;
     font-weight: 700;
+}
+
+/* rankings page */
+
+.rankings-content {
+    margin: 20px 30px 30px;
+}
+.rankings-section {
+    margin-bottom: 30px;
+}
+.rankings-subtitle {
+    color: #6dc5c7;
+    font-size: 22px;
+    margin: 20px 0 12px;
+}
+.rankings-empty {
+    background: linear-gradient(to right, #272727, #282828);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    font-size: 16px;
+}
+.rankings-table .team-abbr-cell {
+    color: #6dc5c7;
+    font-weight: 600;
+}
+.diff-pos {
+    color: #5cb85c;
+}
+.diff-neg {
+    color: #cc4444;
+}
+.under-review-tag {
+    color: #cc4444;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* h2h matrix */
+
+.h2h-scroll {
+    overflow-x: auto;
+    border-radius: 8px;
+}
+.h2h-table {
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.h2h-table th,
+.h2h-table td {
+    padding: 8px 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+.h2h-header {
+    color: #6dc5c7 !important;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+.h2h-row-label {
+    color: #6dc5c7 !important;
+    text-align: left !important;
+    font-weight: 600;
+    font-size: 13px;
+}
+.h2h-self {
+    background: #1a1a1a;
+}
+.h2h-cell {
+    font-weight: 500;
+}
+.h2h-win {
+    color: #5cb85c;
+}
+.h2h-loss {
+    color: #cc4444;
 }
 
 /* misc */

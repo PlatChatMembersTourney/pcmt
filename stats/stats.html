@@ -18,7 +18,7 @@
         </div>
         <nav class="header-content">
             <a class="header-link">Matches</a>
-            <a class="header-link">Rankings</a>
+            <a class="header-link" href="../rankings/rankings.html">Rankings</a>
             <a class="header-link" href="../teams/teams.html">Teams</a>
             <a class="header-link active" href="../stats/stats.html">Stats</a>
         </nav>
@@ -30,7 +30,7 @@
 
     <div class="season-selector-bar">
         <button class="season-sel-btn" onclick="switchSeason(1)">Season 1</button>
-        <button class="season-sel-btn active" onclick="switchSeason(2)">Season 2</button>
+        <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
     </div>
 
     <div class="stats-toggle-bar">
@@ -259,15 +259,21 @@
 
         function loadPlayerTab(name) {
             const area = document.getElementById('player-table-area');
-            area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            const season = currentSeason;
 
-            if (currentSeason === 1) {
-                loadToxicPlayerStats(1);
-            } else {
-                if (name === 'toxic') loadToxicPlayerStats(2);
-                else if (name === 'Angus') loadAngusStats();
-                else if (name === 'pi') loadPiPlayerStats();
+            // check cache before showing loading
+            let cacheKey;
+            if (season === 1) cacheKey = 's1-player-toxic';
+            else cacheKey = `s2-player-${name}`;
+
+            if (!cache[cacheKey]) {
+                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
             }
+
+            if (season === 1) loadToxicPlayerStats(1);
+            else if (name === 'toxic') loadToxicPlayerStats(2);
+            else if (name === 'Angus') loadAngusStats();
+            else if (name === 'pi') loadPiPlayerStats();
         }
 
         async function loadToxicPlayerStats(season) {
@@ -396,14 +402,23 @@
 
         function loadTeamTab(name) {
             const area = document.getElementById('team-table-area');
-            area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            const season = currentSeason;
 
-            if (currentSeason === 1) {
-                loadToxicTeamStats(1);
-            } else {
-                if (name === 'toxic') loadToxicTeamStats(2);
-                else if (name === 'pi') loadPiTeamStats();
+            let cacheKey;
+            if (season === 1) cacheKey = 's1-team-toxic';
+            else cacheKey = `s2-team-${name}`;
+
+            // toxic team stats use workbook cache, not html cache
+            const toxicCached = (season === 1 || name === 'toxic') && toxicTeamWorkbooks[season];
+            const piCached = name === 'pi' && cache[cacheKey];
+
+            if (!toxicCached && !piCached) {
+                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
             }
+
+            if (season === 1) loadToxicTeamStats(1);
+            else if (name === 'toxic') loadToxicTeamStats(2);
+            else if (name === 'pi') loadPiTeamStats();
         }
 
         async function loadPiTeamStats() {
@@ -583,8 +598,7 @@
             container.innerHTML = html;
         }
 
-        // default to S2
-        buildTabs();
+        switchSeason(2);
     </script>
 </body>
 </html>

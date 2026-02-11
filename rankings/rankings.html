@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../icons/PCMT Logo.png">
+    <title>PCMT - Rankings</title>
+</head>
+<body>
+    <div id="header-bar">
+        <div class="header-content" id="link-title">
+            <a href="../index.html">
+                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            </a>
+            <p>Plat Chat Members Tournament</p>
+        </div>
+        <nav class="header-content">
+            <a class="header-link">Matches</a>
+            <a class="header-link active" href="../rankings/rankings.html">Rankings</a>
+            <a class="header-link" href="../teams/teams.html">Teams</a>
+            <a class="header-link" href="../stats/stats.html">Stats</a>
+        </nav>
+    </div>
+
+    <div class="page-title-bar">
+        <h1 class="page-title">Rankings</h1>
+    </div>
+
+    <div class="season-selector-bar">
+        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1 <span class="under-review-tag">(Under Review)</span></button>
+        <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
+    </div>
+
+    <div class="rankings-content" id="rankings-area">
+        <div class="stats-loading">Loading rankings...</div>
+    </div>
+
+    <script>
+        let currentSeason = 2;
+        const cache = {};
+
+        function switchSeason(season) {
+            currentSeason = season;
+            const buttons = document.querySelectorAll('.season-sel-btn');
+            buttons.forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
+            loadRankings();
+        }
+
+        function parseCSV(csvText) {
+            return csvText.split('\n').map(line => {
+                const cells = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        cells.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                cells.push(current.trim());
+                return cells;
+            });
+        }
+
+        function loadRankings() {
+            const area = document.getElementById('rankings-area');
+
+            if (currentSeason === 1) {
+                area.innerHTML = '<div class="rankings-empty"><p>Season 1 rankings are currently under review.</p></div>';
+                return;
+            }
+
+            if (cache['s2-rankings']) {
+                area.innerHTML = cache['s2-rankings'];
+                return;
+            }
+
+            area.innerHTML = '<div class="stats-loading">Loading rankings...</div>';
+            loadS2Rankings();
+        }
+
+        async function loadS2Rankings() {
+            const area = document.getElementById('rankings-area');
+
+            try {
+                const sheetId = '16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8';
+                const gid = '1622887646';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch');
+                const csvText = await response.text();
+                const lines = parseCSV(csvText);
+
+                // --- scoreboard ---
+                // find rows with rank patterns like "1)", "2)", etc.
+                const teamRows = [];
+                for (let i = 0; i < lines.length; i++) {
+                    const row = lines[i];
+                    const rankCell = (row[1] || '').trim();
+                    if (/^\d+\)$/.test(rankCell)) {
+                        teamRows.push({
+                            rank: parseInt(rankCell),
+                            abbr: (row[3] || '').trim(),
+                            name: (row[5] || '').trim(),
+                            matchW: row[9] || '',
+                            matchL: row[10] || '',
+                            mapW: row[11] || '',
+                            mapL: row[12] || '',
+                            mapDiff: row[13] || '',
+                            rndW: row[14] || '',
+                            rndL: row[15] || '',
+                            rndDiff: row[16] || ''
+                        });
+                    }
+                }
+
+                // --- head-to-head matrix ---
+                // find the label row (has team abbreviations in cols 4+)
+                let h2hLabelRowIdx = -1;
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    const row = lines[i];
+                    if ((row[4] || '').trim() && (row[5] || '').trim() && (row[6] || '').trim()) {
+                        const possibleTeams = row.slice(4, 16).map(c => (c || '').trim()).filter(Boolean);
+                        if (possibleTeams.length >= 10) {
+                            h2hLabelRowIdx = i;
+                            break;
+                        }
+                    }
+                }
+
+                const h2hTeams = h2hLabelRowIdx >= 0
+                    ? lines[h2hLabelRowIdx].slice(4, 16).map(c => (c || '').trim())
+                    : [];
+
+                // collect H2H data rows (every 2 rows above label row)
+                const h2hData = [];
+                if (h2hLabelRowIdx >= 0) {
+                    // search backwards from label row for team data rows
+                    for (let i = 0; i < lines.length; i++) {
+                        const row = lines[i];
+                        const teamCell = (row[3] || '').trim();
+                        // h2h rows are between scoreboard and label row, have a team abbr in col 3
+                        // and at least one score pattern like "X-Y" in cols 4-15
+                        if (teamCell && i > teamRows.length + 5 && i < h2hLabelRowIdx) {
+                            const scores = row.slice(4, 16).map(c => (c || '').trim());
+                            const hasScore = scores.some(s => /^\d+-\d+$/.test(s));
+                            if (hasScore) {
+                                h2hData.push({ team: teamCell, scores: scores });
+                            }
+                        }
+                    }
+                }
+
+                // render scoreboard
+                let html = '<div class="rankings-section">';
+                html += '<h2 class="rankings-subtitle">Scoreboard</h2>';
+                html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky rankings-table">';
+
+                // category row
+                html += '<thead><tr class="category-row">';
+                html += '<th colspan="3"></th>';
+                html += '<th colspan="2" class="category-header">Matches</th>';
+                html += '<th colspan="3" class="category-header">Maps</th>';
+                html += '<th colspan="3" class="category-header">Rounds</th>';
+                html += '</tr>';
+
+                // column headers
+                html += '<tr>';
+                html += '<th>#</th><th>ABBR.</th><th>TEAM</th>';
+                html += '<th>W</th><th>L</th>';
+                html += '<th>W</th><th>L</th><th>Δ</th>';
+                html += '<th>W</th><th>L</th><th>Δ</th>';
+                html += '</tr></thead><tbody>';
+
+                teamRows.forEach(t => {
+                    const diffClass = val => {
+                        const n = parseInt(val);
+                        if (isNaN(n)) return '';
+                        if (n > 0) return ' class="diff-pos"';
+                        if (n < 0) return ' class="diff-neg"';
+                        return '';
+                    };
+                    const fmtDiff = val => {
+                        const n = parseInt(val);
+                        if (isNaN(n)) return val;
+                        return n > 0 ? `+${n}` : `${n}`;
+                    };
+
+                    html += '<tr>';
+                    html += `<td>${t.rank}</td>`;
+                    html += `<td class="team-abbr-cell">${t.abbr}</td>`;
+                    html += `<td>${t.name}</td>`;
+                    html += `<td>${t.matchW}</td><td>${t.matchL}</td>`;
+                    html += `<td>${t.mapW}</td><td>${t.mapL}</td>`;
+                    html += `<td${diffClass(t.mapDiff)}>${fmtDiff(t.mapDiff)}</td>`;
+                    html += `<td>${t.rndW}</td><td>${t.rndL}</td>`;
+                    html += `<td${diffClass(t.rndDiff)}>${fmtDiff(t.rndDiff)}</td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table></div>';
+                html += '</div>';
+
+                // render H2H matrix
+                if (h2hData.length > 0 && h2hTeams.length > 0) {
+                    html += '<div class="rankings-section">';
+                    html += '<h2 class="rankings-subtitle">Head-to-Head</h2>';
+                    html += '<div class="h2h-scroll"><table class="stats-table h2h-table">';
+
+                    // header row
+                    html += '<thead><tr><th></th>';
+                    h2hTeams.forEach(t => html += `<th class="h2h-header">${t}</th>`);
+                    html += '</tr></thead><tbody>';
+
+                    h2hData.forEach(row => {
+                        html += '<tr>';
+                        html += `<th class="h2h-row-label">${row.team}</th>`;
+                        row.scores.forEach((score, i) => {
+                            if (!score || row.team === h2hTeams[i]) {
+                                html += '<td class="h2h-self"></td>';
+                            } else {
+                                // determine W/L: first number is this team's wins
+                                const parts = score.split('-').map(Number);
+                                let cls = 'h2h-cell';
+                                if (parts.length === 2) {
+                                    if (parts[0] > parts[1]) cls += ' h2h-win';
+                                    else if (parts[0] < parts[1]) cls += ' h2h-loss';
+                                }
+                                html += `<td class="${cls}">${score}</td>`;
+                            }
+                        });
+                        html += '</tr>';
+                    });
+
+                    html += '</tbody></table></div>';
+                    html += '</div>';
+                }
+
+                cache['s2-rankings'] = html;
+                area.innerHTML = html;
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load rankings. The sheet may not be publicly shared.</p></div>';
+                console.error('rankings error:', err);
+            }
+        }
+
+        switchSeason(2);
+    </script>
+</body>
+</html>
