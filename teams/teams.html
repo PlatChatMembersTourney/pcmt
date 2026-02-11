@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="./icons/PCMT Logo.png">
+    <title>PCMT - Teams</title>
+</head>
+<body>
+    <div id="header-bar">
+        <a href="index.html" class="header-content" id="link-title">
+            <img src="./icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            <p>Plat Chat Members Tournament</p>
+        </a>
+
+        <nav class="header-content">
+            <a class="header-link">Matches</a>
+            <a class="header-link">Events</a>
+            <a class="header-link active" href="teams.html">Teams</a>
+            <a class="header-link">Stats</a>
+        </nav>
+    </div>
+
+    <div class="page-title-bar">
+        <h1 class="page-title">Teams</h1>
+    </div>
+
+    <div class="season-container">
+        <button class="season-toggle" onclick="toggleSeason('season2')">
+            <span class="season-label">Season 2</span>
+            <span class="toggle-icon" id="season2-icon">▾</span>
+        </button>
+        <div class="season-content open" id="season2">
+            <div class="teams-grid">
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="season-container">
+        <button class="season-toggle" onclick="toggleSeason('season1')">
+            <span class="season-label">Season 1</span>
+            <span class="toggle-icon" id="season1-icon">▸</span>
+        </button>
+        <div class="season-content" id="season1">
+            <div class="teams-grid">
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-logo-placeholder"></div>
+                    <h3 class="team-name">Team TBD</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSeason(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+            content.classList.toggle('open');
+            icon.textContent = content.classList.contains('open') ? '▾' : '▸';
+        }
+    </script>
+</body>
+</html>

@@ -5,7 +5,6 @@ body {
     background-color: #3a3a3a;
     font-family: Arial, sans-serif;
 }
-
 #header-bar {
     height: 8%;
     width: 100%;
@@ -13,27 +12,25 @@ body {
     color: white;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     top: 0;
     font-size: larger;
 }
-
 #pcmt-logo {
     height: 10vh;
     width: auto;
 }
-
 .header-content {
     display: flex;
     align-items: center;
-    gap: 50px;
-    margin-right: 50px;
+    gap: 0;
+    margin-right: 0;
+    height: 100%;
 }
-
 #link-title {
     gap: 25px;
+    margin-left: 15px;
 }
-
 .home-box {
     position: relative;
     display: flex;
@@ -44,7 +41,6 @@ body {
     background: linear-gradient(to right, #272727, #282828);
     border-radius: 15px;
 }
-
 #about-text {
     position: relative;
     z-index: 1;
@@ -57,19 +53,16 @@ body {
     border-radius: 15px;
     overflow: hidden;
 }
-
 @media (max-width: 900px) {
     #about-text {
         margin-left: auto;
         margin-right: auto;
     }
 }
-
 #what-pcmt {
     font-size: 200%;
     color: #6dc5c7;
 }
-
 #about-logo {
     position: absolute;
     right: 75px;
@@ -79,7 +72,6 @@ body {
     height: auto;
     opacity: 0.3;
 }
-
 .home-box-nc {
     position: relative;
     display: flex;
@@ -87,8 +79,8 @@ body {
     margin: 30px;
     align-items: center;
     justify-content: space-between;
+    gap: 40px;
 }
-
 #video {
     border: 2px solid transparent;
     border-radius: 15px;
@@ -96,10 +88,8 @@ body {
     max-width: 80%;
     aspect-ratio: 16/9;
     margin-left: 100px;
-
     position: relative;
     overflow: hidden;
-
     background:
             linear-gradient(
                     135deg,
@@ -107,7 +97,6 @@ body {
                     #926acc
             ) border-box;
 }
-
 #video video {
     width: 100%;
     height: 100%;
@@ -115,14 +104,40 @@ body {
     display: block;
     position: relative;
     object-fit: cover;
-
 }
-
 @media (max-width: 1000px) {
     #video {
         margin-left: auto;
         margin-right: auto;
     }
+}
+.video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    text-decoration: none;
+    color: whitesmoke;
+    transition: background 0.3s;
+}
+.video-placeholder:hover {
+    background: linear-gradient(135deg, #1f1f3a, #1b2948);
+}
+.play-button {
+    font-size: 64px;
+    color: #6dc5c7;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
+}
+.video-placeholder:hover .play-button {
+    transform: scale(1.15);
+}
+.placeholder-text {
+    font-size: 16px;
+    opacity: 0.8;
 }
 
 #quote {
@@ -135,16 +150,13 @@ body {
     font-family: Georgia, serif;
     line-height: 1.6;
 }
-
 .quote-text {
     margin-bottom: 10px;
 }
-
 .quote-author {
     text-align: right;
     font-size: 18px;
 }
-
 #how-to-play-text {
     position: relative;
     z-index: 1;
@@ -156,39 +168,32 @@ body {
     border-radius: 15px;
     overflow: hidden;
 }
-
 @media (max-width: 900px) {
     #how-to-play-text {
         margin-left: auto;
         margin-right: auto;
     }
 }
-
 .section-title {
     font-size: 200%;
     color: #6dc5c7;
 }
-
 .steps-list {
     line-height: 1.8;
     padding-left: 20px;
 }
-
 .steps-list li {
     margin-bottom: 15px;
 }
-
 .plat-chat-link {
     color: #6dc5c7;
     text-decoration: none;
 }
-
 .disclaimer {
     margin-top: 20px;
     font-size: 14px;
     font-style: italic;
 }
-
 .pc-logo {
     position: absolute;
     right: 100px;
@@ -198,45 +203,17 @@ body {
     height: auto;
     transition: opacity 0.3s;
 }
-
 #latest-video {
     margin-left: 100px;
 }
-
 .video-title {
     font-size: 200%;
     color: #6dc5c7;
     margin-bottom: 20px;
 }
-
 #latest-video iframe {
     border-radius: 15px;
 }
-
-#bronze-babble-text {
-    width: 600px;
-    max-width: 80%;
-    margin-right: 100px;
-    padding: 30px;
-    color: whitesmoke;
-    background: grey;
-    border-radius: 15px;
-}
-
-#latest-video {
-    margin-left: 100px;
-}
-
-.video-title {
-    font-size: 200%;
-    color: #6dc5c7;
-    margin-bottom: 20px;
-}
-
-#latest-video iframe {
-    border-radius: 15px;
-}
-
 #bronze-babble-text {
     width: 500px;
     max-width: 80%;
@@ -245,4 +222,120 @@ body {
     color: whitesmoke;
     background: grey;
     border-radius: 15px;
+}
+
+/* ===== Header link styles ===== */
+#link-title {
+    text-decoration: none;
+    color: white;
+}
+.header-link {
+    color: #aaa;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    border-left: 1px solid #333;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s;
+    font-size: 15px;
+}
+.header-link:last-child {
+    border-right: 1px solid #333;
+}
+.header-link:hover {
+    color: white;
+    border-bottom-color: #6dc5c7;
+}
+.header-link.active {
+    color: #6dc5c7;
+    border-bottom-color: #6dc5c7;
+}
+
+/* ===== Teams page styles ===== */
+.page-title-bar {
+    margin: 30px 30px 0;
+    padding: 30px 40px;
+    background: linear-gradient(to right, #272727, #282828);
+    border-radius: 15px;
+}
+.page-title {
+    font-size: 250%;
+    color: #6dc5c7;
+    margin: 0;
+}
+.season-container {
+    margin: 20px 30px;
+}
+.season-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: linear-gradient(to right, #272727, #282828);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.season-toggle:hover {
+    background: linear-gradient(to right, #2f2f2f, #303030);
+}
+.season-label {
+    font-size: 150%;
+    font-weight: bold;
+    color: whitesmoke;
+}
+.toggle-icon {
+    font-size: 24px;
+    color: #6dc5c7;
+    transition: transform 0.3s;
+}
+.season-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 10px;
+}
+.season-content.open {
+    max-height: 2000px;
+    padding: 20px 10px;
+}
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+.team-card {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.team-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: #6dc5c7;
+}
+.team-logo-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6dc5c7, #926acc);
+    opacity: 0.4;
+}
+.team-name {
+    color: whitesmoke;
+    font-size: 18px;
+    margin: 0;
+    text-align: center;
 }
