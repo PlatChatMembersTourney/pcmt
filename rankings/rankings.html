@@ -20,6 +20,7 @@
             <a class="header-link active" href="../rankings/rankings.html">Rankings</a>
             <a class="header-link" href="../teams/teams.html">Teams</a>
             <a class="header-link" href="../stats/stats.html">Stats</a>
+            <div class="header-buffer"></div>
         </nav>
     </div>
 
@@ -99,8 +100,8 @@
                 const lines = parseCSV(csvText);
 
                 // --- scoreboard ---
-                // find rows with rank patterns like "1)", "2)", etc.
                 const teamRows = [];
+                let lastScoreboardIdx = 0;
                 for (let i = 0; i < lines.length; i++) {
                     const row = lines[i];
                     const rankCell = (row[1] || '').trim();
@@ -118,6 +119,7 @@
                             rndL: row[15] || '',
                             rndDiff: row[16] || ''
                         });
+                        lastScoreboardIdx = i;
                     }
                 }
 
@@ -148,7 +150,7 @@
                         const teamCell = (row[3] || '').trim();
                         // h2h rows are between scoreboard and label row, have a team abbr in col 3
                         // and at least one score pattern like "X-Y" in cols 4-15
-                        if (teamCell && i > teamRows.length + 5 && i < h2hLabelRowIdx) {
+                        if (teamCell && i > lastScoreboardIdx && i < h2hLabelRowIdx) {
                             const scores = row.slice(4, 16).map(c => (c || '').trim());
                             const hasScore = scores.some(s => /^\d+-\d+$/.test(s));
                             if (hasScore) {
@@ -193,7 +195,13 @@
                         return n > 0 ? `+${n}` : `${n}`;
                     };
 
-                    html += '<tr>';
+                    // top 2 = playoffs, 3-6 = LCQ, 7-12 = eliminated
+                    let rowClass = '';
+                    if (t.rank <= 2) rowClass = 'rank-playoffs';
+                    else if (t.rank <= 6) rowClass = 'rank-lcq';
+                    else rowClass = 'rank-eliminated';
+
+                    html += `<tr class="${rowClass}">`;
                     html += `<td>${t.rank}</td>`;
                     html += `<td class="team-abbr-cell">${t.abbr}</td>`;
                     html += `<td>${t.name}</td>`;

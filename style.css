@@ -45,6 +45,12 @@ body {
     display: flex;
     align-items: center;
 }
+.header-buffer {
+    width: 50px;
+    align-self: stretch;
+    background-color: #1e1e1e;
+    border-left: 1px solid #333;
+}
 .header-link {
     color: #aaa;
     text-decoration: none;
@@ -611,6 +617,16 @@ body {
     color: #cc4444;
     font-size: 11px;
     font-weight: 600;
+}
+
+.rank-playoffs td:first-child {
+    border-left: 3px solid #5cb85c;
+}
+.rank-lcq td:first-child {
+    border-left: 3px solid #d4a843;
+}
+.rank-eliminated td:first-child {
+    border-left: 3px solid #cc4444;
 }
 
 /* h2h matrix */
