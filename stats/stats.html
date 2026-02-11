@@ -28,51 +28,64 @@
         <h1 class="page-title">Stats</h1>
     </div>
 
+    <div class="season-selector-bar">
+        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1</button>
+        <button class="season-sel-btn active" onclick="switchSeason(2)">Season 2</button>
+    </div>
+
     <div class="stats-toggle-bar">
         <button class="stats-toggle-btn active" onclick="switchMainTab('player')">Player Stats</button>
         <button class="stats-toggle-btn" onclick="switchMainTab('team')">Team Stats</button>
     </div>
 
     <div class="stats-content" id="player-stats">
-        <div class="stats-sub-tabs" id="player-sub-tabs">
-            <button class="stats-sub-btn active" onclick="switchPlayerTab('angus')">Angus</button>
-            <button class="stats-sub-btn" onclick="switchPlayerTab('pi')">pi</button>
-            <button class="stats-sub-btn" onclick="switchPlayerTab('toxic')">toxic</button>
-        </div>
-
+        <div class="stats-sub-tabs" id="player-sub-tabs"></div>
         <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
-
-        <div class="stats-table-container" id="angus-stats">
-            <div class="stats-loading">Loading stats...</div>
-        </div>
-        <div class="stats-table-container hidden" id="pi-stats">
-            <div class="stats-loading">Loading stats...</div>
-        </div>
-        <div class="stats-table-container hidden" id="toxic-stats">
-            <div class="stats-loading">Loading stats...</div>
+        <div id="player-table-area">
+            <div class="stats-table-container">
+                <div class="stats-loading">Loading stats...</div>
+            </div>
         </div>
     </div>
 
     <div class="stats-content hidden" id="team-stats">
-        <div class="stats-sub-tabs" id="team-sub-tabs">
-            <button class="stats-sub-btn active" onclick="switchTeamTab('pi-team')">pi</button>
-            <button class="stats-sub-btn" onclick="switchTeamTab('toxic-team')">toxic</button>
-        </div>
-
+        <div class="stats-sub-tabs" id="team-sub-tabs"></div>
         <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
-
-        <div class="stats-table-container" id="pi-team-stats">
-            <div class="stats-loading">Loading stats...</div>
-        </div>
-        <div class="stats-table-container hidden" id="toxic-team-stats">
-            <div class="stats-loading">Loading stats...</div>
+        <div id="team-table-area">
+            <div class="stats-table-container">
+                <div class="stats-loading">Loading stats...</div>
+            </div>
         </div>
     </div>
 
     <script>
         const sortState = {};
+        let currentSeason = 2;
+        let currentMainTab = 'player';
+        const cache = {};
+
+        const seasonConfig = {
+            1: {
+                playerTabs: ['toxic'],
+                teamTabs: ['toxic'],
+            },
+            2: {
+                playerTabs: ['Angus', 'pi', 'toxic'],
+                teamTabs: ['pi', 'toxic'],
+            }
+        };
+
+        function switchSeason(season) {
+            currentSeason = season;
+            const buttons = document.querySelectorAll('.season-sel-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === season - 1);
+            });
+            buildTabs();
+        }
 
         function switchMainTab(tab) {
+            currentMainTab = tab;
             const playerStats = document.getElementById('player-stats');
             const teamStats = document.getElementById('team-stats');
             const buttons = document.querySelectorAll('.stats-toggle-btn');
@@ -88,32 +101,42 @@
             }
         }
 
-        function switchPlayerTab(tab) {
-            const containers = {
-                angus: document.getElementById('angus-stats'),
-                pi: document.getElementById('pi-stats'),
-                toxic: document.getElementById('toxic-stats')
-            };
-            const buttons = document.querySelectorAll('#player-sub-tabs .stats-sub-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            Object.values(containers).forEach(c => c.classList.add('hidden'));
-            containers[tab].classList.remove('hidden');
-            const idx = { angus: 0, pi: 1, toxic: 2 };
-            buttons[idx[tab]].classList.add('active');
+        function buildTabs() {
+            const config = seasonConfig[currentSeason];
+
+            const playerTabBar = document.getElementById('player-sub-tabs');
+            playerTabBar.innerHTML = config.playerTabs.map((name, i) =>
+                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchPlayerTab('${name}')">${name}</button>`
+            ).join('');
+
+            const teamTabBar = document.getElementById('team-sub-tabs');
+            teamTabBar.innerHTML = config.teamTabs.map((name, i) =>
+                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchTeamTab('${name}')">${name}</button>`
+            ).join('');
+
+            loadPlayerTab(config.playerTabs[0]);
+            loadTeamTab(config.teamTabs[0]);
         }
 
-        function switchTeamTab(tab) {
-            const containers = {
-                'pi-team': document.getElementById('pi-team-stats'),
-                'toxic-team': document.getElementById('toxic-team-stats')
-            };
-            const buttons = document.querySelectorAll('#team-sub-tabs .stats-sub-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            Object.values(containers).forEach(c => c.classList.add('hidden'));
-            containers[tab].classList.remove('hidden');
-            const idx = { 'pi-team': 0, 'toxic-team': 1 };
-            buttons[idx[tab]].classList.add('active');
+        function switchPlayerTab(name) {
+            const config = seasonConfig[currentSeason];
+            const buttons = document.querySelectorAll('#player-sub-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', config.playerTabs[i] === name);
+            });
+            loadPlayerTab(name);
         }
+
+        function switchTeamTab(name) {
+            const config = seasonConfig[currentSeason];
+            const buttons = document.querySelectorAll('#team-sub-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', config.teamTabs[i] === name);
+            });
+            loadTeamTab(name);
+        }
+
+        // --- table rendering ---
 
         function renderTable(headers, rows, tableId) {
             let html = `<table class="stats-table" id="table-${tableId}">`;
@@ -173,7 +196,6 @@
                 '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
             ).join('');
 
-            // update arrows on last header row only (handles category row tables)
             const theadRows = table.querySelectorAll('thead tr');
             const lastHeaderRow = theadRows[theadRows.length - 1];
             const ths = lastHeaderRow.querySelectorAll('th');
@@ -186,6 +208,8 @@
                 }
             });
         }
+
+        // --- helpers ---
 
         function parseCSV(csvText) {
             return csvText.split('\n').map(line => {
@@ -231,11 +255,33 @@
             return val;
         }
 
-        // --- player stats ---
+        // --- player stats loaders ---
 
-        async function loadToxicPlayerStats() {
+        function loadPlayerTab(name) {
+            const area = document.getElementById('player-table-area');
+            area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+
+            if (currentSeason === 1) {
+                loadToxicPlayerStats(1);
+            } else {
+                if (name === 'toxic') loadToxicPlayerStats(2);
+                else if (name === 'Angus') loadAngusStats();
+                else if (name === 'pi') loadPiPlayerStats();
+            }
+        }
+
+        async function loadToxicPlayerStats(season) {
+            const cacheKey = `s${season}-player-toxic`;
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                return;
+            }
+
             try {
-                const response = await fetch('../data/Player Stats.xlsx');
+                const path = `../data/s${season}/Player Stats.xlsx`;
+                const response = await fetch(path);
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
@@ -245,24 +291,34 @@
                 const playerRows = overallData.slice(1).filter(r => r[0]);
 
                 const changeIdx = rawHeaders.indexOf('Change');
-                let headers = [...rawHeaders];
-                if (changeIdx !== -1) headers.splice(changeIdx, 1);
+                let headers = rawHeaders.filter(h => h != null && h !== 'Change');
 
                 const formattedRows = playerRows.map(row => {
                     let r = [...row];
                     if (changeIdx !== -1) r.splice(changeIdx, 1);
+                    while (r.length > headers.length) r.pop();
                     return r.map((cell, i) => formatCell(cell, headers[i]));
                 });
 
-                document.getElementById('toxic-stats').innerHTML = renderTable(headers, formattedRows, 'toxic');
+                const tableId = `toxic-player-s${season}`;
+                const html = renderTable(headers, formattedRows, tableId);
+                cache[cacheKey] = html;
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
             } catch (err) {
-                document.getElementById('toxic-stats').innerHTML =
-                    '<p class="stats-error">Failed to load player stats.</p>';
-                console.error('toxic stats:', err);
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
+                console.error('toxic player stats:', err);
             }
         }
 
         async function loadAngusStats() {
+            const cacheKey = 's2-player-Angus';
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                return;
+            }
+
             try {
                 const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
                 const gid = '821526300';
@@ -275,7 +331,6 @@
                 let headers = lines[0];
                 let rows = lines.slice(1).filter(r => r[0] || r[1]);
 
-                // strip Points and Agents columns
                 const removeCols = [];
                 headers.forEach((h, i) => {
                     const lower = h.toLowerCase().trim();
@@ -286,15 +341,24 @@
                     rows.forEach(r => r.splice(idx, 1));
                 });
 
-                document.getElementById('angus-stats').innerHTML = renderTable(headers, rows, 'angus');
+                const html = renderTable(headers, rows, 'angus-player-s2');
+                cache[cacheKey] = html;
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
             } catch (err) {
-                document.getElementById('angus-stats').innerHTML =
-                    '<p class="stats-error">Failed to load Angus\'s stats.</p>';
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
                 console.error('angus stats:', err);
             }
         }
 
         async function loadPiPlayerStats() {
+            const cacheKey = 's2-player-pi';
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                return;
+            }
+
             try {
                 const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
                 const gid = '1023990137';
@@ -304,14 +368,12 @@
                 const csvText = await response.text();
                 const lines = parseCSV(csvText);
 
-                // row 0 = category headers (skip), row 1 = actual headers
                 const allHeaders = lines[1];
                 const dataRows = lines.slice(2).filter(r => r[0] || r[1]);
 
                 const acsIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'ACS');
                 const rIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'R');
 
-                // keep #, Team, Player + R (rating) + ACS onwards
                 const identCols = [0, 1, 2];
                 if (rIdx !== -1 && rIdx < acsIdx) identCols.push(rIdx);
                 const acsCols = [];
@@ -321,17 +383,38 @@
                 const headers = keepCols.map(i => allHeaders[i]);
                 const rows = dataRows.map(row => keepCols.map(i => row[i] ?? ''));
 
-                document.getElementById('pi-stats').innerHTML = renderTable(headers, rows, 'pi');
+                const html = renderTable(headers, rows, 'pi-player-s2');
+                cache[cacheKey] = html;
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
             } catch (err) {
-                document.getElementById('pi-stats').innerHTML =
-                    '<p class="stats-error">Failed to load pi\'s stats.</p>';
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
                 console.error('pi stats:', err);
             }
         }
 
-        // --- team stats ---
+        // --- team stats loaders ---
+
+        function loadTeamTab(name) {
+            const area = document.getElementById('team-table-area');
+            area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+
+            if (currentSeason === 1) {
+                loadToxicTeamStats(1);
+            } else {
+                if (name === 'toxic') loadToxicTeamStats(2);
+                else if (name === 'pi') loadPiTeamStats();
+            }
+        }
 
         async function loadPiTeamStats() {
+            const cacheKey = 's2-team-pi';
+            const area = document.getElementById('team-table-area');
+
+            if (cache[cacheKey]) {
+                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                return;
+            }
+
             try {
                 const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
                 const gid = '1030932262';
@@ -341,12 +424,10 @@
                 const csvText = await response.text();
                 const lines = parseCSV(csvText);
 
-                // row 0 = category row (Series, Maps, Rounds...), row 1 = column headers
                 const categoryRow = lines[0];
                 const headers = lines[1];
                 const rows = lines.slice(2).filter(r => r[0] || r[1]);
 
-                // figure out category colspan spans
                 const categorySpans = [];
                 for (let i = 0; i < categoryRow.length; i++) {
                     if (categoryRow[i] && categoryRow[i].trim() !== '') {
@@ -359,31 +440,22 @@
                     }
                 }
 
-                const tableId = 'piTeam';
+                const tableId = 'piTeam-s2';
                 let html = `<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tableId}">`;
 
-                // category header row
                 html += '<thead><tr class="category-row">';
                 let colCovered = 0;
                 categorySpans.forEach(cat => {
-                    if (cat.start > colCovered) {
-                        html += `<th colspan="${cat.start - colCovered}"></th>`;
-                    }
+                    if (cat.start > colCovered) html += `<th colspan="${cat.start - colCovered}"></th>`;
                     html += `<th colspan="${cat.span}" class="category-header">${cat.text}</th>`;
                     colCovered = cat.start + cat.span;
                 });
-                if (colCovered < headers.length) {
-                    html += `<th colspan="${headers.length - colCovered}"></th>`;
-                }
-                html += '</tr>';
-
-                // column headers
-                html += '<tr>';
+                if (colCovered < headers.length) html += `<th colspan="${headers.length - colCovered}"></th>`;
+                html += '</tr><tr>';
                 headers.forEach((h, i) => {
                     html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
                 });
                 html += '</tr></thead><tbody>';
-
                 rows.forEach(row => {
                     html += '<tr>';
                     row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
@@ -392,94 +464,114 @@
                 html += '</tbody></table></div>';
 
                 sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
-                document.getElementById('pi-team-stats').innerHTML = html;
+                cache[cacheKey] = html;
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
             } catch (err) {
-                document.getElementById('pi-team-stats').innerHTML =
-                    '<p class="stats-error">Failed to load pi\'s team stats.</p>';
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s team stats.</p></div>';
                 console.error('pi team stats:', err);
             }
         }
 
-        let toxicTeamWorkbook = null;
+        const toxicTeamWorkbooks = {};
 
-        async function loadToxicTeamStats() {
+        async function loadToxicTeamStats(season) {
+            const area = document.getElementById('team-table-area');
+
             try {
-                const response = await fetch('../data/Team Map Stats.xlsx');
-                const arrayBuffer = await response.arrayBuffer();
-                toxicTeamWorkbook = XLSX.read(arrayBuffer, { type: 'array' });
+                if (!toxicTeamWorkbooks[season]) {
+                    const path = `../data/s${season}/Team Map Stats.xlsx`;
+                    const response = await fetch(path);
+                    if (!response.ok) {
+                        area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Team map stats not available for this season.</p></div>';
+                        return;
+                    }
+                    const arrayBuffer = await response.arrayBuffer();
+                    toxicTeamWorkbooks[season] = XLSX.read(arrayBuffer, { type: 'array' });
+                }
 
-                const teamNames = toxicTeamWorkbook.SheetNames.filter(s => !s.includes('Comps'));
+                const workbook = toxicTeamWorkbooks[season];
+                const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data'));
 
-                let html = '<div class="team-selector-bar">';
-                html += '<label for="toxic-team-select">Select Team: </label>';
-                html += '<select id="toxic-team-select" onchange="renderToxicTeamMap(this.value)">';
-                teamNames.forEach((t, i) => {
-                    html += `<option value="${t}" ${i === 0 ? 'selected' : ''}>${t}</option>`;
-                });
+                let html = '<div class="stats-table-container">';
+                html += '<div class="team-selector-bar">';
+                html += `<label for="toxic-team-select-s${season}">Select Team: </label>`;
+                html += `<select id="toxic-team-select-s${season}" onchange="renderToxicTeamMap(${season}, this.value)">`;
+                teamNames.forEach((t, i) => html += `<option value="${t}" ${i === 0 ? 'selected' : ''}>${t}</option>`);
                 html += '</select></div>';
-                html += '<div id="toxic-team-map-table"></div>';
+                html += `<div id="toxic-team-map-table-s${season}"></div></div>`;
 
-                document.getElementById('toxic-team-stats').innerHTML = html;
-                renderToxicTeamMap(teamNames[0]);
+                area.innerHTML = html;
+                renderToxicTeamMap(season, teamNames[0]);
             } catch (err) {
-                document.getElementById('toxic-team-stats').innerHTML =
-                    '<p class="stats-error">Failed to load team map stats.</p>';
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load team map stats.</p></div>';
                 console.error('toxic team stats:', err);
             }
         }
 
-        function renderToxicTeamMap(teamName) {
-            if (!toxicTeamWorkbook) return;
-            const ws = toxicTeamWorkbook.Sheets[teamName];
+        function renderToxicTeamMap(season, teamName) {
+            const workbook = toxicTeamWorkbooks[season];
+            if (!workbook) return;
+            const ws = workbook.Sheets[teamName];
             const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-            const mapHeaders = ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
+            // detect format: S1 has no Pick column (9 cols per map), S2 has Pick (10 cols)
+            const headerRow = data[1] || [];
+            const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
+
+            const leftCols = hasPick ? 10 : 9;
+            const rightStart = hasPick ? 11 : 10;
+            const rightEnd = hasPick ? 21 : 19;
+            const overallValCol = hasPick ? 2 : 1;
+
+            const mapHeaders = hasPick
+                ? ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%']
+                : ['Map', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
+
             const mapRows = [];
             let overallAtk = null;
             let overallDef = null;
 
-            // grab overall atk/def from bottom of sheet
             for (let i = 0; i < data.length; i++) {
-                if (data[i][0] === 'Atk%') overallAtk = data[i][2];
-                if (data[i][0] === 'Def%') overallDef = data[i][2];
+                if (data[i][0] === 'Atk%') overallAtk = data[i][overallValCol];
+                if (data[i][0] === 'Def%') overallDef = data[i][overallValCol];
             }
 
-            // each map pair = 4 rows: name, headers, data, blank
             for (let startRow = 0; startRow < data.length; startRow += 4) {
                 if (startRow + 2 >= data.length) break;
                 const nameRow = data[startRow];
                 const dataRow = data[startRow + 2];
-
                 if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
 
-                // left map (cols 0-9)
+                // left map
                 if (nameRow[0]) {
-                    const d = dataRow.slice(0, 10);
-                    mapRows.push([
-                        nameRow[0], fmtNum(d[0]), fmtNum(d[1]),
-                        fmtNum(d[2]), fmtNum(d[3]), fmtPct(d[4]),
-                        fmtNum(d[5]), fmtNum(d[6]), fmtPct(d[7]),
-                        fmtPct(d[8]), fmtPct(d[9])
-                    ]);
+                    const d = dataRow.slice(0, leftCols);
+                    const row = [nameRow[0]];
+                    d.forEach((v, i) => row.push(i >= leftCols - 2 ? fmtPct(v) : fmtNum(v)));
+                    // fix: Win% and Round% are also percentages
+                    const rebuilt = [nameRow[0]];
+                    for (let i = 0; i < d.length; i++) {
+                        const hdr = mapHeaders[i + 1]; // +1 because Map is first
+                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                    }
+                    mapRows.push(rebuilt);
                 }
 
-                // right map (cols 11-20)
-                if (nameRow[11]) {
-                    const d = dataRow.slice(11, 21);
-                    mapRows.push([
-                        nameRow[11], fmtNum(d[0]), fmtNum(d[1]),
-                        fmtNum(d[2]), fmtNum(d[3]), fmtPct(d[4]),
-                        fmtNum(d[5]), fmtNum(d[6]), fmtPct(d[7]),
-                        fmtPct(d[8]), fmtPct(d[9])
-                    ]);
+                // right map
+                if (nameRow[rightStart]) {
+                    const d = dataRow.slice(rightStart, rightEnd);
+                    const rebuilt = [nameRow[rightStart]];
+                    for (let i = 0; i < d.length; i++) {
+                        const hdr = mapHeaders[i + 1];
+                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                    }
+                    mapRows.push(rebuilt);
                 }
             }
 
-            const filteredRows = mapRows.filter(row =>
-                row.slice(1).some(cell => cell !== '-')
-            );
+            const filteredRows = mapRows.filter(row => row.slice(1).some(cell => cell !== '-'));
             filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
 
+            const container = document.getElementById(`toxic-team-map-table-s${season}`);
             let html = '';
             if (overallAtk != null || overallDef != null) {
                 html += '<div class="team-overall-bar">';
@@ -487,16 +579,12 @@
                 html += '<div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">' + fmtPct(overallDef) + '</span></div>';
                 html += '</div>';
             }
-            html += renderTable(mapHeaders, filteredRows, 'toxicTeamMap');
-
-            document.getElementById('toxic-team-map-table').innerHTML = html;
+            html += renderTable(mapHeaders, filteredRows, `toxicTeamMap-s${season}`);
+            container.innerHTML = html;
         }
 
-        loadToxicPlayerStats();
-        loadAngusStats();
-        loadPiPlayerStats();
-        loadPiTeamStats();
-        loadToxicTeamStats();
+        // default to S2
+        buildTabs();
     </script>
 </body>
 </html>
