@@ -320,3 +320,120 @@ body {
     margin: 0;
     text-align: center;
 }
+
+/* ===== Stats page styles ===== */
+.stats-toggle-bar {
+    display: flex;
+    margin: 20px 30px 0;
+    gap: 0;
+}
+.stats-toggle-btn {
+    padding: 14px 30px;
+    background: #2a2a2a;
+    border: none;
+    color: #aaa;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 2px solid transparent;
+}
+.stats-toggle-btn:first-child {
+    border-radius: 12px 0 0 0;
+}
+.stats-toggle-btn:last-child {
+    border-radius: 0 12px 0 0;
+}
+.stats-toggle-btn:hover {
+    color: white;
+}
+.stats-toggle-btn.active {
+    background: #333;
+    color: #6dc5c7;
+    border-bottom-color: #6dc5c7;
+}
+.stats-content {
+    margin: 0 30px 30px;
+}
+.stats-content.hidden {
+    display: none;
+}
+.stats-sub-tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 10px;
+}
+.stats-sub-btn {
+    padding: 10px 24px;
+    background: #252525;
+    border: none;
+    color: #777;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 2px solid transparent;
+}
+.stats-sub-btn:first-child {
+    border-radius: 8px 0 0 0;
+}
+.stats-sub-btn:last-child {
+    border-radius: 0 8px 0 0;
+}
+.stats-sub-btn:hover {
+    color: white;
+}
+.stats-sub-btn.active {
+    background: #2e2e2e;
+    color: #6dc5c7;
+    border-bottom-color: #6dc5c7;
+}
+.stats-table-container {
+    background: linear-gradient(to right, #272727, #282828);
+    border-radius: 0 12px 12px 12px;
+    padding: 20px;
+    overflow-x: auto;
+}
+.stats-table-container.hidden {
+    display: none;
+}
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: whitesmoke;
+    font-size: 15px;
+}
+.stats-table thead th {
+    text-align: left;
+    padding: 12px 16px;
+    color: #6dc5c7;
+    font-weight: 600;
+    border-bottom: 1px solid #444;
+    white-space: nowrap;
+}
+.stats-table tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #333;
+}
+.stats-table tbody tr:hover {
+    background: rgba(109, 197, 199, 0.05);
+}
+.stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.placeholder-row {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 16px !important;
+}
+.stats-loading {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 16px;
+}
+.stats-error {
+    text-align: center;
+    color: #cc6666;
+    font-style: italic;
+    padding: 40px 16px;
+}

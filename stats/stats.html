@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../icons/PCMT Logo.png">
+    <title>PCMT - Stats</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div id="header-bar">
+        <div class="header-content" id="link-title">
+            <a href="../index.html">
+                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            </a>
+            <p>Plat Chat Members Tournament</p>
+        </div>
+        <nav class="header-content">
+            <a class="header-link">Matches</a>
+            <a class="header-link">Rankings</a>
+            <a class="header-link" href="../teams/teams.html">Teams</a>
+            <a class="header-link active" href="../stats/stats.html">Stats</a>
+        </nav>
+    </div>
+
+    <div class="page-title-bar">
+        <h1 class="page-title">Stats</h1>
+    </div>
+
+    <div class="stats-toggle-bar">
+        <button class="stats-toggle-btn active" onclick="switchMainTab('player')">Player Stats</button>
+        <button class="stats-toggle-btn" onclick="switchMainTab('team')">Team Stats</button>
+    </div>
+
+    <div class="stats-content" id="player-stats">
+        <div class="stats-sub-tabs">
+            <button class="stats-sub-btn active" onclick="switchSubTab('toxic')">Toxic</button>
+            <button class="stats-sub-btn" onclick="switchSubTab('angus')">Angus</button>
+        </div>
+
+        <div class="stats-table-container" id="toxic-stats">
+            <div class="stats-loading">Loading stats...</div>
+        </div>
+
+        <div class="stats-table-container hidden" id="angus-stats">
+            <div class="stats-loading">Loading stats...</div>
+        </div>
+    </div>
+
+    <div class="stats-content hidden" id="team-stats">
+        <div class="stats-table-container" id="team-stats-table">
+            <div class="stats-loading">Loading stats...</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Tab switching =====
+        function switchMainTab(tab) {
+            const playerStats = document.getElementById('player-stats');
+            const teamStats = document.getElementById('team-stats');
+            const buttons = document.querySelectorAll('.stats-toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (tab === 'player') {
+                playerStats.classList.remove('hidden');
+                teamStats.classList.add('hidden');
+                buttons[0].classList.add('active');
+            } else {
+                teamStats.classList.remove('hidden');
+                playerStats.classList.add('hidden');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        function switchSubTab(tab) {
+            const toxicStats = document.getElementById('toxic-stats');
+            const angusStats = document.getElementById('angus-stats');
+            const buttons = document.querySelectorAll('.stats-sub-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (tab === 'toxic') {
+                toxicStats.classList.remove('hidden');
+                angusStats.classList.add('hidden');
+                buttons[0].classList.add('active');
+            } else {
+                angusStats.classList.remove('hidden');
+                toxicStats.classList.add('hidden');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        // ===== Render a table from headers + rows =====
+        function renderTable(headers, rows) {
+            let html = '<table class="stats-table"><thead><tr>';
+            headers.forEach(h => html += `<th>${h}</th>`);
+            html += '</tr></thead><tbody>';
+            rows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            return html;
+        }
+
+        // ===== Load Toxic's Excel =====
+        async function loadToxicStats() {
+            try {
+                const response = await fetch('../data/Player Stats.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                // Player stats from "Overall" sheet
+                const overallSheet = workbook.Sheets['Overall'];
+                const overallData = XLSX.utils.sheet_to_json(overallSheet, { header: 1 });
+                const playerHeaders = overallData[0];
+                const playerRows = overallData.slice(1).filter(r => r[0]);
+
+                // Format numeric values
+                const formattedRows = playerRows.map(row => {
+                    return row.map((cell, i) => {
+                        if (typeof cell === 'number') {
+                            // Percentage columns (KAST, HS%, CL%)
+                            const header = playerHeaders[i];
+                            if (['KAST', 'HS%', 'CL%'].includes(header)) {
+                                return (cell * 100).toFixed(0) + '%';
+                            }
+                            if (Number.isInteger(cell)) return cell;
+                            return cell.toFixed(2);
+                        }
+                        return cell;
+                    });
+                });
+
+                // Remove "Change" column if present
+                const changeIdx = playerHeaders.indexOf('Change');
+                let displayHeaders = [...playerHeaders];
+                let displayRows = formattedRows;
+                if (changeIdx !== -1) {
+                    displayHeaders.splice(changeIdx, 1);
+                    displayRows = formattedRows.map(r => {
+                        const newRow = [...r];
+                        newRow.splice(changeIdx, 1);
+                        return newRow;
+                    });
+                }
+
+                document.getElementById('toxic-stats').innerHTML = renderTable(displayHeaders, displayRows);
+
+                // Team stats aggregation
+                const teamData = {};
+                playerRows.forEach(row => {
+                    const team = row[1];
+                    if (!team || row[16] == null) return;
+                    if (!teamData[team]) {
+                        teamData[team] = { rounds: 0, k: 0, d: 0, a: 0, fk: 0, fd: 0, players: 0 };
+                    }
+                    teamData[team].k += row[16] || 0;
+                    teamData[team].d += row[17] || 0;
+                    teamData[team].a += row[18] || 0;
+                    teamData[team].fk += row[19] || 0;
+                    teamData[team].fd += row[20] || 0;
+                    teamData[team].players += 1;
+                    if (row[2] && row[2] > teamData[team].rounds) {
+                        teamData[team].rounds = row[2];
+                    }
+                });
+
+                const teamHeaders = ['Team', 'Players', 'RND', 'K', 'D', 'A', 'K:D', 'FK', 'FD'];
+                const teamRows = Object.entries(teamData)
+                    .sort((a, b) => (b[1].k / b[1].d) - (a[1].k / a[1].d))
+                    .map(([team, td]) => [
+                        team, td.players, td.rounds, td.k, td.d, td.a,
+                        (td.k / td.d).toFixed(2), td.fk, td.fd
+                    ]);
+
+                document.getElementById('team-stats-table').innerHTML = renderTable(teamHeaders, teamRows);
+
+            } catch (err) {
+                document.getElementById('toxic-stats').innerHTML =
+                    '<p class="stats-error">Failed to load stats. Make sure Player Stats.xlsx is in the /data folder.</p>';
+                document.getElementById('team-stats-table').innerHTML =
+                    '<p class="stats-error">Failed to load team stats.</p>';
+                console.error('Error loading Toxic stats:', err);
+            }
+        }
+
+        // ===== Load Angus's Google Sheet =====
+        async function loadAngusStats() {
+            try {
+                const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
+                const gid = '821526300';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                const csvText = await response.text();
+
+                // Parse CSV
+                const lines = csvText.split('\n').map(line => {
+                    const cells = [];
+                    let current = '';
+                    let inQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            cells.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    cells.push(current.trim());
+                    return cells;
+                }).filter(row => row.some(cell => cell !== ''));
+
+                const headers = lines[0];
+                const rows = lines.slice(1).filter(r => r[0] || r[1]);
+
+                document.getElementById('angus-stats').innerHTML = renderTable(headers, rows);
+
+            } catch (err) {
+                document.getElementById('angus-stats').innerHTML =
+                    '<p class="stats-error">Failed to load Angus\'s stats. The Google Sheet may not be publicly accessible.</p>';
+                console.error('Error loading Angus stats:', err);
+            }
+        }
+
+        // Load all data on page load
+        loadToxicStats();
+        loadAngusStats();
+    </script>
+</body>
+</html>
