@@ -14,13 +14,19 @@ body {
     width: 100%;
     background-color: #1e1e1e;
     color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
     position: sticky;
     top: 0;
     z-index: 100;
     font-size: larger;
+}
+.header-inner {
+    max-width: 1260px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 100%;
 }
 #pcmt-logo {
     height: 64px;
@@ -82,7 +88,7 @@ body {
     position: relative;
     display: flex;
     height: 500px;
-    margin: 30px;
+    margin: 30px 0;
     align-items: center;
     overflow: hidden;
     background: linear-gradient(to right, #272727, #282828);
@@ -123,7 +129,7 @@ body {
     position: relative;
     display: flex;
     height: 500px;
-    margin: 30px;
+    margin: 30px 0;
     align-items: center;
     justify-content: space-between;
     gap: 40px;
@@ -244,8 +250,14 @@ body {
 
 /* teams page */
 
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
 .page-title-bar {
-    margin: 30px 30px 0;
+    margin: 30px 0 0;
     padding: 30px 40px;
     background: linear-gradient(to right, #272727, #282828);
     border-radius: 15px;
@@ -256,7 +268,7 @@ body {
     margin: 0;
 }
 .season-container {
-    margin: 20px 30px;
+    margin: 20px 0;
 }
 .season-toggle {
     width: 100%;
@@ -343,96 +355,78 @@ body {
 
 .season-selector-bar {
     display: flex;
-    margin: 20px 30px 0;
-    gap: 0;
+    margin: 20px 0 0;
+    border-bottom: 1px solid #333;
 }
 .season-sel-btn {
     padding: 12px 28px;
-    background: #222;
+    background: none;
     border: none;
     color: #777;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.2s;
     border-bottom: 2px solid transparent;
-}
-.season-sel-btn:first-child {
-    border-radius: 12px 0 0 0;
-}
-.season-sel-btn:last-child {
-    border-radius: 0 12px 0 0;
+    margin-bottom: -1px;
 }
 .season-sel-btn:hover {
     color: white;
 }
 .season-sel-btn.active {
-    background: #2a2a2a;
     color: #6dc5c7;
     border-bottom-color: #6dc5c7;
 }
 
 .stats-toggle-bar {
     display: flex;
-    margin: 0 30px 0;
-    gap: 0;
+    margin: 0;
+    border-bottom: 1px solid #333;
 }
 .stats-toggle-btn {
-    padding: 14px 30px;
-    background: #2a2a2a;
+    padding: 12px 28px;
+    background: none;
     border: none;
-    color: #aaa;
-    font-size: 16px;
+    color: #888;
+    font-size: 15px;
     cursor: pointer;
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.2s;
     border-bottom: 2px solid transparent;
-}
-.stats-toggle-btn:first-child {
-    border-radius: 12px 0 0 0;
-}
-.stats-toggle-btn:last-child {
-    border-radius: 0 12px 0 0;
+    margin-bottom: -1px;
 }
 .stats-toggle-btn:hover {
     color: white;
 }
 .stats-toggle-btn.active {
-    background: #333;
     color: #6dc5c7;
     border-bottom-color: #6dc5c7;
 }
 .stats-content {
-    margin: 0 30px 30px;
+    margin: 0 0 30px;
 }
 .stats-content.hidden {
     display: none;
 }
 .stats-sub-tabs {
     display: flex;
-    gap: 0;
     margin-top: 10px;
+    border-bottom: 1px solid #333;
 }
 .stats-sub-btn {
     padding: 10px 24px;
-    background: #252525;
+    background: none;
     border: none;
     color: #777;
     font-size: 14px;
     cursor: pointer;
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.2s;
     border-bottom: 2px solid transparent;
-}
-.stats-sub-btn:first-child {
-    border-radius: 8px 0 0 0;
-}
-.stats-sub-btn:last-child {
-    border-radius: 0 8px 0 0;
+    margin-bottom: -1px;
 }
 .stats-sub-btn:hover {
     color: white;
 }
 .stats-sub-btn.active {
-    background: #2e2e2e;
     color: #6dc5c7;
     border-bottom-color: #6dc5c7;
 }
@@ -584,7 +578,7 @@ body {
 /* rankings page */
 
 .rankings-content {
-    margin: 20px 30px 30px;
+    margin: 20px 0 30px;
 }
 .rankings-section {
     margin-bottom: 30px;
