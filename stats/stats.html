@@ -33,7 +33,6 @@
         <button class="stats-toggle-btn" onclick="switchMainTab('team')">Team Stats</button>
     </div>
 
-    <!-- ===== PLAYER STATS ===== -->
     <div class="stats-content" id="player-stats">
         <div class="stats-sub-tabs" id="player-sub-tabs">
             <button class="stats-sub-btn active" onclick="switchPlayerTab('angus')">Angus</button>
@@ -54,7 +53,6 @@
         </div>
     </div>
 
-    <!-- ===== TEAM STATS ===== -->
     <div class="stats-content hidden" id="team-stats">
         <div class="stats-sub-tabs" id="team-sub-tabs">
             <button class="stats-sub-btn active" onclick="switchTeamTab('pi-team')">pi</button>
@@ -72,10 +70,8 @@
     </div>
 
     <script>
-        // ===== Sort state tracking =====
         const sortState = {};
 
-        // ===== Main tab switching =====
         function switchMainTab(tab) {
             const playerStats = document.getElementById('player-stats');
             const teamStats = document.getElementById('team-stats');
@@ -92,7 +88,6 @@
             }
         }
 
-        // ===== Player sub-tab switching =====
         function switchPlayerTab(tab) {
             const containers = {
                 angus: document.getElementById('angus-stats'),
@@ -107,7 +102,6 @@
             buttons[idx[tab]].classList.add('active');
         }
 
-        // ===== Team sub-tab switching =====
         function switchTeamTab(tab) {
             const containers = {
                 'pi-team': document.getElementById('pi-team-stats'),
@@ -121,7 +115,6 @@
             buttons[idx[tab]].classList.add('active');
         }
 
-        // ===== Render a sortable table =====
         function renderTable(headers, rows, tableId) {
             let html = `<table class="stats-table" id="table-${tableId}">`;
             html += '<thead><tr>';
@@ -139,7 +132,7 @@
             return html;
         }
 
-        // ===== Sort a table by column =====
+        // 1st click = desc, 2nd = asc, 3rd = reset
         function sortTable(tableId, colIndex) {
             const state = sortState[tableId];
             if (!state) return;
@@ -180,7 +173,7 @@
                 '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
             ).join('');
 
-            // Update arrows on the last header row only
+            // update arrows on last header row only (handles category row tables)
             const theadRows = table.querySelectorAll('thead tr');
             const lastHeaderRow = theadRows[theadRows.length - 1];
             const ths = lastHeaderRow.querySelectorAll('th');
@@ -194,7 +187,6 @@
             });
         }
 
-        // ===== CSV parser =====
         function parseCSV(csvText) {
             return csvText.split('\n').map(line => {
                 const cells = [];
@@ -216,7 +208,6 @@
             }).filter(row => row.some(cell => cell !== ''));
         }
 
-        // ===== Format helpers =====
         function formatCell(value, header) {
             if (value == null || value === '') return '';
             if (typeof value === 'number') {
@@ -240,11 +231,8 @@
             return val;
         }
 
-        // ================================================================
-        //  PLAYER STATS LOADERS
-        // ================================================================
+        // --- player stats ---
 
-        // ===== Load toxic's Player Stats Excel =====
         async function loadToxicPlayerStats() {
             try {
                 const response = await fetch('../data/Player Stats.xlsx');
@@ -270,11 +258,10 @@
             } catch (err) {
                 document.getElementById('toxic-stats').innerHTML =
                     '<p class="stats-error">Failed to load player stats.</p>';
-                console.error('Error loading toxic stats:', err);
+                console.error('toxic stats:', err);
             }
         }
 
-        // ===== Load Angus's Google Sheet =====
         async function loadAngusStats() {
             try {
                 const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
@@ -288,7 +275,7 @@
                 let headers = lines[0];
                 let rows = lines.slice(1).filter(r => r[0] || r[1]);
 
-                // Remove "Points" and "Agents" columns
+                // strip Points and Agents columns
                 const removeCols = [];
                 headers.forEach((h, i) => {
                     const lower = h.toLowerCase().trim();
@@ -303,11 +290,10 @@
             } catch (err) {
                 document.getElementById('angus-stats').innerHTML =
                     '<p class="stats-error">Failed to load Angus\'s stats.</p>';
-                console.error('Error loading Angus stats:', err);
+                console.error('angus stats:', err);
             }
         }
 
-        // ===== Load pi's Player Stats Google Sheet =====
         async function loadPiPlayerStats() {
             try {
                 const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
@@ -318,14 +304,14 @@
                 const csvText = await response.text();
                 const lines = parseCSV(csvText);
 
-                // Row 0 is category headers (skip), row 1 is actual headers
+                // row 0 = category headers (skip), row 1 = actual headers
                 const allHeaders = lines[1];
                 const dataRows = lines.slice(2).filter(r => r[0] || r[1]);
 
                 const acsIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'ACS');
                 const rIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'R');
 
-                // Keep identifying cols (#, Team, Player) + R (Rating) + ACS onwards
+                // keep #, Team, Player + R (rating) + ACS onwards
                 const identCols = [0, 1, 2];
                 if (rIdx !== -1 && rIdx < acsIdx) identCols.push(rIdx);
                 const acsCols = [];
@@ -339,15 +325,12 @@
             } catch (err) {
                 document.getElementById('pi-stats').innerHTML =
                     '<p class="stats-error">Failed to load pi\'s stats.</p>';
-                console.error('Error loading pi stats:', err);
+                console.error('pi stats:', err);
             }
         }
 
-        // ================================================================
-        //  TEAM STATS LOADERS
-        // ================================================================
+        // --- team stats ---
 
-        // ===== Load pi's Team Stats Google Sheet =====
         async function loadPiTeamStats() {
             try {
                 const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
@@ -358,18 +341,15 @@
                 const csvText = await response.text();
                 const lines = parseCSV(csvText);
 
-                // Row 0 = category headers (Series, Maps, Rounds, etc.)
-                // Row 1 = column headers (#, ABBR., TEAM, W, L, etc.)
-                // Row 2+ = data
+                // row 0 = category row (Series, Maps, Rounds...), row 1 = column headers
                 const categoryRow = lines[0];
                 const headers = lines[1];
                 const rows = lines.slice(2).filter(r => r[0] || r[1]);
 
-                // Build category spans: find non-empty cells and their colspans
+                // figure out category colspan spans
                 const categorySpans = [];
                 for (let i = 0; i < categoryRow.length; i++) {
                     if (categoryRow[i] && categoryRow[i].trim() !== '') {
-                        // Count how many cols this spans (until next non-empty or end)
                         let span = 1;
                         for (let j = i + 1; j < categoryRow.length; j++) {
                             if (categoryRow[j] && categoryRow[j].trim() !== '') break;
@@ -382,12 +362,10 @@
                 const tableId = 'piTeam';
                 let html = `<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tableId}">`;
 
-                // Category header row
-                html += '<thead>';
-                html += '<tr class="category-row">';
+                // category header row
+                html += '<thead><tr class="category-row">';
                 let colCovered = 0;
                 categorySpans.forEach(cat => {
-                    // Fill any gap
                     if (cat.start > colCovered) {
                         html += `<th colspan="${cat.start - colCovered}"></th>`;
                     }
@@ -399,10 +377,10 @@
                 }
                 html += '</tr>';
 
-                // Actual column headers
+                // column headers
                 html += '<tr>';
                 headers.forEach((h, i) => {
-                    html += `<th class="sortable" onclick="sortTableWithCategory('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
+                    html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
                 });
                 html += '</tr></thead><tbody>';
 
@@ -415,20 +393,13 @@
 
                 sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
                 document.getElementById('pi-team-stats').innerHTML = html;
-
             } catch (err) {
                 document.getElementById('pi-team-stats').innerHTML =
                     '<p class="stats-error">Failed to load pi\'s team stats.</p>';
-                console.error('Error loading pi team stats:', err);
+                console.error('pi team stats:', err);
             }
         }
 
-        // Sort for tables with category headers (same logic, different table structure)
-        function sortTableWithCategory(tableId, colIndex) {
-            sortTable(tableId, colIndex);
-        }
-
-        // ===== Load toxic's Team Map Stats Excel =====
         let toxicTeamWorkbook = null;
 
         async function loadToxicTeamStats() {
@@ -437,10 +408,8 @@
                 const arrayBuffer = await response.arrayBuffer();
                 toxicTeamWorkbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-                // Get team names (non-Comps sheets)
                 const teamNames = toxicTeamWorkbook.SheetNames.filter(s => !s.includes('Comps'));
 
-                // Build team selector + table container
                 let html = '<div class="team-selector-bar">';
                 html += '<label for="toxic-team-select">Select Team: </label>';
                 html += '<select id="toxic-team-select" onchange="renderToxicTeamMap(this.value)">';
@@ -455,7 +424,7 @@
             } catch (err) {
                 document.getElementById('toxic-team-stats').innerHTML =
                     '<p class="stats-error">Failed to load team map stats.</p>';
-                console.error('Error loading toxic team stats:', err);
+                console.error('toxic team stats:', err);
             }
         }
 
@@ -469,38 +438,36 @@
             let overallAtk = null;
             let overallDef = null;
 
+            // grab overall atk/def from bottom of sheet
             for (let i = 0; i < data.length; i++) {
-                const row = data[i];
-                if (row[0] === 'Atk%') overallAtk = row[2];
-                if (row[0] === 'Def%') overallDef = row[2];
+                if (data[i][0] === 'Atk%') overallAtk = data[i][2];
+                if (data[i][0] === 'Def%') overallDef = data[i][2];
             }
 
+            // each map pair = 4 rows: name, headers, data, blank
             for (let startRow = 0; startRow < data.length; startRow += 4) {
                 if (startRow + 2 >= data.length) break;
                 const nameRow = data[startRow];
                 const dataRow = data[startRow + 2];
 
-                // Skip if this is the overall stats rows
                 if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
 
-                // Left map (cols 0-9)
-                const leftMap = nameRow[0];
-                if (leftMap) {
+                // left map (cols 0-9)
+                if (nameRow[0]) {
                     const d = dataRow.slice(0, 10);
                     mapRows.push([
-                        leftMap, fmtNum(d[0]), fmtNum(d[1]),
+                        nameRow[0], fmtNum(d[0]), fmtNum(d[1]),
                         fmtNum(d[2]), fmtNum(d[3]), fmtPct(d[4]),
                         fmtNum(d[5]), fmtNum(d[6]), fmtPct(d[7]),
                         fmtPct(d[8]), fmtPct(d[9])
                     ]);
                 }
 
-                // Right map (cols 11-20)
-                const rightMap = nameRow[11];
-                if (rightMap) {
+                // right map (cols 11-20)
+                if (nameRow[11]) {
                     const d = dataRow.slice(11, 21);
                     mapRows.push([
-                        rightMap, fmtNum(d[0]), fmtNum(d[1]),
+                        nameRow[11], fmtNum(d[0]), fmtNum(d[1]),
                         fmtNum(d[2]), fmtNum(d[3]), fmtPct(d[4]),
                         fmtNum(d[5]), fmtNum(d[6]), fmtPct(d[7]),
                         fmtPct(d[8]), fmtPct(d[9])
@@ -508,15 +475,11 @@
                 }
             }
 
-            // Filter out maps with no data
             const filteredRows = mapRows.filter(row =>
                 row.slice(1).some(cell => cell !== '-')
             );
-
-            // Sort alphabetically by map name
             filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
 
-            // Build overall summary + table
             let html = '';
             if (overallAtk != null || overallDef != null) {
                 html += '<div class="team-overall-bar">';
@@ -529,7 +492,6 @@
             document.getElementById('toxic-team-map-table').innerHTML = html;
         }
 
-        // ===== Load everything =====
         loadToxicPlayerStats();
         loadAngusStats();
         loadPiPlayerStats();

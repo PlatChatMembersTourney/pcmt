@@ -30,9 +30,9 @@
     <div class="season-container">
         <button class="season-toggle" onclick="toggleSeason('season1')">
             <span class="season-label">Season 1</span>
-            <span class="toggle-icon" id="season1-icon">▾</span>
+            <span class="toggle-icon" id="season1-icon">▸</span>
         </button>
-        <div class="season-content open" id="season1">
+        <div class="season-content" id="season1">
             <div class="teams-grid">
                 <div class="team-card">
                     <img src="../icons/s1_teams/Absolute Cinema.png" alt="Absolute Cinema" class="team-logo">
@@ -121,10 +121,10 @@
             icon.textContent = content.classList.contains('open') ? '▾' : '▸';
         }
 
-        // Reset to default state on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('season1').classList.add('open');
-            document.getElementById('season1-icon').textContent = '▾';
+        // handles bfcache (back/forward nav)
+        window.addEventListener('pageshow', () => {
+            document.getElementById('season1').classList.remove('open');
+            document.getElementById('season1-icon').textContent = '▸';
             document.getElementById('season2').classList.remove('open');
             document.getElementById('season2-icon').textContent = '▸';
         });
