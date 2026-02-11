@@ -3,133 +3,621 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="./icons/PCMT Logo.png">
-    <title>PCMT</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../icons/PCMT Logo.png">
+    <title>PCMT - Stats</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div id="header-bar">
         <div class="header-inner">
         <div class="header-content" id="link-title">
-            <a href="./">
-                <img src="./icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            <a href="../">
+                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
             </a>
             <p>Plat Chat Members Tournament</p>
         </div>
-
         <nav class="header-content">
             <a class="header-link">Matches</a>
-            <a class="header-link" href="rankings/">Rankings</a>
-            <a class="header-link" href="teams/">Teams</a>
-            <a class="header-link" href="stats/">Stats</a>
+            <a class="header-link" href="../rankings/">Rankings</a>
+            <a class="header-link" href="../teams/">Teams</a>
+            <a class="header-link active" href="../stats/">Stats</a>
             <div class="header-buffer"></div>
         </nav>
         </div>
     </div>
 
     <div class="page-container">
-
-    <div class="home-box">
-        <div id="about-text">
-            <h1 id="what-pcmt">
-                What is the PCMT?
-            </h1>
-
-            <p>
-                The Plat Chat Members Tournament (PCMT) is a community-run 
-                Valorant tournament organized by and for members of the Plat 
-                Chat community. 
-                <br><br>
-                Whether you're here for your first taste of structured Valorant 
-                or just here for a good time, 
-                PCMT provides a competitive yet fun environment to test your 
-                skills and connect with other members.
-            </p>
-        </div>
-        <img src="./icons/PCMT Logo.png" id="about-logo">
+    <div class="page-title-bar">
+        <h1 class="page-title">Stats</h1>
     </div>
 
-    <div class="home-box-nc">
+    <div class="season-selector-bar">
+        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1</button>
+        <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
+    </div>
 
-        <div id="video">
-            <iframe src="https://www.youtube.com/embed/9aO9lbssFg4?autoplay=1&mute=1&controls=0&loop=1&playlist=9aO9lbssFg4&playsinline=1&modestbranding=1&showinfo=0&rel=0"
-                    frameborder="0"
-                    allow="autoplay;
-                    encrypted-media"
-                    style="pointer-events: none; width: 100%; height: 100%;">
-            </iframe>
-        </div>
+    <div class="stats-toggle-bar">
+        <button class="stats-toggle-btn active" onclick="switchMainTab('player')">Player Stats</button>
+        <button class="stats-toggle-btn" onclick="switchMainTab('team')">Team Stats</button>
+    </div>
 
-        <div id="quote">
-            <p class="quote-text">
-                "The timmies [Plat Chat Members], they're better than us, 
-                they know more than us, they're smarter, more handsome, more 
-                knowledgable than us"
-            </p>
-            <p class="quote-author">-Sideshow, Plat Chat Ep. 247</p>
+    <div class="stats-content" id="player-stats">
+        <div class="stats-sub-tabs" id="player-sub-tabs"></div>
+        <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
+        <div id="player-table-area">
+            <div class="stats-table-container">
+                <div class="stats-loading">Loading stats...</div>
+            </div>
         </div>
     </div>
 
-    <div class="home-box">
-        <div id="how-to-play-text">
-            <h1 class="section-title">How to Play</h1>
-            
-            <p>
-                Ready to compete? Here's how to join PCMT:
-            </p>
-            
-            <ol class="steps-list">
-                <li><strong>Become a YouTube Member</strong> - Support <a 
-                    href="https://www.youtube.com/@PlatChatValorant/join" 
-                    target="_blank" class="plat-chat-link">Plat Chat</a> 
-                    by becoming a YouTube Member to gain access 
-                    to the community</li>
-                <li><strong>Join the Discord</strong> - Connect with other 
-                    members and stay updated on tournament announcements</li>
-            </ol>
-            
-            <p class="disclaimer">
-                PCMT is an independent community project and is not officially 
-                affiliated with 
-                <a href="https://www.youtube.com/@PlatChatValorant" 
-                target="_blank" class="plat-chat-link">Plat Chat</a>. 
-                If you're not already watching, check them out for the best 
-                Valorant esports content and analysis!
-            </p>
-        </div>
-        
-        <a href="https://www.youtube.com/@PlatChatValorant" target="_blank">
-            <img src="./icons/PC Logo.png" class="pc-logo" alt="Plat Chat Logo">
-        </a>
-    </div>
-
-    <div class="home-box-nc">
-        <div id="latest-video">
-            <h1 class="video-title">Latest Video</h1>
-            <iframe 
-                width="560" 
-                height="315" 
-                src="https://youtube.com/embed/ZtnjE0RCPM0?si=ohZfQwKCIitvzf_y" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <div id="bronze-babble-text">
-            <h1 class="section-title">Bronze Babble</h1>
-            <p>
-                Yes, PCMT has its own "podcast"! Introducing Bronze Babble.
-            </p>
-            <p>
-                Check out the <a href="https://youtube.com/@bronzebabble?si=jEnkQCDdAqHqamnU" target="_blank" class="plat-chat-link">PCMT channel</a> 
-                for Bronze Babble episodes and live broadcasts of all PCMT games!
-            </p>
+    <div class="stats-content hidden" id="team-stats">
+        <div class="stats-sub-tabs" id="team-sub-tabs"></div>
+        <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
+        <div id="team-table-area">
+            <div class="stats-table-container">
+                <div class="stats-loading">Loading stats...</div>
+            </div>
         </div>
     </div>
 
-    </div>
+    <script>
+        const sortState = {};
+        let currentSeason = 2;
+        let currentMainTab = 'player';
+        const cache = {};
 
+        const seasonConfig = {
+            1: {
+                playerTabs: ['toxic'],
+                teamTabs: ['toxic'],
+            },
+            2: {
+                playerTabs: ['Angus', 'pi', 'toxic'],
+                teamTabs: ['pi', 'toxic'],
+            }
+        };
+
+        function switchSeason(season) {
+            currentSeason = season;
+            const buttons = document.querySelectorAll('.season-sel-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === season - 1);
+            });
+            buildTabs();
+        }
+
+        function switchMainTab(tab) {
+            currentMainTab = tab;
+            const playerStats = document.getElementById('player-stats');
+            const teamStats = document.getElementById('team-stats');
+            const buttons = document.querySelectorAll('.stats-toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (tab === 'player') {
+                playerStats.classList.remove('hidden');
+                teamStats.classList.add('hidden');
+                buttons[0].classList.add('active');
+            } else {
+                teamStats.classList.remove('hidden');
+                playerStats.classList.add('hidden');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        function buildTabs() {
+            const config = seasonConfig[currentSeason];
+
+            const playerTabBar = document.getElementById('player-sub-tabs');
+            playerTabBar.innerHTML = config.playerTabs.map((name, i) =>
+                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchPlayerTab('${name}')">${name}</button>`
+            ).join('');
+
+            const teamTabBar = document.getElementById('team-sub-tabs');
+            teamTabBar.innerHTML = config.teamTabs.map((name, i) =>
+                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchTeamTab('${name}')">${name}</button>`
+            ).join('');
+
+            loadPlayerTab(config.playerTabs[0]);
+            loadTeamTab(config.teamTabs[0]);
+        }
+
+        function switchPlayerTab(name) {
+            const config = seasonConfig[currentSeason];
+            const buttons = document.querySelectorAll('#player-sub-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', config.playerTabs[i] === name);
+            });
+            loadPlayerTab(name);
+        }
+
+        function switchTeamTab(name) {
+            const config = seasonConfig[currentSeason];
+            const buttons = document.querySelectorAll('#team-sub-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', config.teamTabs[i] === name);
+            });
+            loadTeamTab(name);
+        }
+
+        // --- table rendering ---
+
+        function renderTable(headers, rows, tableId) {
+            let html = `<table class="stats-table" id="table-${tableId}">`;
+            html += '<thead><tr>';
+            headers.forEach((h, i) => {
+                html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
+            });
+            html += '</tr></thead><tbody>';
+            rows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+            return html;
+        }
+
+        // 1st click = desc, 2nd = asc, 3rd = reset
+        function sortTable(tableId, colIndex) {
+            const state = sortState[tableId];
+            if (!state) return;
+
+            if (state.currentCol === colIndex) {
+                state.clicks++;
+            } else {
+                state.currentCol = colIndex;
+                state.clicks = 1;
+            }
+
+            let sorted;
+            if (state.clicks % 3 === 0) {
+                sorted = [...state.originalRows];
+                state.currentCol = -1;
+                state.clicks = 0;
+            } else {
+                const asc = state.clicks % 3 === 2;
+                sorted = [...state.rows].sort((a, b) => {
+                    let valA = a[colIndex];
+                    let valB = b[colIndex];
+                    if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
+                    if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return asc ? numA - numB : numB - numA;
+                    }
+                    const strA = String(valA || '').toLowerCase();
+                    const strB = String(valB || '').toLowerCase();
+                    return asc ? strA.localeCompare(strB) : strB.localeCompare(strA);
+                });
+            }
+
+            const table = document.getElementById(`table-${tableId}`);
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = sorted.map(row =>
+                '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
+            ).join('');
+
+            const theadRows = table.querySelectorAll('thead tr');
+            const lastHeaderRow = theadRows[theadRows.length - 1];
+            const ths = lastHeaderRow.querySelectorAll('th');
+            ths.forEach((th, i) => {
+                const arrow = th.querySelector('.sort-arrow');
+                if (i === colIndex && state.currentCol !== -1) {
+                    arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
+                } else {
+                    arrow.textContent = '';
+                }
+            });
+        }
+
+        // auto-sort a table by rating column (desc)
+        function sortByRating(tableId, headers) {
+            const ratingNames = ['R1.0', 'R', 'Rating'];
+            const idx = headers.findIndex(h => ratingNames.includes((h || '').trim()));
+            if (idx !== -1) sortTable(tableId, idx);
+        }
+
+        // --- helpers ---
+
+        function parseCSV(csvText) {
+            return csvText.split('\n').map(line => {
+                const cells = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        cells.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                cells.push(current.trim());
+                return cells;
+            }).filter(row => row.some(cell => cell !== ''));
+        }
+
+        function formatCell(value, header) {
+            if (value == null || value === '') return '';
+            if (typeof value === 'number') {
+                if (['KAST', 'HS%', 'CL%'].includes(header)) return (value * 100).toFixed(0) + '%';
+                if (header === 'ACS') return Math.round(value);
+                if (header === 'ADR') return value.toFixed(1);
+                if (Number.isInteger(value)) return value;
+                return value.toFixed(2);
+            }
+            return value;
+        }
+
+        function fmtPct(val) {
+            if (val == null || val === '') return '-';
+            if (typeof val === 'number') return (val * 100).toFixed(0) + '%';
+            return val;
+        }
+
+        function fmtNum(val) {
+            if (val == null || val === '') return '-';
+            return val;
+        }
+
+        // --- player stats loaders ---
+
+        function loadPlayerTab(name) {
+            const area = document.getElementById('player-table-area');
+            const season = currentSeason;
+
+            // check cache before showing loading
+            let cacheKey;
+            if (season === 1) cacheKey = 's1-player-toxic';
+            else cacheKey = `s2-player-${name}`;
+
+            if (!cache[cacheKey]) {
+                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            }
+
+            if (season === 1) loadToxicPlayerStats(1);
+            else if (name === 'toxic') loadToxicPlayerStats(2);
+            else if (name === 'Angus') loadAngusStats();
+            else if (name === 'pi') loadPiPlayerStats();
+        }
+
+        async function loadToxicPlayerStats(season) {
+            const cacheKey = `s${season}-player-toxic`;
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                const { headers, rows } = cache[cacheKey];
+                const tableId = `toxic-player-s${season}`;
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
+                sortByRating(tableId, headers);
+                return;
+            }
+
+            try {
+                const path = `../data/s${season}/Player Stats.xlsx`;
+                const response = await fetch(path);
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                const overallSheet = workbook.Sheets['Overall'];
+                const overallData = XLSX.utils.sheet_to_json(overallSheet, { header: 1 });
+                const rawHeaders = overallData[0];
+                const playerRows = overallData.slice(1).filter(r => r[0]);
+
+                const changeIdx = rawHeaders.indexOf('Change');
+                let headers = rawHeaders.filter(h => h != null && h !== 'Change');
+
+                const formattedRows = playerRows.map(row => {
+                    let r = [...row];
+                    if (changeIdx !== -1) r.splice(changeIdx, 1);
+                    while (r.length > headers.length) r.pop();
+                    return r.map((cell, i) => formatCell(cell, headers[i]));
+                });
+
+                const tableId = `toxic-player-s${season}`;
+                cache[cacheKey] = { headers, rows: formattedRows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, formattedRows, tableId)}</div>`;
+                sortByRating(tableId, headers);
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
+                console.error('toxic player stats:', err);
+            }
+        }
+
+        async function loadAngusStats() {
+            const cacheKey = 's2-player-Angus';
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                const { headers, rows } = cache[cacheKey];
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
+                sortByRating('angus-player-s2', headers);
+                return;
+            }
+
+            try {
+                const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
+                const gid = '821526300';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                const csvText = await response.text();
+                const lines = parseCSV(csvText);
+
+                let headers = lines[0];
+                let rows = lines.slice(1).filter(r => r[0] || r[1]);
+
+                const removeCols = [];
+                headers.forEach((h, i) => {
+                    const lower = h.toLowerCase().trim();
+                    if (lower === 'points' || lower === 'agents') removeCols.push(i);
+                });
+                removeCols.sort((a, b) => b - a).forEach(idx => {
+                    headers.splice(idx, 1);
+                    rows.forEach(r => r.splice(idx, 1));
+                });
+
+                cache[cacheKey] = { headers, rows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
+                sortByRating('angus-player-s2', headers);
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
+                console.error('angus stats:', err);
+            }
+        }
+
+        async function loadPiPlayerStats() {
+            const cacheKey = 's2-player-pi';
+            const area = document.getElementById('player-table-area');
+
+            if (cache[cacheKey]) {
+                const { headers, rows } = cache[cacheKey];
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
+                sortByRating('pi-player-s2', headers);
+                return;
+            }
+
+            try {
+                const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
+                const gid = '1023990137';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                const csvText = await response.text();
+                const lines = parseCSV(csvText);
+
+                const allHeaders = lines[1];
+                const dataRows = lines.slice(2).filter(r => r[0] || r[1]);
+
+                const acsIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'ACS');
+                const rIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'R');
+
+                const identCols = [0, 1, 2];
+                if (rIdx !== -1 && rIdx < acsIdx) identCols.push(rIdx);
+                const acsCols = [];
+                for (let i = acsIdx; i < allHeaders.length; i++) acsCols.push(i);
+                const keepCols = [...identCols, ...acsCols];
+
+                const headers = keepCols.map(i => allHeaders[i]);
+                const rows = dataRows.map(row => keepCols.map(i => row[i] ?? ''));
+
+                cache[cacheKey] = { headers, rows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
+                sortByRating('pi-player-s2', headers);
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
+                console.error('pi stats:', err);
+            }
+        }
+
+        // --- team stats loaders ---
+
+        function loadTeamTab(name) {
+            const area = document.getElementById('team-table-area');
+            const season = currentSeason;
+
+            let cacheKey;
+            if (season === 1) cacheKey = 's1-team-toxic';
+            else cacheKey = `s2-team-${name}`;
+
+            // toxic team stats use workbook cache, not html cache
+            const toxicCached = (season === 1 || name === 'toxic') && toxicTeamWorkbooks[season];
+            const piCached = name === 'pi' && cache[cacheKey];
+
+            if (!toxicCached && !piCached) {
+                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            }
+
+            if (season === 1) loadToxicTeamStats(1);
+            else if (name === 'toxic') loadToxicTeamStats(2);
+            else if (name === 'pi') loadPiTeamStats();
+        }
+
+        async function loadPiTeamStats() {
+            const cacheKey = 's2-team-pi';
+            const area = document.getElementById('team-table-area');
+
+            if (cache[cacheKey]) {
+                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                return;
+            }
+
+            try {
+                const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
+                const gid = '1030932262';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                const response = await fetch(url);
+                const csvText = await response.text();
+                const lines = parseCSV(csvText);
+
+                const categoryRow = lines[0];
+                const headers = lines[1];
+                const rows = lines.slice(2).filter(r => r[0] || r[1]);
+
+                const categorySpans = [];
+                for (let i = 0; i < categoryRow.length; i++) {
+                    if (categoryRow[i] && categoryRow[i].trim() !== '') {
+                        let span = 1;
+                        for (let j = i + 1; j < categoryRow.length; j++) {
+                            if (categoryRow[j] && categoryRow[j].trim() !== '') break;
+                            span++;
+                        }
+                        categorySpans.push({ text: categoryRow[i].trim(), start: i, span: span });
+                    }
+                }
+
+                const tableId = 'piTeam-s2';
+                let html = `<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tableId}">`;
+
+                html += '<thead><tr class="category-row">';
+                let colCovered = 0;
+                categorySpans.forEach(cat => {
+                    if (cat.start > colCovered) html += `<th colspan="${cat.start - colCovered}"></th>`;
+                    html += `<th colspan="${cat.span}" class="category-header">${cat.text}</th>`;
+                    colCovered = cat.start + cat.span;
+                });
+                if (colCovered < headers.length) html += `<th colspan="${headers.length - colCovered}"></th>`;
+                html += '</tr><tr>';
+                headers.forEach((h, i) => {
+                    html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
+                });
+                html += '</tr></thead><tbody>';
+                rows.forEach(row => {
+                    html += '<tr>';
+                    row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+
+                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+                cache[cacheKey] = html;
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s team stats.</p></div>';
+                console.error('pi team stats:', err);
+            }
+        }
+
+        const toxicTeamWorkbooks = {};
+
+        async function loadToxicTeamStats(season) {
+            const area = document.getElementById('team-table-area');
+
+            try {
+                if (!toxicTeamWorkbooks[season]) {
+                    const path = `../data/s${season}/Team Map Stats.xlsx`;
+                    const response = await fetch(path);
+                    if (!response.ok) {
+                        area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Team map stats not available for this season.</p></div>';
+                        return;
+                    }
+                    const arrayBuffer = await response.arrayBuffer();
+                    toxicTeamWorkbooks[season] = XLSX.read(arrayBuffer, { type: 'array' });
+                }
+
+                const workbook = toxicTeamWorkbooks[season];
+                const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
+
+                let html = '<div class="stats-table-container">';
+                html += '<div class="team-selector-bar">';
+                html += `<label for="toxic-team-select-s${season}">Select Team: </label>`;
+                html += `<select id="toxic-team-select-s${season}" onchange="renderToxicTeamMap(${season}, this.value)">`;
+                teamNames.forEach((t, i) => html += `<option value="${t}" ${i === 0 ? 'selected' : ''}>${t}</option>`);
+                html += '</select></div>';
+                html += `<div id="toxic-team-map-table-s${season}"></div></div>`;
+
+                area.innerHTML = html;
+                renderToxicTeamMap(season, teamNames[0]);
+            } catch (err) {
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load team map stats.</p></div>';
+                console.error('toxic team stats:', err);
+            }
+        }
+
+        function renderToxicTeamMap(season, teamName) {
+            const workbook = toxicTeamWorkbooks[season];
+            if (!workbook) return;
+            const ws = workbook.Sheets[teamName];
+            const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+            // detect format: S1 has no Pick column (9 cols per map), S2 has Pick (10 cols)
+            const headerRow = data[1] || [];
+            const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
+
+            const leftCols = hasPick ? 10 : 9;
+            const rightStart = hasPick ? 11 : 10;
+            const rightEnd = hasPick ? 21 : 19;
+            const overallValCol = hasPick ? 2 : 1;
+
+            const mapHeaders = hasPick
+                ? ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%']
+                : ['Map', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
+
+            const mapRows = [];
+            let overallAtk = null;
+            let overallDef = null;
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i][0] === 'Atk%') overallAtk = data[i][overallValCol];
+                if (data[i][0] === 'Def%') overallDef = data[i][overallValCol];
+            }
+
+            for (let startRow = 0; startRow < data.length; startRow += 4) {
+                if (startRow + 2 >= data.length) break;
+                const nameRow = data[startRow];
+                const dataRow = data[startRow + 2];
+                if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
+
+                // left map
+                if (nameRow[0]) {
+                    const d = dataRow.slice(0, leftCols);
+                    const row = [nameRow[0]];
+                    d.forEach((v, i) => row.push(i >= leftCols - 2 ? fmtPct(v) : fmtNum(v)));
+                    // fix: Win% and Round% are also percentages
+                    const rebuilt = [nameRow[0]];
+                    for (let i = 0; i < d.length; i++) {
+                        const hdr = mapHeaders[i + 1]; // +1 because Map is first
+                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                    }
+                    mapRows.push(rebuilt);
+                }
+
+                // right map
+                if (nameRow[rightStart]) {
+                    const d = dataRow.slice(rightStart, rightEnd);
+                    const rebuilt = [nameRow[rightStart]];
+                    for (let i = 0; i < d.length; i++) {
+                        const hdr = mapHeaders[i + 1];
+                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                    }
+                    mapRows.push(rebuilt);
+                }
+            }
+
+            const filteredRows = mapRows.filter(row => row.slice(1).some(cell => cell !== '-'));
+            filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
+
+            const container = document.getElementById(`toxic-team-map-table-s${season}`);
+            let html = '';
+            if (overallAtk != null || overallDef != null) {
+                html += '<div class="team-overall-bar">';
+                html += '<div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">' + fmtPct(overallAtk) + '</span></div>';
+                html += '<div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">' + fmtPct(overallDef) + '</span></div>';
+                html += '</div>';
+            }
+            html += renderTable(mapHeaders, filteredRows, `toxicTeamMap-s${season}`);
+            container.innerHTML = html;
+        }
+
+        switchSeason(2);
+    </script>
+    </div>
 </body>
 </html>
