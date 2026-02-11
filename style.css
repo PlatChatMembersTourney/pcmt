@@ -282,7 +282,7 @@ body {
 }
 .teams-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 .team-card {
@@ -308,6 +308,11 @@ body {
     border-radius: 50%;
     background: linear-gradient(135deg, #6dc5c7, #926acc);
     opacity: 0.4;
+}
+.team-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
 }
 .team-name {
     color: whitesmoke;
