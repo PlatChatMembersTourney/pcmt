@@ -466,11 +466,22 @@
 
             const mapHeaders = ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
             const mapRows = [];
+            let overallAtk = null;
+            let overallDef = null;
+
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i];
+                if (row[0] === 'Atk%') overallAtk = row[2];
+                if (row[0] === 'Def%') overallDef = row[2];
+            }
 
             for (let startRow = 0; startRow < data.length; startRow += 4) {
                 if (startRow + 2 >= data.length) break;
                 const nameRow = data[startRow];
                 const dataRow = data[startRow + 2];
+
+                // Skip if this is the overall stats rows
+                if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
 
                 // Left map (cols 0-9)
                 const leftMap = nameRow[0];
@@ -502,7 +513,20 @@
                 row.slice(1).some(cell => cell !== '-')
             );
 
-            document.getElementById('toxic-team-map-table').innerHTML = renderTable(mapHeaders, filteredRows, 'toxicTeamMap');
+            // Sort alphabetically by map name
+            filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
+
+            // Build overall summary + table
+            let html = '';
+            if (overallAtk != null || overallDef != null) {
+                html += '<div class="team-overall-bar">';
+                html += '<div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">' + fmtPct(overallAtk) + '</span></div>';
+                html += '<div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">' + fmtPct(overallDef) + '</span></div>';
+                html += '</div>';
+            }
+            html += renderTable(mapHeaders, filteredRows, 'toxicTeamMap');
+
+            document.getElementById('toxic-team-map-table').innerHTML = html;
         }
 
         // ===== Load everything =====

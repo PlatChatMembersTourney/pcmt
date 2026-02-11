@@ -120,6 +120,14 @@
             content.classList.toggle('open');
             icon.textContent = content.classList.contains('open') ? '▾' : '▸';
         }
+
+        // Reset to default state on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('season1').classList.add('open');
+            document.getElementById('season1-icon').textContent = '▾';
+            document.getElementById('season2').classList.remove('open');
+            document.getElementById('season2-icon').textContent = '▸';
+        });
     </script>
 </body>
 </html>

@@ -455,6 +455,9 @@ body {
     font-size: 12px;
     font-style: italic;
     margin: 0 0 10px 0;
+    width: 100%;
+    padding-right: 16px;
+    box-sizing: border-box;
 }
 
 .team-selector-bar {
@@ -481,6 +484,32 @@ body {
 .team-selector-bar select:hover,
 .team-selector-bar select:focus {
     border-color: #6dc5c7;
+}
+
+.team-overall-bar {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #272727, #2a2a2a);
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+.overall-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.overall-label {
+    color: #888;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.overall-value {
+    color: #6dc5c7;
+    font-size: 22px;
+    font-weight: 700;
 }
 .stats-table tbody td {
     padding: 10px 16px;
