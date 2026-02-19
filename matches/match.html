@@ -47,6 +47,12 @@
             return `<img src="../${logo}" alt="${abbr}" class="${cls || 'md-team-logo'}" onerror="this.style.display='none'">`;
         }
 
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/);
+            return m ? m[1] : null;
+        }
+
         async function loadMatch() {
             const container = document.getElementById('match-detail');
             if (!matchId) {
@@ -152,8 +158,21 @@
             }
             html += '</div>';
 
-            // --- Stats area (empty for now) ---
+            // --- Stats area ---
             html += '<div id="md-stats-area"></div>';
+
+            // --- YouTube embed ---
+            const streamUrl = match.streamLink;
+            if (streamUrl) {
+                const ytId = extractYouTubeId(streamUrl);
+                if (ytId) {
+                    html += '<div class="md-stream-section">';
+                    html += '<h2 class="md-stream-title">Match VOD</h2>';
+                    html += '<div class="md-stream-embed">';
+                    html += `<iframe src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+                    html += '</div></div>';
+                }
+            }
 
             container.innerHTML = html;
             renderStats('all');
@@ -249,7 +268,6 @@
             const mw = md.score1 > md.score2 ? 1 : 2;
             let html = '';
 
-            // Map score header
             html += '<div class="md-single-map-header">';
             html += `<span class="md-single-map-name">${md.name}</span>`;
             html += '<div class="md-single-map-score">';
@@ -261,21 +279,13 @@
             html += '</div>';
             html += '</div>';
 
-            // Round timeline
             if (md.rounds && md.rounds.length > 0) {
                 html += renderTimeline(md);
             }
 
-            // Per-map stats table
             if (md.stats && md.stats.length > 0) {
                 const winner = md.score1 > md.score2 ? 1 : 2;
                 html += renderMapStatsTable(md.stats, winner);
-            }
-
-            // Stream link (per-map or match-level fallback)
-            const link = md.streamLink || match.streamLink;
-            if (link) {
-                html += `<div class="md-stream-link"><a href="${link}" target="_blank" class="md-stream-btn">▶ Watch on YouTube</a></div>`;
             }
 
             area.innerHTML = html;
@@ -341,12 +351,9 @@
 
         function renderTimeline(md) {
             const rounds = md.rounds;
-            // Find the half split: first round where side flips for team1
-            // Rounds 1-12 are first half, 13+ second half (standard Valorant)
             const firstHalf = rounds.filter(r => r.round <= 12);
             const secondHalf = rounds.filter(r => r.round > 12);
 
-            // Count halftime scores
             let t1First = firstHalf.filter(r => r.winner === 1).length;
             let t2First = firstHalf.filter(r => r.winner === 2).length;
             let t1Second = secondHalf.filter(r => r.winner === 1).length;
@@ -361,7 +368,6 @@
 
             let html = '<div class="md-timeline">';
 
-            // OT label row
             if (hasOT) {
                 html += '<div class="md-timeline-row md-timeline-labels">';
                 html += '<span class="md-timeline-team"></span>';
@@ -376,9 +382,7 @@
                 html += '</div></div>';
             }
 
-            // Team 1 row
             html += renderTimelineRow(match.team1, 1, rounds, maxRound, hasOT, t1First, hasOT ? t1Reg : t1Second, t1OT);
-            // Team 2 row
             html += renderTimelineRow(match.team2, 2, rounds, maxRound, hasOT, t2First, hasOT ? t2Reg : t2Second, t2OT);
 
             html += '</div>';

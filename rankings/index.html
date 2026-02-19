@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../icons/PCMT Logo.png">
     <title>PCMT - Rankings</title>
+    <style>
+        .bracket-date {
+            font-size: 0.7em;
+            color: #888;
+            font-weight: 400;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <div id="header-bar">
@@ -96,6 +105,16 @@
                 cells.push(current.trim());
                 return cells;
             });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const parts = dateStr.split('-');
+            if (parts.length < 3) return dateStr;
+            const month = months[parseInt(parts[1], 10) - 1] || '';
+            const day = parseInt(parts[2], 10);
+            return `${month} ${day}`;
         }
 
         function loadRankings() {
@@ -312,7 +331,6 @@
 
             function logoFor(abbr) {
                 if (!abbr || !teams[abbr]) return '';
-                // Strip all ../ then use ../ (rankings/ -> pcmt root)
                 const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
                 return `<img src="../${logo}" alt="${abbr}" class="bracket-team-logo" onerror="this.style.display='none'">`;
             }
@@ -350,7 +368,8 @@
                 const t2 = m ? m.team2 : fb2;
                 const s1 = m && m.completed ? m.score1 : null;
                 const s2 = m && m.completed ? m.score2 : null;
-                return { label, match: m, team1: t1 || 'TBD', team2: t2 || 'TBD', score1: s1, score2: s2 };
+                const date = m ? m.date : null;
+                return { label, match: m, team1: t1 || 'TBD', team2: t2 || 'TBD', score1: s1, score2: s2, date };
             }
 
             const bracket = {
@@ -377,9 +396,11 @@
                 const hrefAttr = href ? ` href="${href}"` : '';
                 const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
 
+                const dateTag = s.date ? `<span class="bracket-date">${formatDate(s.date)}</span>` : '';
+
                 return `
                     <div class="bracket-match">
-                        <div class="bracket-label">${s.label}</div>
+                        <div class="bracket-label">${s.label}${dateTag}</div>
                         <${tag}${hrefAttr} class="${cls}">
                             <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
                                 <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>

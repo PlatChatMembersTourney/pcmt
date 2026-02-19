@@ -69,8 +69,23 @@
         let currentSeason = 2;
         let currentMainTab = 'player';
         let currentToxicStage = 'Overall';
-        const cache = {};
         const teamsLookup = {};
+
+        // --- sessionStorage cache ---
+        function cacheGet(key) {
+            try { return sessionStorage.getItem('pcmt-stats-' + key); } catch(e) { return null; }
+        }
+        function cacheSet(key, val) {
+            try { sessionStorage.setItem('pcmt-stats-' + key, val); } catch(e) {}
+        }
+        function cacheGetJSON(key) {
+            const raw = cacheGet(key);
+            if (!raw) return null;
+            try { return JSON.parse(raw); } catch(e) { return null; }
+        }
+        function cacheSetJSON(key, val) {
+            try { cacheSet(key, JSON.stringify(val)); } catch(e) {}
+        }
 
         async function loadTeamsLookup() {
             try {
@@ -420,11 +435,11 @@
             }
 
             let cacheKey;
-            if (season === 1) cacheKey = 's1-player-toxic';
+            if (season === 1) cacheKey = `s1-player-toxic`;
             else if (name === 'toxic') cacheKey = `s2-player-toxic-${currentToxicStage}`;
             else cacheKey = `s2-player-${name}`;
 
-            if (!cache[cacheKey]) {
+            if (!cacheGet(cacheKey)) {
                 area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
             }
 
@@ -439,8 +454,9 @@
             const cacheKey = `s${season}-player-toxic-${sheetName}`;
             const area = document.getElementById('player-table-area');
 
-            if (cache[cacheKey]) {
-                const { headers, rows } = cache[cacheKey];
+            const cached = cacheGetJSON(cacheKey);
+            if (cached) {
+                const { headers, rows } = cached;
                 const tableId = `toxic-player-s${season}-${sheetName}`;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
                 sortByRating(tableId, headers);
@@ -480,7 +496,7 @@
 
                 const tableId = `toxic-player-s${season}-${sheetName}`;
                 const merged = mergeTeamIntoPlayer(headers, formattedRows);
-                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
                 sortByRating(tableId, merged.headers);
                 highlightTable(tableId, 'player');
@@ -494,8 +510,9 @@
             const cacheKey = 's2-player-Angus';
             const area = document.getElementById('player-table-area');
 
-            if (cache[cacheKey]) {
-                const { headers, rows } = cache[cacheKey];
+            const cached = cacheGetJSON(cacheKey);
+            if (cached) {
+                const { headers, rows } = cached;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
                 sortByRating('angus-player-s2', headers);
                 highlightTable('angus-player-s2', 'player');
@@ -525,7 +542,7 @@
                 });
 
                 const merged = mergeTeamIntoPlayer(headers, rows);
-                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'angus-player-s2')}</div>`;
                 sortByRating('angus-player-s2', merged.headers);
                 highlightTable('angus-player-s2', 'player');
@@ -539,8 +556,9 @@
             const cacheKey = 's2-player-pi';
             const area = document.getElementById('player-table-area');
 
-            if (cache[cacheKey]) {
-                const { headers, rows } = cache[cacheKey];
+            const cached = cacheGetJSON(cacheKey);
+            if (cached) {
+                const { headers, rows } = cached;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
                 sortByRating('pi-player-s2', headers);
                 highlightTable('pi-player-s2', 'player');
@@ -572,7 +590,7 @@
                 const rows = dataRows.map(row => keepCols.map(i => row[i] ?? ''));
 
                 const merged = mergeTeamIntoPlayer(headers, rows);
-                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'pi-player-s2')}</div>`;
                 sortByRating('pi-player-s2', merged.headers);
                 highlightTable('pi-player-s2', 'player');
@@ -592,11 +610,7 @@
             if (season === 1) cacheKey = 's1-team-toxic';
             else cacheKey = `s2-team-${name}`;
 
-            // toxic team stats use workbook cache, not html cache
-            const toxicCached = (season === 1 || name === 'toxic') && toxicTeamWorkbooks[season];
-            const piCached = name === 'pi' && cache[cacheKey];
-
-            if (!toxicCached && !piCached) {
+            if (!cacheGet(cacheKey)) {
                 area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
             }
 
@@ -609,9 +623,13 @@
             const cacheKey = 's2-team-pi';
             const area = document.getElementById('team-table-area');
 
-            if (cache[cacheKey]) {
-                area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
-                highlightTable('piTeam-s2', 'team');
+            const cached = cacheGetJSON(cacheKey);
+            if (cached) {
+                const { headers, rows, html } = cached;
+                const tableId = 'piTeam-s2';
+                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
+                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
+                highlightTable(tableId, 'team');
                 return;
             }
 
@@ -671,7 +689,7 @@
                 html += '</tbody></table></div>';
 
                 sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
-                cache[cacheKey] = html;
+                cacheSetJSON(cacheKey, { headers, rows, html });
                 area.innerHTML = `<div class="stats-table-container">${html}</div>`;
                 highlightTable(tableId, 'team');
             } catch (err) {
@@ -684,9 +702,19 @@
 
         async function loadToxicTeamStats(season) {
             const area = document.getElementById('team-table-area');
+            const cacheKey = `s${season}-team-toxic`;
+
+            // Check if we have cached sheet data
+            const cachedSheets = cacheGetJSON(cacheKey);
 
             try {
-                if (!toxicTeamWorkbooks[season]) {
+                let sheetDataMap;
+                let teamNames;
+
+                if (cachedSheets) {
+                    sheetDataMap = cachedSheets.sheets;
+                    teamNames = cachedSheets.teamNames;
+                } else {
                     const path = `../data/s${season}/Team Map Stats.xlsx`;
                     const response = await fetch(path);
                     if (!response.ok) {
@@ -694,11 +722,19 @@
                         return;
                     }
                     const arrayBuffer = await response.arrayBuffer();
-                    toxicTeamWorkbooks[season] = XLSX.read(arrayBuffer, { type: 'array' });
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                    teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
+                    sheetDataMap = {};
+                    for (const name of teamNames) {
+                        const ws = workbook.Sheets[name];
+                        sheetDataMap[name] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                    }
+                    cacheSetJSON(cacheKey, { teamNames, sheets: sheetDataMap });
                 }
 
-                const workbook = toxicTeamWorkbooks[season];
-                const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
+                // Store in memory for renderToxicTeamMap
+                toxicTeamWorkbooks[season] = sheetDataMap;
 
                 let html = '<div class="stats-table-container">';
                 html += '<div class="stats-sub-tabs">';
@@ -724,10 +760,10 @@
         }
 
         function renderToxicTeamMap(season, teamName) {
-            const workbook = toxicTeamWorkbooks[season];
-            if (!workbook) return;
-            const ws = workbook.Sheets[teamName];
-            const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            const sheetDataMap = toxicTeamWorkbooks[season];
+            if (!sheetDataMap) return;
+            const data = sheetDataMap[teamName];
+            if (!data) return;
 
             // detect format: S1 has no Pick column (9 cols per map), S2 has Pick (10 cols)
             const headerRow = data[1] || [];
@@ -760,12 +796,9 @@
                 // left map
                 if (nameRow[0]) {
                     const d = dataRow.slice(0, leftCols);
-                    const row = [nameRow[0]];
-                    d.forEach((v, i) => row.push(i >= leftCols - 2 ? fmtPct(v) : fmtNum(v)));
-                    // fix: Win% and Round% are also percentages
                     const rebuilt = [nameRow[0]];
                     for (let i = 0; i < d.length; i++) {
-                        const hdr = mapHeaders[i + 1]; // +1 because Map is first
+                        const hdr = mapHeaders[i + 1];
                         rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
                     }
                     mapRows.push(rebuilt);
