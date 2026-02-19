@@ -134,24 +134,18 @@
             const rosterUpper = team.players.map(p => p.toUpperCase());
 
             if (teamCol !== -1) {
-                const uniqueVals = [...new Set(rows.map(r => String(r[teamCol] || '').trim()))].slice(0, 15);
                 const byTeam = rows.filter(r => {
                     const val = String(r[teamCol] || '').trim().toUpperCase();
                     return val === team.abbr.toUpperCase() || val === team.name.toUpperCase();
                 });
                 if (byTeam.length > 0) return byTeam;
-                alert('DEBUG filterTeamRows: team col found at index ' + teamCol + ', but no match.\nLooking for: "' + team.abbr + '" or "' + team.name + '"\nValues in sheet: ' + uniqueVals.join(', '));
-            } else {
-                alert('DEBUG filterTeamRows: no "Team" column found.\nHeaders: ' + headers.join(', '));
             }
 
-            // fallback: match player names against roster
             for (let col = 0; col < headers.length; col++) {
                 if (col === teamCol) continue;
                 const byCol = rows.filter(r => rosterUpper.includes(String(r[col] || '').trim().toUpperCase()));
                 if (byCol.length >= 2) return byCol;
             }
-            alert('DEBUG filterTeamRows: roster fallback also failed.\nRoster: ' + rosterUpper.join(', ') + '\nSample row values: ' + (rows[0] || []).join(', '));
             return [];
         }
 
@@ -164,7 +158,7 @@
             try {
                 if (source === 'toxic') {
                     const response = await fetch(`../../data/s${season}/Player Stats.xlsx`);
-                    if (!response.ok) { alert('DEBUG: toxic fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    if (!response.ok) return { headers: [], rows: [] };
                     const ab = await response.arrayBuffer();
                     const wb = XLSX.read(ab, { type: 'array' });
                     const sheet = wb.Sheets['Overall'];
@@ -175,23 +169,20 @@
                     const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
                     const gid = '821526300';
                     const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
-                    if (!response.ok) { alert('DEBUG: Angus fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    if (!response.ok) return { headers: [], rows: [] };
                     const lines = parseCSV(await response.text());
                     headers = lines[0];
                     rows = lines.slice(1).filter(r => r[0] || r[1]);
-                    alert('DEBUG Angus loaded.\nHeaders: ' + headers.join(', ') + '\nRows: ' + rows.length);
                 } else if (source === 'pi') {
                     const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
                     const gid = '1023990137';
                     const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
-                    if (!response.ok) { alert('DEBUG: pi fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    if (!response.ok) return { headers: [], rows: [] };
                     const lines = parseCSV(await response.text());
                     headers = lines[1];
                     rows = lines.slice(2).filter(r => r[1] || r[2]);
-                    alert('DEBUG pi loaded.\nHeaders: ' + headers.join(', ') + '\nRows: ' + rows.length);
                 }
             } catch (err) {
-                alert('DEBUG getDataset ERROR for ' + source + ': ' + err.message);
                 return { headers: [], rows: [] };
             }
 
@@ -210,11 +201,7 @@
 
                 const ratingCol = findCol(headers, ['r1.0', 'r', 'rating', 'rrating']);
                 const playerCol = findCol(headers, ['player', 'name', 'ign']);
-                if (ratingCol === -1) {
-                    alert('DEBUG loadRatingStats: no rating column.\nHeaders: ' + headers.join(', '));
-                    area.innerHTML = '<p class="stats-error">Data not found.</p>';
-                    return;
-                }
+                if (ratingCol === -1) { area.innerHTML = '<p class="stats-error">Data not found.</p>'; return; }
 
                 const nameCol = playerCol !== -1 ? playerCol : 0;
                 const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
@@ -228,34 +215,29 @@
                 html += '</tbody></table>';
                 area.innerHTML = html;
             } catch (err) {
-                alert('DEBUG loadRatingStats ERROR: ' + err.message);
                 area.innerHTML = '<p class="stats-error">Failed to load stats.</p>';
             }
         }
 
-        function parseCSV(text) {
-            const rows = [];
-            let current = [];
-            let cell = '';
-            let inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                const c = text[i];
-                if (inQuotes) {
-                    if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
-                    else if (c === '"') inQuotes = false;
-                    else cell += c;
-                } else {
-                    if (c === '"') inQuotes = true;
-                    else if (c === ',') { current.push(cell.trim()); cell = ''; }
-                    else if (c === '\n' || (c === '\r' && text[i + 1] === '\n')) {
-                        current.push(cell.trim()); cell = '';
-                        rows.push(current); current = [];
-                        if (c === '\r') i++;
-                    } else cell += c;
+        function parseCSV(csvText) {
+            return csvText.split('\n').map(line => {
+                const cells = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        cells.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
                 }
-            }
-            if (cell || current.length) { current.push(cell.trim()); rows.push(current); }
-            return rows;
+                cells.push(current.trim());
+                return cells;
+            }).filter(row => row.some(cell => cell !== ''));
         }
 
         // --- map stats ---
