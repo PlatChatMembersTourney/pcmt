@@ -185,6 +185,24 @@
             return html;
         }
 
+        function mergeTeamIntoPlayer(headers, rows) {
+            const teamIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'team');
+            const playerIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'player');
+            if (teamIdx === -1 || playerIdx === -1) return { headers, rows };
+
+            const newRows = rows.map(r => {
+                const newRow = [...r];
+                const name = newRow[playerIdx] || '';
+                const team = newRow[teamIdx] || '';
+                newRow[playerIdx] = `${name}<span class="player-team-tag">${team}</span>`;
+                return newRow;
+            });
+
+            const newHeaders = headers.filter((_, i) => i !== teamIdx);
+            const finalRows = newRows.map(r => r.filter((_, i) => i !== teamIdx));
+            return { headers: newHeaders, rows: finalRows };
+        }
+
         // 1st click = desc, 2nd = asc, 3rd = reset
         function sortTable(tableId, colIndex) {
             const state = sortState[tableId];
@@ -243,7 +261,7 @@
 
         // auto-sort a table by rating column (desc)
         function sortByRating(tableId, headers) {
-            const ratingNames = ['R1.0', 'R', 'Rating'];
+            const ratingNames = ['R1.0', 'R', 'Rating', 'rRating'];
             const idx = headers.findIndex(h => ratingNames.includes((h || '').trim()));
             if (idx !== -1) sortTable(tableId, idx);
         }
@@ -434,9 +452,10 @@
                 });
 
                 const tableId = `toxic-player-s${season}-${sheetName}`;
-                cache[cacheKey] = { headers, rows: formattedRows };
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, formattedRows, tableId)}</div>`;
-                sortByRating(tableId, headers);
+                const merged = mergeTeamIntoPlayer(headers, formattedRows);
+                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
+                sortByRating(tableId, merged.headers);
                 highlightTable(tableId, 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
@@ -478,9 +497,10 @@
                     rows.forEach(r => r.splice(idx, 1));
                 });
 
-                cache[cacheKey] = { headers, rows };
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
-                sortByRating('angus-player-s2', headers);
+                const merged = mergeTeamIntoPlayer(headers, rows);
+                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'angus-player-s2')}</div>`;
+                sortByRating('angus-player-s2', merged.headers);
                 highlightTable('angus-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
@@ -524,9 +544,10 @@
                 const headers = keepCols.map(i => allHeaders[i]);
                 const rows = dataRows.map(row => keepCols.map(i => row[i] ?? ''));
 
-                cache[cacheKey] = { headers, rows };
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
-                sortByRating('pi-player-s2', headers);
+                const merged = mergeTeamIntoPlayer(headers, rows);
+                cache[cacheKey] = { headers: merged.headers, rows: merged.rows };
+                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'pi-player-s2')}</div>`;
+                sortByRating('pi-player-s2', merged.headers);
                 highlightTable('pi-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
