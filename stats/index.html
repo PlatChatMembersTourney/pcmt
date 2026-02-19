@@ -181,7 +181,7 @@
                 html += '</tr>';
             });
             html += '</tbody></table>';
-            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
             return html;
         }
 
@@ -237,6 +237,8 @@
                     arrow.textContent = '';
                 }
             });
+
+            if (state.highlightMode) highlightTable(tableId, state.highlightMode);
         }
 
         // auto-sort a table by rating column (desc)
@@ -244,6 +246,69 @@
             const ratingNames = ['R1.0', 'R', 'Rating'];
             const idx = headers.findIndex(h => ratingNames.includes((h || '').trim()));
             if (idx !== -1) sortTable(tableId, idx);
+        }
+
+        // highlight best (green) and optionally worst (red) in each numeric column
+        const lowerIsBetter = ['d', 'dpr', 'fdpr', 'fd', 'ban'];
+
+        function highlightTable(tableId, mode) {
+            const table = document.getElementById(`table-${tableId}`);
+            if (!table) return;
+            const state = sortState[tableId];
+            if (!state) return;
+            state.highlightMode = mode;
+
+            const headers = state.headers;
+            const tbody = table.querySelector('tbody');
+            const trs = tbody.querySelectorAll('tr');
+            if (trs.length < 2) return;
+
+            const skipCols = new Set();
+            headers.forEach((h, i) => {
+                const lower = (h || '').trim().toLowerCase();
+                if (['#', 'player', 'team', 'map', 'mp'].includes(lower)) skipCols.add(i);
+            });
+
+            for (let col = 0; col < headers.length; col++) {
+                if (skipCols.has(col)) continue;
+
+                const hLower = (headers[col] || '').trim().toLowerCase();
+                const invert = lowerIsBetter.includes(hLower);
+
+                let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
+
+                trs.forEach((tr, rowIdx) => {
+                    const td = tr.children[col];
+                    if (!td) return;
+                    let raw = td.textContent.trim();
+                    if (raw === '' || raw === '-') return;
+                    if (raw.endsWith('%')) raw = raw.slice(0, -1);
+                    const num = parseFloat(raw);
+                    if (isNaN(num)) return;
+
+                    if (bestVal === null) {
+                        bestVal = num; worstVal = num;
+                        bestIdx = rowIdx; worstIdx = rowIdx;
+                    } else {
+                        if (invert) {
+                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        } else {
+                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        }
+                    }
+                });
+
+                if (bestIdx !== -1 && bestVal !== worstVal) {
+                    const bestTd = trs[bestIdx].children[col];
+                    if (bestTd) bestTd.classList.add('stat-best');
+                }
+                if (mode === 'team' && worstIdx !== -1 && bestVal !== worstVal) {
+                    const worstTd = trs[worstIdx].children[col];
+                    if (worstTd) worstTd.classList.add('stat-worst');
+                }
+            }
         }
 
         // --- helpers ---
@@ -334,6 +399,7 @@
                 const tableId = `toxic-player-s${season}-${sheetName}`;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
                 sortByRating(tableId, headers);
+                highlightTable(tableId, 'player');
                 return;
             }
 
@@ -371,6 +437,7 @@
                 cache[cacheKey] = { headers, rows: formattedRows };
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, formattedRows, tableId)}</div>`;
                 sortByRating(tableId, headers);
+                highlightTable(tableId, 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
                 console.error('toxic player stats:', err);
@@ -385,6 +452,7 @@
                 const { headers, rows } = cache[cacheKey];
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
                 sortByRating('angus-player-s2', headers);
+                highlightTable('angus-player-s2', 'player');
                 return;
             }
 
@@ -413,6 +481,7 @@
                 cache[cacheKey] = { headers, rows };
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
                 sortByRating('angus-player-s2', headers);
+                highlightTable('angus-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
                 console.error('angus stats:', err);
@@ -427,6 +496,7 @@
                 const { headers, rows } = cache[cacheKey];
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
                 sortByRating('pi-player-s2', headers);
+                highlightTable('pi-player-s2', 'player');
                 return;
             }
 
@@ -457,6 +527,7 @@
                 cache[cacheKey] = { headers, rows };
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
                 sortByRating('pi-player-s2', headers);
+                highlightTable('pi-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
                 console.error('pi stats:', err);
@@ -492,6 +563,7 @@
 
             if (cache[cacheKey]) {
                 area.innerHTML = `<div class="stats-table-container">${cache[cacheKey]}</div>`;
+                highlightTable('piTeam-s2', 'team');
                 return;
             }
 
@@ -543,9 +615,10 @@
                 });
                 html += '</tbody></table></div>';
 
-                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
                 cache[cacheKey] = html;
                 area.innerHTML = `<div class="stats-table-container">${html}</div>`;
+                highlightTable(tableId, 'team');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s team stats.</p></div>';
                 console.error('pi team stats:', err);
@@ -661,6 +734,7 @@
             }
             html += renderTable(mapHeaders, filteredRows, `toxicTeamMap-s${season}`);
             container.innerHTML = html;
+            highlightTable(`toxicTeamMap-s${season}`, 'team');
         }
 
         switchSeason(2);

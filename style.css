@@ -521,6 +521,14 @@ body {
 .stats-table tbody tr:last-child td {
     border-bottom: none;
 }
+.stat-best {
+    color: #5cb85c;
+    font-weight: 600;
+}
+.stat-worst {
+    color: #cc4444;
+    font-weight: 600;
+}
 
 /* team selector dropdown (toxic map stats) */
 
@@ -791,11 +799,19 @@ body {
     background: #222;
     border: 1px solid #333;
     border-radius: 8px;
-    padding: 30px;
-    text-align: center;
+    overflow: hidden;
+}
+.td-matches-box .stats-sub-tabs {
+    margin: 0;
+    border-bottom: 1px solid #333;
+}
+.td-matches-box .stats-sub-btn {
+    padding: 10px 20px;
 }
 .td-no-matches {
     color: #666;
     font-style: italic;
     margin: 0;
+    padding: 30px;
+    text-align: center;
 }
