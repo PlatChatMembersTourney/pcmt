@@ -1784,3 +1784,9 @@ a.md-team-info:hover .md-team-name {
     font-weight: 400;
     margin-left: 6px;
 }
+
+#td-matches-area {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 8px;
+}
