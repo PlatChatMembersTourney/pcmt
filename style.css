@@ -774,3 +774,28 @@ body {
     color: white;
     background: rgba(109, 197, 199, 0.05);
 }
+.td-columns {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+.td-col-left {
+    flex: 1;
+    min-width: 0;
+}
+.td-col-right {
+    flex: 1;
+    min-width: 0;
+}
+.td-matches-box {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+}
+.td-no-matches {
+    color: #666;
+    font-style: italic;
+    margin: 0;
+}

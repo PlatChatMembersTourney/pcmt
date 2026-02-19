@@ -60,6 +60,10 @@
                 currentTeam = team;
                 document.title = `PCMT - ${team.name}`;
 
+                const sortedPlayers = [...team.players].sort((a, b) =>
+                    a.toLowerCase().localeCompare(b.toLowerCase())
+                );
+
                 let html = '';
 
                 html += '<div class="td-header">';
@@ -72,24 +76,36 @@
                 html += '<div class="td-section">';
                 html += '<h2 class="td-subtitle">Roster</h2>';
                 html += '<div class="td-roster">';
-                team.players.forEach(p => {
+                sortedPlayers.forEach(p => {
                     html += `<div class="td-roster-player">${p}</div>`;
                 });
                 html += '</div></div>';
 
-                html += '<div class="td-section">';
+                html += '<div class="td-columns">';
+
+                html += '<div class="td-col-left">';
                 html += '<h2 class="td-subtitle">Player Stats</h2>';
                 html += '<div class="td-stats-box">';
                 if (season === 2) {
                     html += '<div class="stats-sub-tabs" id="td-stats-tabs">';
-                    html += '<button class="stats-sub-btn active" onclick="switchStatSource(\'toxic\')">toxic</button>';
-                    html += '<button class="stats-sub-btn" onclick="switchStatSource(\'Angus\')">Angus</button>';
+                    html += '<button class="stats-sub-btn active" onclick="switchStatSource(\'Angus\')">Angus</button>';
                     html += '<button class="stats-sub-btn" onclick="switchStatSource(\'pi\')">pi</button>';
+                    html += '<button class="stats-sub-btn" onclick="switchStatSource(\'toxic\')">toxic</button>';
                     html += '</div>';
                 }
                 html += '<div id="td-stats-area"><div class="stats-loading">Loading stats...</div></div>';
                 html += `<a href="../../stats/" class="td-see-all">See all stats →</a>`;
-                html += '</div></div>';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="td-col-right">';
+                html += '<h2 class="td-subtitle">Upcoming Matches</h2>';
+                html += '<div class="td-matches-box">';
+                html += '<p class="td-no-matches">No upcoming matches</p>';
+                html += '</div>';
+                html += '</div>';
+
+                html += '</div>';
 
                 html += '<div class="td-section">';
                 html += '<h2 class="td-subtitle">Map Stats</h2>';
@@ -98,7 +114,7 @@
 
                 container.innerHTML = html;
 
-                loadRatingStats(team, 'toxic');
+                loadRatingStats(team, season === 2 ? 'Angus' : 'toxic');
                 loadMapStats(team);
             } catch (err) {
                 container.innerHTML = '<p class="stats-error">Failed to load team data.</p>';
@@ -108,9 +124,15 @@
 
         function switchStatSource(source) {
             const buttons = document.querySelectorAll('#td-stats-tabs .stats-sub-btn');
-            const sources = ['toxic', 'Angus', 'pi'];
+            const sources = ['Angus', 'pi', 'toxic'];
             buttons.forEach((btn, i) => btn.classList.toggle('active', sources[i] === source));
             if (currentTeam) loadRatingStats(currentTeam, source);
+        }
+
+        function matchesTeam(cellValue, team) {
+            if (!cellValue) return false;
+            const val = String(cellValue).trim().toUpperCase();
+            return val === team.abbr.toUpperCase() || val === team.name.toUpperCase();
         }
 
         async function loadRatingStats(team, source) {
@@ -126,7 +148,7 @@
                     const sheet = wb.Sheets['Overall'];
                     const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                     const rawHeaders = data[0];
-                    const playerRows = data.slice(1).filter(r => r[0] && r[1] === team.abbr);
+                    const playerRows = data.slice(1).filter(r => r[0] && matchesTeam(r[1], team));
 
                     if (playerRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
 
@@ -152,17 +174,19 @@
                     const headers = lines[0];
                     const rows = lines.slice(1).filter(r => r[0] || r[1]);
 
-                    const teamCol = headers.findIndex(h => h.trim().toLowerCase() === 'team');
-                    const playerCol = headers.findIndex(h => h.trim().toLowerCase() === 'player');
-                    const ratingCol = headers.findIndex(h => h.trim() === 'R' || h.trim() === 'R1.0' || h.trim().toLowerCase() === 'rating');
+                    const teamCol = findCol(headers, ['team']);
+                    const playerCol = findCol(headers, ['player']);
+                    const ratingCol = findCol(headers, ['r', 'r1.0', 'rating']);
 
-                    const teamRows = rows.filter(r => r[teamCol] && r[teamCol].trim() === team.abbr);
+                    if (teamCol === -1 || ratingCol === -1) { area.innerHTML = '<p class="stats-error">Column not found.</p>'; return; }
+
+                    const teamRows = rows.filter(r => matchesTeam(r[teamCol], team));
                     if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
 
                     let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
                     const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
                     sorted.forEach(row => {
-                        const name = row[playerCol] || row[0];
+                        const name = playerCol !== -1 ? row[playerCol] : row[0];
                         const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
                         html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
                     });
@@ -180,17 +204,19 @@
                     const headers = lines[1];
                     const rows = lines.slice(2).filter(r => r[1] || r[2]);
 
-                    const teamCol = headers.findIndex(h => h.trim().toLowerCase() === 'team');
-                    const playerCol = headers.findIndex(h => h.trim().toLowerCase() === 'player');
-                    const ratingCol = headers.findIndex(h => h.trim() === 'R' || h.trim() === 'R1.0');
+                    const teamCol = findCol(headers, ['team']);
+                    const playerCol = findCol(headers, ['player']);
+                    const ratingCol = findCol(headers, ['r', 'r1.0']);
 
-                    const teamRows = rows.filter(r => r[teamCol] && r[teamCol].trim() === team.abbr);
+                    if (teamCol === -1 || ratingCol === -1) { area.innerHTML = '<p class="stats-error">Column not found.</p>'; return; }
+
+                    const teamRows = rows.filter(r => matchesTeam(r[teamCol], team));
                     if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
 
                     let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
                     const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
                     sorted.forEach(row => {
-                        const name = row[playerCol] || row[2];
+                        const name = playerCol !== -1 ? row[playerCol] : row[2];
                         const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
                         html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
                     });
@@ -201,6 +227,14 @@
                 area.innerHTML = '<p class="stats-error">Failed to load stats.</p>';
                 console.error(err);
             }
+        }
+
+        function findCol(headers, names) {
+            return headers.findIndex(h => {
+                if (!h) return false;
+                const lower = h.trim().toLowerCase();
+                return names.some(n => lower === n);
+            });
         }
 
         function parseCSV(text) {
