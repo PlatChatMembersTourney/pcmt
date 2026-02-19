@@ -88,7 +88,7 @@
                 html += '<button class="stats-sub-btn active" onclick="switchMatchTab(\'upcoming\')">Upcoming</button>';
                 html += '<button class="stats-sub-btn" onclick="switchMatchTab(\'completed\')">Completed</button>';
                 html += '</div>';
-                html += '<div id="td-matches-area"><p class="td-no-matches">No upcoming matches</p></div>';
+                html += '<div id="td-matches-area"><div class="stats-loading">Loading matches...</div></div>';
                 html += '</div></div>';
                 html += '</div>';
 
@@ -98,6 +98,7 @@
                 container.innerHTML = html;
                 loadRatingStats(team, season === 2 ? 'Angus' : 'toxic');
                 loadMapStats(team);
+                loadTeamMatches();
             } catch (err) {
                 container.innerHTML = '<p class="stats-error">Failed to load team data.</p>';
             }
@@ -110,17 +111,93 @@
             if (currentTeam) loadRatingStats(currentTeam, source);
         }
 
+        // ========== MATCH LOADING ==========
+
+        let matchData = null;
+        let currentMatchTab = 'upcoming';
+
         function switchMatchTab(tab) {
+            currentMatchTab = tab;
             const buttons = document.querySelectorAll('#td-match-tabs .stats-sub-btn');
             const tabs = ['upcoming', 'completed'];
             buttons.forEach((btn, i) => btn.classList.toggle('active', tabs[i] === tab));
-            const area = document.getElementById('td-matches-area');
-            area.innerHTML = tab === 'upcoming'
-                ? '<p class="td-no-matches">No upcoming matches</p>'
-                : '<p class="td-no-matches">No completed matches</p>';
+            renderTeamMatches();
         }
 
-        // --- data loading ---
+        async function loadTeamMatches() {
+            try {
+                const res = await fetch(`../../data/s${season}/matches/matches.json`);
+                if (!res.ok) {
+                    document.getElementById('td-matches-area').innerHTML = '<p class="td-no-matches">No upcoming matches</p>';
+                    return;
+                }
+                matchData = await res.json();
+                renderTeamMatches();
+            } catch (err) {
+                document.getElementById('td-matches-area').innerHTML = '<p class="td-no-matches">No upcoming matches</p>';
+            }
+        }
+
+        function renderTeamMatches() {
+            const area = document.getElementById('td-matches-area');
+            if (!area) return;
+            if (!matchData || !currentTeam) {
+                area.innerHTML = '<p class="td-no-matches">No match data available</p>';
+                return;
+            }
+
+            const teamMatches = matchData.filter(m =>
+                m.team1 === currentTeam.abbr || m.team2 === currentTeam.abbr ||
+                m.team1Name === currentTeam.name || m.team2Name === currentTeam.name
+            );
+
+            const filtered = currentMatchTab === 'completed'
+                ? teamMatches.filter(m => m.completed)
+                : teamMatches.filter(m => !m.completed);
+
+            if (filtered.length === 0) {
+                area.innerHTML = `<p class="td-no-matches">No ${currentMatchTab} matches</p>`;
+                return;
+            }
+
+            const sorted = [...filtered].sort((a, b) => {
+                const da = new Date(a.date || 0), db = new Date(b.date || 0);
+                return currentMatchTab === 'completed' ? db - da : da - db;
+            });
+
+            let html = '';
+            sorted.forEach(match => {
+                const isTeam1 = match.team1 === currentTeam.abbr || match.team1Name === currentTeam.name;
+                const oppName = isTeam1 ? match.team2Name : match.team1Name;
+                const myScore = isTeam1 ? match.score1 : match.score2;
+                const oppScore = isTeam1 ? match.score2 : match.score1;
+                const won = myScore > oppScore;
+
+                html += `<a class="td-match-card" href="../../matches/match.html?id=${match.id}&season=${season}">`;
+                html += `<div class="td-match-meta">${match.stage || ''}${match.date ? ' \u00b7 ' + match.date : ''}</div>`;
+                html += '<div class="td-match-result">';
+                html += `<span class="td-match-vs">vs ${oppName}</span>`;
+                if (match.completed) {
+                    html += `<span class="td-match-score ${won ? 'td-win' : 'td-loss'}">${won ? 'W' : 'L'} ${myScore}-${oppScore}</span>`;
+                }
+                html += '</div>';
+
+                if (match.maps && match.maps.length > 0) {
+                    html += '<div class="td-match-maps">';
+                    match.maps.forEach(map => {
+                        const ms1 = isTeam1 ? map.score1 : map.score2;
+                        const ms2 = isTeam1 ? map.score2 : map.score1;
+                        html += `<span class="match-map-tag">${map.name} <span class="match-map-score">${ms1}-${ms2}</span></span>`;
+                    });
+                    html += '</div>';
+                }
+                html += '</a>';
+            });
+
+            area.innerHTML = html;
+        }
+
+        // ========== DATA LOADING ==========
 
         function findCol(headers, names) {
             return headers.findIndex(h => {

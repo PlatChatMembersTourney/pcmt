@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../icons/PCMT Logo.png">
+    <title>PCMT - Match</title>
+</head>
+<body>
+    <div id="header-bar">
+        <div class="header-inner">
+        <div class="header-content" id="link-title">
+            <a href="../">
+                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            </a>
+            <p>Plat Chat Members Tournament</p>
+        </div>
+        <nav class="header-content">
+            <a class="header-link" href="../">Home</a>
+            <a class="header-link active" href="../matches/">Matches</a>
+            <a class="header-link" href="../rankings/">Rankings</a>
+            <a class="header-link" href="../teams/">Teams</a>
+            <a class="header-link" href="../stats/">Stats</a>
+            <div class="header-buffer"></div>
+        </nav>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div id="match-detail">
+            <div class="stats-loading">Loading match...</div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const matchId = params.get('id');
+        const season = parseInt(params.get('season')) || 2;
+        let match = null;
+        let currentMapTab = 'all';
+
+        async function loadMatch() {
+            const container = document.getElementById('match-detail');
+            if (!matchId) {
+                container.innerHTML = '<p class="stats-error">No match specified.</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`../data/s${season}/matches/matches.json`);
+                if (!res.ok) throw new Error();
+                const matches = await res.json();
+                match = matches.find(m => m.id === matchId);
+
+                if (!match) {
+                    container.innerHTML = '<p class="stats-error">Match not found.</p>';
+                    return;
+                }
+
+                document.title = `PCMT - ${match.team1} vs ${match.team2}`;
+                renderMatch(container);
+            } catch (err) {
+                container.innerHTML = '<p class="stats-error">Failed to load match.</p>';
+            }
+        }
+
+        function renderMatch(container) {
+            const winner = match.score1 > match.score2 ? 1 : match.score2 > match.score1 ? 2 : 0;
+
+            let html = '';
+
+            // --- Header ---
+            html += '<div class="md-header">';
+            html += `<div class="md-stage-tag">${match.stage || 'Match'}${match.date ? ' · ' + match.date : ''}</div>`;
+            html += '<div class="md-teams-row">';
+
+            html += `<div class="md-team md-team-left ${winner === 1 ? 'md-winner' : ''}">`;
+            html += `<div class="md-team-info">`;
+            html += `<span class="md-team-name">${match.team1Name}</span>`;
+            html += `<span class="md-team-abbr">${match.team1}</span>`;
+            html += `</div></div>`;
+
+            html += '<div class="md-score-box">';
+            html += `<span class="md-score ${winner === 1 ? 'md-score-win' : 'md-score-loss'}">${match.score1}</span>`;
+            html += '<span class="md-score-sep">:</span>';
+            html += `<span class="md-score ${winner === 2 ? 'md-score-win' : 'md-score-loss'}">${match.score2}</span>`;
+            html += '</div>';
+
+            html += `<div class="md-team md-team-right ${winner === 2 ? 'md-winner' : ''}">`;
+            html += `<div class="md-team-info">`;
+            html += `<span class="md-team-name">${match.team2Name}</span>`;
+            html += `<span class="md-team-abbr">${match.team2}</span>`;
+            html += `</div></div>`;
+
+            html += '</div>';
+
+            // Map score pills
+            if (match.maps && match.maps.length > 0) {
+                html += '<div class="md-map-scores">';
+                match.maps.forEach(map => {
+                    const mw = map.score1 > map.score2 ? 1 : 2;
+                    html += '<div class="md-map-pill">';
+                    html += `<span class="md-map-pill-name">${map.name}</span>`;
+                    html += `<span class="md-map-pill-score">`;
+                    html += `<span class="${mw === 1 ? 'md-pill-win' : 'md-pill-loss'}">${map.score1}</span>`;
+                    html += `<span class="md-pill-sep">-</span>`;
+                    html += `<span class="${mw === 2 ? 'md-pill-win' : 'md-pill-loss'}">${map.score2}</span>`;
+                    html += `</span>`;
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+
+            // --- Veto ---
+            if (match.veto) {
+                html += '<div class="md-veto">';
+                const parts = match.veto.split(',').map(s => s.trim());
+                parts.forEach(part => {
+                    let cls = 'md-veto-item';
+                    if (part.includes('bans')) cls += ' md-veto-ban';
+                    else if (part.includes('picks')) cls += ' md-veto-pick';
+                    else cls += ' md-veto-decider';
+                    html += `<span class="${cls}">${part}</span>`;
+                });
+                html += '</div>';
+            }
+
+            // --- Map tabs ---
+            html += '<div class="md-map-tabs" id="md-map-tabs">';
+            html += '<button class="md-map-tab active" onclick="switchMap(\'all\')">All Maps</button>';
+            if (match.mapDetails) {
+                match.mapDetails.forEach((md, i) => {
+                    html += `<button class="md-map-tab" onclick="switchMap(${i})">${md.name}</button>`;
+                });
+            }
+            html += '</div>';
+
+            // --- Stats area (empty for now) ---
+            html += '<div id="md-stats-area"></div>';
+
+            container.innerHTML = html;
+        }
+
+        function switchMap(mapIndex) {
+            currentMapTab = mapIndex;
+            const btns = document.querySelectorAll('#md-map-tabs .md-map-tab');
+            btns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === 0 ? mapIndex === 'all' : i - 1 === mapIndex);
+            });
+            // TODO: render stats for selected tab
+        }
+
+        loadMatch();
+    </script>
+</body>
+</html>

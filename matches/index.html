@@ -90,7 +90,7 @@
             compEl.innerHTML = '<div class="matches-loading">Loading matches...</div>';
 
             try {
-                const res = await fetch(`../data/s${season}/matches.json`);
+                const res = await fetch(`../data/s${season}/matches/matches.json`);
                 if (!res.ok) {
                     compEl.innerHTML = '<p class="matches-empty">No match data available</p>';
                     return;
@@ -144,7 +144,7 @@
                 const name2 = getTeamName(match.team2, season);
                 const winner = match.score1 > match.score2 ? 1 : match.score2 > match.score1 ? 2 : 0;
 
-                html += '<div class="match-card">';
+                html += `<a class="match-card" href="../matches/match.html?id=${match.id}&season=${season}">`;
                 html += `<div class="match-meta">${match.stage || ''}${match.date ? ' · ' + match.date : ''}</div>`;
                 html += '<div class="match-teams">';
 
@@ -180,7 +180,7 @@
                     html += '</div>';
                 }
 
-                html += '</div>';
+                html += '</a>';
             });
 
             container.innerHTML = html;
