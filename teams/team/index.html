@@ -38,7 +38,15 @@
         const teamAbbr = params.get('team');
         const season = parseInt(params.get('season')) || 2;
         let currentTeam = null;
+        let allTeams = {};  // CHANGE 1: added
         const cache = {};
+
+        // CHANGE 1b: added helper
+        function oppLogoFor(abbr) {
+            if (!abbr || !allTeams[abbr]) return '';
+            const logo = allTeams[abbr].logo.replace(/^(\.\.\/)+/, '');
+            return `<img src="../../${logo}" alt="${abbr}" class="td-opp-logo" onerror="this.style.display='none'">`;
+        }
 
         async function loadTeam() {
             const container = document.getElementById('team-detail');
@@ -47,6 +55,7 @@
             try {
                 const res = await fetch(`../../data/s${season}/teams.json`);
                 const teams = await res.json();
+                allTeams = teams;  // CHANGE 2: added
                 const team = teams[teamAbbr];
                 if (!team) { container.innerHTML = `<p class="stats-error">Team "${teamAbbr}" not found.</p>`; return; }
 
@@ -165,9 +174,11 @@
                 return currentMatchTab === 'completed' ? db - da : da - db;
             });
 
+            // CHANGE 3: new card rendering with opponent logo + centered score
             let html = '';
             sorted.forEach(match => {
                 const isTeam1 = match.team1 === currentTeam.abbr || match.team1Name === currentTeam.name;
+                const oppAbbr = isTeam1 ? match.team2 : match.team1;
                 const oppName = isTeam1 ? match.team2Name : match.team1Name;
                 const myScore = isTeam1 ? match.score1 : match.score2;
                 const oppScore = isTeam1 ? match.score2 : match.score1;
@@ -175,22 +186,55 @@
 
                 html += `<a class="td-match-card" href="../../matches/match.html?id=${match.id}&season=${season}">`;
                 html += `<div class="td-match-meta">${match.stage || ''}${match.date ? ' \u00b7 ' + match.date : ''}</div>`;
-                html += '<div class="td-match-result">';
-                html += `<span class="td-match-vs">vs ${oppName}</span>`;
-                if (match.completed) {
-                    html += `<span class="td-match-score ${won ? 'td-win' : 'td-loss'}">${won ? 'W' : 'L'} ${myScore}-${oppScore}</span>`;
-                }
-                html += '</div>';
 
-                if (match.maps && match.maps.length > 0) {
-                    html += '<div class="td-match-maps">';
-                    match.maps.forEach(map => {
-                        const ms1 = isTeam1 ? map.score1 : map.score2;
-                        const ms2 = isTeam1 ? map.score2 : map.score1;
-                        html += `<span class="match-map-tag">${map.name} <span class="match-map-score">${ms1}-${ms2}</span></span>`;
-                    });
+                if (match.completed) {
+                    html += '<div class="td-match-row">';
+                    html += `<div class="td-match-team td-match-team-left ${won ? 'td-match-winner' : ''}">`;
+                    html += `<span class="td-match-name">${currentTeam.name}</span>`;
+                    html += `<span class="td-match-abbr">${currentTeam.abbr}</span>`;
+                    html += '</div>';
+                    html += '<div class="td-match-center">';
+                    html += `<span class="td-score ${won ? 'td-score-win' : 'td-score-loss'}">${myScore}</span>`;
+                    html += '<span class="td-score-sep">:</span>';
+                    html += `<span class="td-score ${!won ? 'td-score-win' : 'td-score-loss'}">${oppScore}</span>`;
+                    html += '</div>';
+                    html += `<div class="td-match-team td-match-team-right ${!won ? 'td-match-winner' : ''}">`;
+                    html += oppLogoFor(oppAbbr);
+                    html += `<span class="td-match-abbr">${oppAbbr}</span>`;
+                    html += `<span class="td-match-name">${oppName}</span>`;
+                    html += '</div>';
+                    html += '</div>';
+
+                    if (match.maps && match.maps.length > 0) {
+                        html += '<div class="td-match-maps">';
+                        match.maps.forEach(map => {
+                            const ms1 = isTeam1 ? map.score1 : map.score2;
+                            const ms2 = isTeam1 ? map.score2 : map.score1;
+                            const mw = ms1 > ms2;
+                            html += '<div class="td-map-pill">';
+                            html += `<span class="td-map-pill-name">${map.name}</span>`;
+                            html += `<span class="${mw ? 'td-map-win' : 'td-map-loss'}">${ms1}</span>`;
+                            html += '<span class="td-map-sep">-</span>';
+                            html += `<span class="${!mw ? 'td-map-win' : 'td-map-loss'}">${ms2}</span>`;
+                            html += '</div>';
+                        });
+                        html += '</div>';
+                    }
+                } else {
+                    html += '<div class="td-match-row">';
+                    html += '<div class="td-match-team td-match-team-left">';
+                    html += `<span class="td-match-name">${currentTeam.name}</span>`;
+                    html += `<span class="td-match-abbr">${currentTeam.abbr}</span>`;
+                    html += '</div>';
+                    html += '<div class="td-match-center"><span class="td-match-vs">vs</span></div>';
+                    html += '<div class="td-match-team td-match-team-right">';
+                    html += oppLogoFor(oppAbbr);
+                    html += `<span class="td-match-abbr">${oppAbbr}</span>`;
+                    html += `<span class="td-match-name">${oppName}</span>`;
+                    html += '</div>';
                     html += '</div>';
                 }
+
                 html += '</a>';
             });
 
