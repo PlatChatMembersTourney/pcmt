@@ -112,7 +112,9 @@
 
         function getTeamLogo(abbr, season) {
             const key = `s${season}`;
-            if (teamLogos[key] && teamLogos[key][abbr]) return teamLogos[key][abbr].logo;
+            if (teamLogos[key] && teamLogos[key][abbr]) {
+                return '../' + teamLogos[key][abbr].logo.replace(/^(\.\.\/)+/, '');
+            }
             return '';
         }
 

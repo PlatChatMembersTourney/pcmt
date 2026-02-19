@@ -38,7 +38,14 @@
         const matchId = params.get('id');
         const season = parseInt(params.get('season')) || 2;
         let match = null;
+        let teams = {};
         let currentMapTab = 'all';
+
+        function logoFor(abbr, cls) {
+            if (!abbr || !teams[abbr]) return '';
+            const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
+            return `<img src="../${logo}" alt="${abbr}" class="${cls || 'md-team-logo'}" onerror="this.style.display='none'">`;
+        }
 
         async function loadMatch() {
             const container = document.getElementById('match-detail');
@@ -48,9 +55,13 @@
             }
 
             try {
-                const res = await fetch(`../data/s${season}/matches/matches.json`);
-                if (!res.ok) throw new Error();
-                const matches = await res.json();
+                const [matchRes, teamsRes] = await Promise.all([
+                    fetch(`../data/s${season}/matches/matches.json`),
+                    fetch(`../data/s${season}/teams.json`)
+                ]);
+                if (!matchRes.ok) throw new Error();
+                const matches = await matchRes.json();
+                if (teamsRes.ok) teams = await teamsRes.json();
                 match = matches.find(m => m.id === matchId);
 
                 if (!match) {
@@ -79,7 +90,9 @@
             html += `<div class="md-team-info">`;
             html += `<span class="md-team-name">${match.team1Name}</span>`;
             html += `<span class="md-team-abbr">${match.team1}</span>`;
-            html += `</div></div>`;
+            html += `</div>`;
+            html += logoFor(match.team1, 'md-team-logo');
+            html += `</div>`;
 
             html += '<div class="md-score-box">';
             html += `<span class="md-score ${winner === 1 ? 'md-score-win' : 'md-score-loss'}">${match.score1}</span>`;
@@ -88,6 +101,7 @@
             html += '</div>';
 
             html += `<div class="md-team md-team-right ${winner === 2 ? 'md-winner' : ''}">`;
+            html += logoFor(match.team2, 'md-team-logo');
             html += `<div class="md-team-info">`;
             html += `<span class="md-team-name">${match.team2Name}</span>`;
             html += `<span class="md-team-abbr">${match.team2}</span>`;
@@ -256,6 +270,12 @@
             if (md.stats && md.stats.length > 0) {
                 const winner = md.score1 > md.score2 ? 1 : 2;
                 html += renderMapStatsTable(md.stats, winner);
+            }
+
+            // Stream link (per-map or match-level fallback)
+            const link = md.streamLink || match.streamLink;
+            if (link) {
+                html += `<div class="md-stream-link"><a href="${link}" target="_blank" class="md-stream-btn">▶ Watch on YouTube</a></div>`;
             }
 
             area.innerHTML = html;

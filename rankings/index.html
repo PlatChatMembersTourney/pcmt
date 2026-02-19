@@ -50,7 +50,13 @@
     <script>
         let currentSeason = 2;
         let currentStage = 'groups';
-        const cache = {};
+
+        function cacheGet(key) {
+            try { return sessionStorage.getItem('pcmt-rank-' + key); } catch(e) { return null; }
+        }
+        function cacheSet(key, val) {
+            try { sessionStorage.setItem('pcmt-rank-' + key, val); } catch(e) {}
+        }
 
         function switchSeason(season) {
             currentSeason = season;
@@ -101,7 +107,8 @@
             }
 
             if (currentStage === 'lcq') {
-                area.innerHTML = '<div class="rankings-empty"><p>LCQ standings will be available once the Last Chance Qualifier begins.</p></div>';
+                area.innerHTML = '<div class="stats-loading">Loading bracket...</div>';
+                loadLCQBracket();
                 return;
             }
 
@@ -111,8 +118,8 @@
             }
 
             // Group Stage
-            if (cache['s2-groups']) {
-                area.innerHTML = cache['s2-groups'];
+            if (cacheGet('s2-groups')) {
+                area.innerHTML = cacheGet('s2-groups');
                 return;
             }
 
@@ -274,7 +281,7 @@
                     html += '</div>';
                 }
 
-                cache['s2-groups'] = html;
+                cacheSet('s2-groups', html);
                 area.innerHTML = html;
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load rankings. The sheet may not be publicly shared.</p></div>';
@@ -282,7 +289,152 @@
             }
         }
 
+        async function loadLCQBracket() {
+            const area = document.getElementById('rankings-area');
+
+            // LCQ seeds from group stage (3rd vs 6th, 4th vs 5th)
+            const seeds = {
+                opening1: ['JDG', 'MIBR'],
+                opening2: ['ZIRC', 'DRG']
+            };
+
+            // Load matches and teams
+            let matches = [];
+            let teams = {};
+            try {
+                const res = await fetch(`../data/s${currentSeason}/matches/matches.json`);
+                if (res.ok) matches = await res.json();
+            } catch(e) {}
+            try {
+                const res = await fetch(`../data/s${currentSeason}/teams.json`);
+                if (res.ok) teams = await res.json();
+            } catch(e) {}
+
+            function logoFor(abbr) {
+                if (!abbr || !teams[abbr]) return '';
+                // Strip all ../ then use ../ (rankings/ -> pcmt root)
+                const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
+                return `<img src="../${logo}" alt="${abbr}" class="bracket-team-logo" onerror="this.style.display='none'">`;
+            }
+
+            const lcqMatches = matches.filter(m => m.stage && m.stage.toLowerCase().includes('lcq'));
+
+            function findMatch(t1, t2) {
+                if (!t1 || !t2) return null;
+                return lcqMatches.find(m =>
+                    (m.team1 === t1 && m.team2 === t2) ||
+                    (m.team1 === t2 && m.team2 === t1)
+                ) || null;
+            }
+            function getWinner(m) {
+                if (!m || !m.completed) return null;
+                return m.score1 > m.score2 ? m.team1 : m.team2;
+            }
+            function getLoser(m) {
+                if (!m || !m.completed) return null;
+                return m.score1 > m.score2 ? m.team2 : m.team1;
+            }
+
+            const o1 = findMatch(seeds.opening1[0], seeds.opening1[1]);
+            const o2 = findMatch(seeds.opening2[0], seeds.opening2[1]);
+            const w1 = getWinner(o1), w2 = getWinner(o2);
+            const l1 = getLoser(o1), l2 = getLoser(o2);
+            const wMatch = findMatch(w1, w2);
+            const eMatch = findMatch(l1, l2);
+            const wLoser = getLoser(wMatch);
+            const eWinner = getWinner(eMatch);
+            const dMatch = findMatch(wLoser, eWinner);
+
+            function slot(label, m, fb1, fb2) {
+                const t1 = m ? m.team1 : fb1;
+                const t2 = m ? m.team2 : fb2;
+                const s1 = m && m.completed ? m.score1 : null;
+                const s2 = m && m.completed ? m.score2 : null;
+                return { label, match: m, team1: t1 || 'TBD', team2: t2 || 'TBD', score1: s1, score2: s2 };
+            }
+
+            const bracket = {
+                opening1: slot('Opening', o1, seeds.opening1[0], seeds.opening1[1]),
+                opening2: slot('Opening', o2, seeds.opening2[0], seeds.opening2[1]),
+                winners:  slot("Winner's", wMatch, w1 || 'Winner M1', w2 || 'Winner M2'),
+                elim:     slot('Elimination', eMatch, l1 || 'Loser M1', l2 || 'Loser M2'),
+                decider:  slot('Decider', dMatch, wLoser || 'Loser M3', eWinner || 'Winner M4')
+            };
+
+            area.innerHTML = renderLCQBracket(bracket, logoFor);
+        }
+
+        function renderLCQBracket(bracket, logoFor) {
+            function matchBox(s) {
+                const s1 = s.score1 !== null ? s.score1 : '-';
+                const s2 = s.score2 !== null ? s.score2 : '-';
+                const w1 = s.score1 !== null && s.score2 !== null && s.score1 > s.score2;
+                const w2 = s.score1 !== null && s.score2 !== null && s.score2 > s.score1;
+                const hasMatch = !!s.match;
+                const upcoming = s.match && !s.match.completed;
+                const href = hasMatch ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
+                const tag = href ? 'a' : 'div';
+                const hrefAttr = href ? ` href="${href}"` : '';
+                const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
+
+                return `
+                    <div class="bracket-match">
+                        <div class="bracket-label">${s.label}</div>
+                        <${tag}${hrefAttr} class="${cls}">
+                            <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
+                                <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>
+                                <span class="bracket-team-score">${s1}</span>
+                            </div>
+                            <div class="bracket-team ${w2 ? 'bracket-winner' : ''}">
+                                <div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div>
+                                <span class="bracket-team-score">${s2}</span>
+                            </div>
+                        </${tag}>
+                    </div>`;
+            }
+
+            function qualBox() {
+                return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
+            }
+
+            function conn(type) {
+                if (type === 'merge') return `<div class="bracket-connector bracket-conn-upper">
+                    <svg viewBox="0 0 60 200" preserveAspectRatio="none">
+                        <line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                        <line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                        <line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                        <line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                    </svg></div>`;
+                return `<div class="bracket-connector bracket-conn-single">
+                    <svg viewBox="0 0 60 20" preserveAspectRatio="none">
+                        <line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                    </svg></div>`;
+            }
+
+            return `
+                <div class="bracket-container">
+                    <div class="bracket-upper">
+                        <div class="bracket-col bracket-col-opening">
+                            ${matchBox(bracket.opening1)}
+                            ${matchBox(bracket.opening2)}
+                        </div>
+                        ${conn('merge')}
+                        <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
+                        ${conn('single')}
+                        <div class="bracket-col bracket-col-qual">${qualBox()}</div>
+                    </div>
+                    <div class="bracket-lower">
+                        <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
+                        ${conn('single')}
+                        <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
+                        ${conn('single')}
+                        <div class="bracket-col bracket-col-qual">${qualBox()}</div>
+                    </div>
+                </div>`;
+        }
+
         switchSeason(2);
+
     </script>
     </div>
 </body>
