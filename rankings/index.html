@@ -37,18 +37,37 @@
         <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
     </div>
 
+    <div class="stats-sub-tabs" id="stage-tabs" style="display:none;">
+        <button class="stats-sub-btn active" onclick="switchStage('groups')">Group Stage</button>
+        <button class="stats-sub-btn" onclick="switchStage('lcq')">LCQ</button>
+        <button class="stats-sub-btn" onclick="switchStage('playoffs')">Playoffs</button>
+    </div>
+
     <div class="rankings-content" id="rankings-area">
         <div class="stats-loading">Loading rankings...</div>
     </div>
 
     <script>
         let currentSeason = 2;
+        let currentStage = 'groups';
         const cache = {};
 
         function switchSeason(season) {
             currentSeason = season;
             const buttons = document.querySelectorAll('.season-sel-btn');
             buttons.forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
+
+            const stageTabs = document.getElementById('stage-tabs');
+            stageTabs.style.display = (season === 2) ? '' : 'none';
+
+            loadRankings();
+        }
+
+        function switchStage(stage) {
+            currentStage = stage;
+            const buttons = document.querySelectorAll('#stage-tabs .stats-sub-btn');
+            const stages = ['groups', 'lcq', 'playoffs'];
+            buttons.forEach((btn, i) => btn.classList.toggle('active', stages[i] === stage));
             loadRankings();
         }
 
@@ -81,16 +100,27 @@
                 return;
             }
 
-            if (cache['s2-rankings']) {
-                area.innerHTML = cache['s2-rankings'];
+            if (currentStage === 'lcq') {
+                area.innerHTML = '<div class="rankings-empty"><p>LCQ standings will be available once the Last Chance Qualifier begins.</p></div>';
+                return;
+            }
+
+            if (currentStage === 'playoffs') {
+                area.innerHTML = '<div class="rankings-empty"><p>Playoff bracket will be available once playoffs begin.</p></div>';
+                return;
+            }
+
+            // Group Stage
+            if (cache['s2-groups']) {
+                area.innerHTML = cache['s2-groups'];
                 return;
             }
 
             area.innerHTML = '<div class="stats-loading">Loading rankings...</div>';
-            loadS2Rankings();
+            loadS2Groups();
         }
 
-        async function loadS2Rankings() {
+        async function loadS2Groups() {
             const area = document.getElementById('rankings-area');
 
             try {
@@ -128,7 +158,6 @@
                 }
 
                 // --- head-to-head matrix ---
-                // find the label row (has team abbreviations in cols 4+)
                 let h2hLabelRowIdx = -1;
                 for (let i = lines.length - 1; i >= 0; i--) {
                     const row = lines[i];
@@ -145,15 +174,11 @@
                     ? lines[h2hLabelRowIdx].slice(4, 16).map(c => (c || '').trim())
                     : [];
 
-                // collect H2H data rows (every 2 rows above label row)
                 const h2hData = [];
                 if (h2hLabelRowIdx >= 0) {
-                    // search backwards from label row for team data rows
                     for (let i = 0; i < lines.length; i++) {
                         const row = lines[i];
                         const teamCell = (row[3] || '').trim();
-                        // h2h rows are between scoreboard and label row, have a team abbr in col 3
-                        // and at least one score pattern like "X-Y" in cols 4-15
                         if (teamCell && i > lastScoreboardIdx && i < h2hLabelRowIdx) {
                             const scores = row.slice(4, 16).map(c => (c || '').trim());
                             const hasScore = scores.some(s => /^\d+-\d+$/.test(s));
@@ -166,10 +191,8 @@
 
                 // render scoreboard
                 let html = '<div class="rankings-section">';
-                html += '<h2 class="rankings-subtitle">Scoreboard</h2>';
                 html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky rankings-table">';
 
-                // category row
                 html += '<thead><tr class="category-row">';
                 html += '<th colspan="3"></th>';
                 html += '<th colspan="2" class="category-header">Matches</th>';
@@ -177,7 +200,6 @@
                 html += '<th colspan="3" class="category-header">Rounds</th>';
                 html += '</tr>';
 
-                // column headers
                 html += '<tr>';
                 html += '<th>#</th><th>ABBR.</th><th>TEAM</th>';
                 html += '<th>W</th><th>L</th>';
@@ -199,7 +221,6 @@
                         return n > 0 ? `+${n}` : `${n}`;
                     };
 
-                    // top 2 = playoffs, 3-6 = LCQ, 7-12 = eliminated
                     let rowClass = '';
                     if (t.rank <= 2) rowClass = 'rank-playoffs';
                     else if (t.rank <= 6) rowClass = 'rank-lcq';
@@ -226,7 +247,6 @@
                     html += '<h2 class="rankings-subtitle">Head-to-Head</h2>';
                     html += '<div class="h2h-scroll"><table class="stats-table h2h-table">';
 
-                    // header row
                     html += '<thead><tr><th></th>';
                     h2hTeams.forEach(t => html += `<th class="h2h-header">${t}</th>`);
                     html += '</tr></thead><tbody>';
@@ -238,7 +258,6 @@
                             if (!score || row.team === h2hTeams[i]) {
                                 html += '<td class="h2h-self"></td>';
                             } else {
-                                // determine W/L: first number is this team's wins
                                 const parts = score.split('-').map(Number);
                                 let cls = 'h2h-cell';
                                 if (parts.length === 2) {
@@ -255,7 +274,7 @@
                     html += '</div>';
                 }
 
-                cache['s2-rankings'] = html;
+                cache['s2-groups'] = html;
                 area.innerHTML = html;
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load rankings. The sheet may not be publicly shared.</p></div>';

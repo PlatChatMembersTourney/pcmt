@@ -714,6 +714,11 @@ body {
     border-bottom: 1px solid #333;
     margin-top: 4px;
     overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.md-map-tabs::-webkit-scrollbar {
+    display: none;
 }
 .md-map-tab {
     padding: 12px 24px;
@@ -802,7 +807,7 @@ body {
     border-collapse: collapse;
     font-size: 13px;
     color: #ccc;
-    min-width: 700px;
+    table-layout: fixed;
 }
 .md-stats-table thead th {
     text-align: center;
@@ -814,26 +819,23 @@ body {
     letter-spacing: 0.5px;
     border-bottom: 1px solid #333;
     white-space: nowrap;
+    overflow: hidden;
 }
-.md-stats-table thead th.md-col-player,
-.md-stats-table thead th.md-col-agent {
+.md-stats-table thead th.md-col-player {
     text-align: left;
 }
 .md-stats-table tbody td {
     padding: 8px 10px;
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .md-stats-table tbody td.md-col-player {
     text-align: left;
     color: whitesmoke;
     font-weight: 500;
-    white-space: nowrap;
-}
-.md-stats-table tbody td.md-col-agent {
-    text-align: left;
-    color: #888;
-    font-size: 12px;
 }
 .md-stats-table tbody td.md-col-rating {
     color: #6dc5c7;
@@ -865,6 +867,120 @@ body {
     .md-score-box {
         padding: 0 16px;
     }
+}
+
+/* single map header */
+
+.md-single-map-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 0 16px;
+}
+.md-single-map-name {
+    color: #888;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.md-single-map-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.md-sms-team {
+    color: #aaa;
+    font-size: 14px;
+    font-weight: 600;
+}
+.md-sms-num {
+    font-size: 28px;
+    font-weight: 700;
+}
+.md-sms-sep {
+    color: #555;
+    font-size: 22px;
+}
+
+/* round timeline */
+
+.md-timeline {
+    background: none;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.md-timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+.md-timeline-team {
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+.md-timeline-rounds {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.md-round {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.md-round-def {
+    background: #6dc5c7;
+}
+.md-round-atk {
+    background: #cc6666;
+}
+.md-round-empty {
+    background: #1e1e1e;
+}
+.md-timeline-halfscore {
+    color: #888;
+    font-size: 14px;
+    font-weight: 700;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.md-ot-label {
+    color: #6dc5c7;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+.md-timeline-labels {
+    margin-bottom: 0;
+}
+
+/* per-map agent column */
+
+.md-stats-table thead th.md-col-agent {
+    text-align: left;
+    width: 10%;
+}
+.md-stats-table tbody td.md-col-agent {
+    text-align: left;
+    color: #888;
+    font-size: 12px;
+}
+.md-stats-table thead th.md-col-player {
+    width: 12%;
+}
+.md-stats-table thead th:not(.md-col-player):not(.md-col-agent) {
+    width: 6.5%;
 }
 
 /* ===== Team Page Match Cards ===== */
