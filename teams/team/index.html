@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="icon" href="../../icons/PCMT Logo.png">
+    <title>PCMT - Team</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div id="header-bar">
+        <div class="header-inner">
+        <div class="header-content" id="link-title">
+            <a href="../../">
+                <img src="../../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            </a>
+            <p>Plat Chat Members Tournament</p>
+        </div>
+        <nav class="header-content">
+            <a class="header-link">Matches</a>
+            <a class="header-link" href="../../rankings/">Rankings</a>
+            <a class="header-link active" href="../../teams/">Teams</a>
+            <a class="header-link" href="../../stats/">Stats</a>
+            <div class="header-buffer"></div>
+        </nav>
+        </div>
+    </div>
+
+    <div class="page-container">
+
+    <div id="team-detail">
+        <div class="stats-loading">Loading team...</div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const teamAbbr = params.get('team');
+        const season = parseInt(params.get('season')) || 2;
+        let currentTeam = null;
+
+        async function loadTeam() {
+            const container = document.getElementById('team-detail');
+
+            if (!teamAbbr) {
+                container.innerHTML = '<p class="stats-error">No team specified.</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`../../data/s${season}/teams.json`);
+                const teams = await res.json();
+                const team = teams[teamAbbr];
+
+                if (!team) {
+                    container.innerHTML = `<p class="stats-error">Team "${teamAbbr}" not found for Season ${season}.</p>`;
+                    return;
+                }
+
+                currentTeam = team;
+                document.title = `PCMT - ${team.name}`;
+
+                let html = '';
+
+                html += '<div class="td-header">';
+                html += `<img src="${team.logo}" alt="${team.name}" class="td-logo" onerror="this.style.display='none'">`;
+                html += '<div class="td-header-text">';
+                html += `<h1 class="td-name">${team.name}</h1>`;
+                html += `<span class="td-meta">${team.abbr} · Season ${season}</span>`;
+                html += '</div></div>';
+
+                html += '<div class="td-section">';
+                html += '<h2 class="td-subtitle">Roster</h2>';
+                html += '<div class="td-roster">';
+                team.players.forEach(p => {
+                    html += `<div class="td-roster-player">${p}</div>`;
+                });
+                html += '</div></div>';
+
+                html += '<div class="td-section">';
+                html += '<h2 class="td-subtitle">Player Stats</h2>';
+                html += '<div class="td-stats-box">';
+                if (season === 2) {
+                    html += '<div class="stats-sub-tabs" id="td-stats-tabs">';
+                    html += '<button class="stats-sub-btn active" onclick="switchStatSource(\'toxic\')">toxic</button>';
+                    html += '<button class="stats-sub-btn" onclick="switchStatSource(\'Angus\')">Angus</button>';
+                    html += '<button class="stats-sub-btn" onclick="switchStatSource(\'pi\')">pi</button>';
+                    html += '</div>';
+                }
+                html += '<div id="td-stats-area"><div class="stats-loading">Loading stats...</div></div>';
+                html += `<a href="../../stats/" class="td-see-all">See all stats →</a>`;
+                html += '</div></div>';
+
+                html += '<div class="td-section">';
+                html += '<h2 class="td-subtitle">Map Stats</h2>';
+                html += '<div id="td-map-area"><div class="stats-loading">Loading stats...</div></div>';
+                html += '</div>';
+
+                container.innerHTML = html;
+
+                loadRatingStats(team, 'toxic');
+                loadMapStats(team);
+            } catch (err) {
+                container.innerHTML = '<p class="stats-error">Failed to load team data.</p>';
+                console.error(err);
+            }
+        }
+
+        function switchStatSource(source) {
+            const buttons = document.querySelectorAll('#td-stats-tabs .stats-sub-btn');
+            const sources = ['toxic', 'Angus', 'pi'];
+            buttons.forEach((btn, i) => btn.classList.toggle('active', sources[i] === source));
+            if (currentTeam) loadRatingStats(currentTeam, source);
+        }
+
+        async function loadRatingStats(team, source) {
+            const area = document.getElementById('td-stats-area');
+
+            try {
+                if (source === 'toxic') {
+                    const path = `../../data/s${season}/Player Stats.xlsx`;
+                    const response = await fetch(path);
+                    if (!response.ok) { area.innerHTML = '<p class="stats-error">Not available.</p>'; return; }
+                    const ab = await response.arrayBuffer();
+                    const wb = XLSX.read(ab, { type: 'array' });
+                    const sheet = wb.Sheets['Overall'];
+                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    const rawHeaders = data[0];
+                    const playerRows = data.slice(1).filter(r => r[0] && r[1] === team.abbr);
+
+                    if (playerRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
+
+                    const playerIdx = rawHeaders.indexOf('Player');
+                    const ratingIdx = rawHeaders.indexOf('R1.0');
+
+                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
+                    const sorted = [...playerRows].sort((a, b) => (b[ratingIdx] || 0) - (a[ratingIdx] || 0));
+                    sorted.forEach(row => {
+                        const rating = row[ratingIdx] != null ? Number(row[ratingIdx]).toFixed(2) : '-';
+                        html += `<tr><td>${row[playerIdx]}</td><td>${rating}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    area.innerHTML = html;
+
+                } else if (source === 'Angus') {
+                    const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
+                    const gid = '821526300';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                    const response = await fetch(url);
+                    const csvText = await response.text();
+                    const lines = parseCSV(csvText);
+                    const headers = lines[0];
+                    const rows = lines.slice(1).filter(r => r[0] || r[1]);
+
+                    const teamCol = headers.findIndex(h => h.trim().toLowerCase() === 'team');
+                    const playerCol = headers.findIndex(h => h.trim().toLowerCase() === 'player');
+                    const ratingCol = headers.findIndex(h => h.trim() === 'R' || h.trim() === 'R1.0' || h.trim().toLowerCase() === 'rating');
+
+                    const teamRows = rows.filter(r => r[teamCol] && r[teamCol].trim() === team.abbr);
+                    if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
+
+                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
+                    const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
+                    sorted.forEach(row => {
+                        const name = row[playerCol] || row[0];
+                        const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
+                        html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    area.innerHTML = html;
+
+                } else if (source === 'pi') {
+                    const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
+                    const gid = '1023990137';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                    const response = await fetch(url);
+                    const csvText = await response.text();
+                    const lines = parseCSV(csvText);
+
+                    const headers = lines[1];
+                    const rows = lines.slice(2).filter(r => r[1] || r[2]);
+
+                    const teamCol = headers.findIndex(h => h.trim().toLowerCase() === 'team');
+                    const playerCol = headers.findIndex(h => h.trim().toLowerCase() === 'player');
+                    const ratingCol = headers.findIndex(h => h.trim() === 'R' || h.trim() === 'R1.0');
+
+                    const teamRows = rows.filter(r => r[teamCol] && r[teamCol].trim() === team.abbr);
+                    if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
+
+                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
+                    const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
+                    sorted.forEach(row => {
+                        const name = row[playerCol] || row[2];
+                        const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
+                        html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    area.innerHTML = html;
+                }
+            } catch (err) {
+                area.innerHTML = '<p class="stats-error">Failed to load stats.</p>';
+                console.error(err);
+            }
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let current = [];
+            let cell = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (inQuotes) {
+                    if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+                    else if (c === '"') inQuotes = false;
+                    else cell += c;
+                } else {
+                    if (c === '"') inQuotes = true;
+                    else if (c === ',') { current.push(cell.trim()); cell = ''; }
+                    else if (c === '\n' || (c === '\r' && text[i + 1] === '\n')) {
+                        current.push(cell.trim()); cell = '';
+                        rows.push(current); current = [];
+                        if (c === '\r') i++;
+                    } else cell += c;
+                }
+            }
+            if (cell || current.length) { current.push(cell.trim()); rows.push(current); }
+            return rows;
+        }
+
+        async function loadMapStats(team) {
+            const area = document.getElementById('td-map-area');
+            try {
+                const path = `../../data/s${season}/Team Map Stats.xlsx`;
+                const response = await fetch(path);
+                if (!response.ok) { area.innerHTML = '<p class="stats-error">Map stats not available.</p>'; return; }
+                const ab = await response.arrayBuffer();
+                const wb = XLSX.read(ab, { type: 'array' });
+
+                const sheetName = wb.SheetNames.find(s =>
+                    s === team.name || s.includes(team.abbr) || s.includes(team.name)
+                );
+                if (!sheetName) { area.innerHTML = '<p class="stats-error">No map stats found.</p>'; return; }
+
+                const ws = wb.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+                const headerRow = data[1] || [];
+                const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
+                const leftCols = hasPick ? 10 : 9;
+                const rightStart = hasPick ? 11 : 10;
+                const rightEnd = hasPick ? 21 : 19;
+                const overallValCol = hasPick ? 2 : 1;
+
+                const mapHeaders = hasPick
+                    ? ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%']
+                    : ['Map', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
+
+                const mapRows = [];
+                let overallAtk = null, overallDef = null;
+
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i][0] === 'Atk%') overallAtk = data[i][overallValCol];
+                    if (data[i][0] === 'Def%') overallDef = data[i][overallValCol];
+                }
+
+                for (let startRow = 0; startRow < data.length; startRow += 4) {
+                    if (startRow + 2 >= data.length) break;
+                    const nameRow = data[startRow];
+                    const dataRow = data[startRow + 2];
+                    if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
+
+                    if (nameRow[0]) {
+                        const d = dataRow.slice(0, leftCols);
+                        const rebuilt = [nameRow[0]];
+                        for (let i = 0; i < d.length; i++) {
+                            const hdr = mapHeaders[i + 1];
+                            rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                        }
+                        mapRows.push(rebuilt);
+                    }
+                    if (nameRow[rightStart]) {
+                        const d = dataRow.slice(rightStart, rightEnd);
+                        const rebuilt = [nameRow[rightStart]];
+                        for (let i = 0; i < d.length; i++) {
+                            const hdr = mapHeaders[i + 1];
+                            rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
+                        }
+                        mapRows.push(rebuilt);
+                    }
+                }
+
+                const filteredRows = mapRows.filter(row => row.slice(1).some(cell => cell !== '-'));
+                filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
+
+                let html = '';
+                if (overallAtk != null || overallDef != null) {
+                    html += '<div class="team-overall-bar">';
+                    html += '<div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">' + fmtPct(overallAtk) + '</span></div>';
+                    html += '<div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">' + fmtPct(overallDef) + '</span></div>';
+                    html += '</div>';
+                }
+                html += renderTable(mapHeaders, filteredRows, 'td-maps');
+                area.innerHTML = html;
+            } catch (err) {
+                area.innerHTML = '<p class="stats-error">Failed to load map stats.</p>';
+                console.error(err);
+            }
+        }
+
+        const sortState = {};
+
+        function renderTable(headers, rows, tableId) {
+            let html = `<table class="stats-table" id="table-${tableId}">`;
+            html += '<thead><tr>';
+            headers.forEach((h, i) => {
+                html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
+            });
+            html += '</tr></thead><tbody>';
+            rows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+            return html;
+        }
+
+        function sortTable(tableId, colIndex) {
+            const state = sortState[tableId];
+            if (!state) return;
+            if (state.currentCol === colIndex) { state.clicks++; } else { state.currentCol = colIndex; state.clicks = 1; }
+            let sorted;
+            if (state.clicks % 3 === 0) {
+                sorted = [...state.originalRows]; state.currentCol = -1; state.clicks = 0;
+            } else {
+                const asc = state.clicks % 3 === 2;
+                sorted = [...state.rows].sort((a, b) => {
+                    let valA = a[colIndex], valB = b[colIndex];
+                    if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
+                    if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
+                    const numA = parseFloat(valA), numB = parseFloat(valB);
+                    if (!isNaN(numA) && !isNaN(numB)) return asc ? numA - numB : numB - numA;
+                    return asc ? String(valA||'').localeCompare(String(valB||'')) : String(valB||'').localeCompare(String(valA||''));
+                });
+            }
+            const table = document.getElementById(`table-${tableId}`);
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = sorted.map(row => '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>').join('');
+            const ths = table.querySelectorAll('thead tr:last-child th');
+            ths.forEach((th, i) => {
+                const arrow = th.querySelector('.sort-arrow');
+                if (i === colIndex && state.currentCol !== -1) arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
+                else arrow.textContent = '';
+            });
+        }
+
+        function fmtPct(val) {
+            if (val == null || val === '') return '-';
+            if (typeof val === 'number') return (val * 100).toFixed(0) + '%';
+            return val;
+        }
+
+        function fmtNum(val) {
+            if (val == null || val === '') return '-';
+            return val;
+        }
+
+        loadTeam();
+    </script>
+
+    </div>
+</body>
+</html>

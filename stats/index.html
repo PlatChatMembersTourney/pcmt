@@ -44,6 +44,7 @@
 
     <div class="stats-content" id="player-stats">
         <div class="stats-sub-tabs" id="player-sub-tabs"></div>
+        <div class="stats-sub-tabs" id="player-stage-tabs" style="display:none;"></div>
         <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
         <div id="player-table-area">
             <div class="stats-table-container">
@@ -66,7 +67,9 @@
         const sortState = {};
         let currentSeason = 2;
         let currentMainTab = 'player';
+        let currentToxicStage = 'Overall';
         const cache = {};
+        const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
 
         const seasonConfig = {
             1: {
@@ -107,6 +110,7 @@
 
         function buildTabs() {
             const config = seasonConfig[currentSeason];
+            currentToxicStage = 'Overall';
 
             const playerTabBar = document.getElementById('player-sub-tabs');
             playerTabBar.innerHTML = config.playerTabs.map((name, i) =>
@@ -128,7 +132,29 @@
             buttons.forEach((btn, i) => {
                 btn.classList.toggle('active', config.playerTabs[i] === name);
             });
+
+            const stageBar = document.getElementById('player-stage-tabs');
+            if (name === 'toxic' && currentSeason === 2) {
+                currentToxicStage = currentToxicStage || 'Overall';
+                stageBar.style.display = '';
+                stageBar.innerHTML = toxicStages.map((s, i) =>
+                    `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
+                ).join('');
+            } else {
+                stageBar.style.display = 'none';
+                stageBar.innerHTML = '';
+            }
+
             loadPlayerTab(name);
+        }
+
+        function switchToxicStage(stage) {
+            currentToxicStage = stage;
+            const buttons = document.querySelectorAll('#player-stage-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', toxicStages[i] === stage);
+            });
+            loadToxicPlayerStats(currentSeason, stage);
         }
 
         function switchTeamTab(name) {
@@ -271,29 +297,41 @@
         function loadPlayerTab(name) {
             const area = document.getElementById('player-table-area');
             const season = currentSeason;
+            const stageBar = document.getElementById('player-stage-tabs');
 
-            // check cache before showing loading
+            if (name === 'toxic' && season === 2) {
+                stageBar.style.display = '';
+                stageBar.innerHTML = toxicStages.map((s, i) =>
+                    `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
+                ).join('');
+            } else {
+                stageBar.style.display = 'none';
+                stageBar.innerHTML = '';
+            }
+
             let cacheKey;
             if (season === 1) cacheKey = 's1-player-toxic';
+            else if (name === 'toxic') cacheKey = `s2-player-toxic-${currentToxicStage}`;
             else cacheKey = `s2-player-${name}`;
 
             if (!cache[cacheKey]) {
                 area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
             }
 
-            if (season === 1) loadToxicPlayerStats(1);
-            else if (name === 'toxic') loadToxicPlayerStats(2);
+            if (season === 1) loadToxicPlayerStats(1, 'Overall');
+            else if (name === 'toxic') loadToxicPlayerStats(2, currentToxicStage);
             else if (name === 'Angus') loadAngusStats();
             else if (name === 'pi') loadPiPlayerStats();
         }
 
-        async function loadToxicPlayerStats(season) {
-            const cacheKey = `s${season}-player-toxic`;
+        async function loadToxicPlayerStats(season, sheetName) {
+            sheetName = sheetName || 'Overall';
+            const cacheKey = `s${season}-player-toxic-${sheetName}`;
             const area = document.getElementById('player-table-area');
 
             if (cache[cacheKey]) {
                 const { headers, rows } = cache[cacheKey];
-                const tableId = `toxic-player-s${season}`;
+                const tableId = `toxic-player-s${season}-${sheetName}`;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
                 sortByRating(tableId, headers);
                 return;
@@ -305,10 +343,19 @@
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-                const overallSheet = workbook.Sheets['Overall'];
-                const overallData = XLSX.utils.sheet_to_json(overallSheet, { header: 1 });
-                const rawHeaders = overallData[0];
-                const playerRows = overallData.slice(1).filter(r => r[0]);
+                const sheet = workbook.Sheets[sheetName];
+                if (!sheet) {
+                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Sheet not found.</p></div>';
+                    return;
+                }
+                const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                const rawHeaders = sheetData[0];
+                const playerRows = sheetData.slice(1).filter(r => r[0]);
+
+                if (playerRows.length === 0) {
+                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">No data available yet.</p></div>';
+                    return;
+                }
 
                 const changeIdx = rawHeaders.indexOf('Change');
                 let headers = rawHeaders.filter(h => h != null && h !== 'Change');
@@ -320,7 +367,7 @@
                     return r.map((cell, i) => formatCell(cell, headers[i]));
                 });
 
-                const tableId = `toxic-player-s${season}`;
+                const tableId = `toxic-player-s${season}-${sheetName}`;
                 cache[cacheKey] = { headers, rows: formattedRows };
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, formattedRows, tableId)}</div>`;
                 sortByRating(tableId, headers);
@@ -398,7 +445,7 @@
                 const acsIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'ACS');
                 const rIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'R');
 
-                const identCols = [0, 1, 2];
+                const identCols = [1, 2, 3];
                 if (rIdx !== -1 && rIdx < acsIdx) identCols.push(rIdx);
                 const acsCols = [];
                 for (let i = acsIdx; i < allHeaders.length; i++) acsCols.push(i);

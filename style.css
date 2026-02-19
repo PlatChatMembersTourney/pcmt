@@ -327,6 +327,8 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     border: 1px solid transparent;
+    text-decoration: none;
+    color: inherit;
 }
 .team-card:hover {
     transform: translateY(-4px);
@@ -683,4 +685,92 @@ body {
     color: #cc6666;
     font-style: italic;
     padding: 40px 16px;
+}
+
+/* team detail page */
+
+.td-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 30px 0 24px;
+}
+.td-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+.td-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.td-name {
+    color: whitesmoke;
+    font-size: 28px;
+    margin: 0;
+}
+.td-meta {
+    color: #888;
+    font-size: 14px;
+}
+.td-section {
+    margin-bottom: 30px;
+}
+.td-subtitle {
+    color: #6dc5c7;
+    font-size: 20px;
+    margin: 0 0 14px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+}
+.td-roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.td-roster-player {
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 10px 18px;
+    color: whitesmoke;
+    font-size: 15px;
+}
+.td-stats-box {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+}
+.td-stats-box .stats-sub-tabs {
+    margin: 0;
+    border-bottom: 1px solid #333;
+}
+.td-stats-box .stats-sub-btn {
+    padding: 10px 20px;
+}
+.td-rating-table {
+    margin: 0;
+}
+.td-rating-table thead th {
+    padding: 10px 16px;
+}
+.td-rating-table tbody td {
+    padding: 8px 16px;
+}
+.td-see-all {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    color: #6dc5c7;
+    text-decoration: none;
+    font-size: 14px;
+    border-top: 1px solid #333;
+    transition: color 0.2s, background 0.2s;
+}
+.td-see-all:hover {
+    color: white;
+    background: rgba(109, 197, 199, 0.05);
 }
