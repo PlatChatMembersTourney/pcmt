@@ -70,6 +70,32 @@
         let currentMainTab = 'player';
         let currentToxicStage = 'Overall';
         const cache = {};
+        const teamsLookup = {};
+
+        async function loadTeamsLookup() {
+            try {
+                for (const s of [1, 2]) {
+                    const res = await fetch(`../data/s${s}/teams.json`);
+                    const data = await res.json();
+                    teamsLookup[`s${s}`] = {};
+                    for (const [abbr, team] of Object.entries(data)) {
+                        teamsLookup[`s${s}`][abbr.toUpperCase()] = abbr;
+                        teamsLookup[`s${s}`][team.name.toUpperCase()] = abbr;
+                    }
+                }
+            } catch (err) {}
+        }
+
+        function teamLink(cellValue, season) {
+            if (!cellValue) return cellValue;
+            const lookup = teamsLookup[`s${season}`];
+            if (!lookup) return cellValue;
+            const abbr = lookup[String(cellValue).trim().toUpperCase()];
+            if (!abbr) return cellValue;
+            return `<a href="../teams/team/?team=${abbr}&season=${season}" class="team-link">${cellValue}</a>`;
+        }
+
+        loadTeamsLookup();
         const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
 
         const seasonConfig = {
@@ -630,9 +656,16 @@
                     html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
                 });
                 html += '</tr></thead><tbody>';
+                const teamColIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'team');
                 rows.forEach(row => {
                     html += '<tr>';
-                    row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
+                    row.forEach((cell, i) => {
+                        if (i === teamColIdx) {
+                            html += `<td>${teamLink(cell, 2)}</td>`;
+                        } else {
+                            html += `<td>${cell ?? ''}</td>`;
+                        }
+                    });
                     html += '</tr>';
                 });
                 html += '</tbody></table></div>';
@@ -668,11 +701,11 @@
                 const teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
 
                 let html = '<div class="stats-table-container">';
-                html += '<div class="team-selector-bar">';
-                html += `<label for="toxic-team-select-s${season}">Select Team: </label>`;
-                html += `<select id="toxic-team-select-s${season}" onchange="renderToxicTeamMap(${season}, this.value)">`;
-                teamNames.forEach((t, i) => html += `<option value="${t}" ${i === 0 ? 'selected' : ''}>${t}</option>`);
-                html += '</select></div>';
+                html += '<div class="stats-sub-tabs">';
+                teamNames.forEach((t, i) => {
+                    html += `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchTeamMap(${season}, '${t.replace(/'/g, "\\'")}', this)">${t}</button>`;
+                });
+                html += '</div>';
                 html += `<div id="toxic-team-map-table-s${season}"></div></div>`;
 
                 area.innerHTML = html;
@@ -681,6 +714,13 @@
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load team map stats.</p></div>';
                 console.error('toxic team stats:', err);
             }
+        }
+
+        function switchTeamMap(season, teamName, btn) {
+            const tabs = btn.parentElement.querySelectorAll('.stats-sub-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            renderToxicTeamMap(season, teamName);
         }
 
         function renderToxicTeamMap(season, teamName) {

@@ -207,8 +207,8 @@
 
                     html += `<tr class="${rowClass}">`;
                     html += `<td>${t.rank}</td>`;
-                    html += `<td class="team-abbr-cell">${t.abbr}</td>`;
-                    html += `<td>${t.name}</td>`;
+                    html += `<td class="team-abbr-cell"><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.abbr}</a></td>`;
+                    html += `<td><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.name}</a></td>`;
                     html += `<td>${t.matchW}</td><td>${t.matchL}</td>`;
                     html += `<td>${t.mapW}</td><td>${t.mapL}</td>`;
                     html += `<td${diffClass(t.mapDiff)}>${fmtDiff(t.mapDiff)}</td>`;
@@ -233,7 +233,7 @@
 
                     h2hData.forEach(row => {
                         html += '<tr>';
-                        html += `<th class="h2h-row-label">${row.team}</th>`;
+                        html += `<th class="h2h-row-label"><a href="../teams/team/?team=${row.team}&season=${currentSeason}" class="team-link">${row.team}</a></th>`;
                         row.scores.forEach((score, i) => {
                             if (!score || row.team === h2hTeams[i]) {
                                 html += '<td class="h2h-self"></td>';

@@ -393,6 +393,14 @@ body {
 .team-expand-link:hover {
     text-decoration: underline;
 }
+.team-link {
+    color: inherit;
+    text-decoration: none;
+}
+.team-link:hover {
+    text-decoration: underline;
+    color: #6dc5c7;
+}
 .team-logo-placeholder {
     width: 100px;
     height: 100px;
@@ -604,6 +612,7 @@ body {
 }
 .stats-sub-tabs {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 10px;
     border-bottom: 1px solid #333;
 }
