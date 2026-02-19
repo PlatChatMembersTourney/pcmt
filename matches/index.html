@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../icons/PCMT Logo.png">
+    <title>PCMT - Matches</title>
+</head>
+<body>
+    <div id="header-bar">
+        <div class="header-inner">
+        <div class="header-content" id="link-title">
+            <a href="../">
+                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
+            </a>
+            <p>Plat Chat Members Tournament</p>
+        </div>
+        <nav class="header-content">
+            <a class="header-link" href="../">Home</a>
+            <a class="header-link active" href="../matches/">Matches</a>
+            <a class="header-link" href="../rankings/">Rankings</a>
+            <a class="header-link" href="../teams/">Teams</a>
+            <a class="header-link" href="../stats/">Stats</a>
+            <div class="header-buffer"></div>
+        </nav>
+        </div>
+    </div>
+
+    <div class="page-container">
+    <div class="page-title-bar">
+        <h1 class="page-title">Matches</h1>
+    </div>
+
+    <div class="season-selector-bar">
+        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1</button>
+        <button class="season-sel-btn active" onclick="switchSeason(2)">Season 2</button>
+    </div>
+
+    <div class="matches-columns" id="matches-area">
+        <div class="matches-col">
+            <h2 class="matches-col-title">Upcoming</h2>
+            <div class="matches-list" id="upcoming">
+                <p class="matches-empty">No upcoming matches</p>
+            </div>
+        </div>
+        <div class="matches-col">
+            <h2 class="matches-col-title">Completed</h2>
+            <div class="matches-list" id="completed">
+                <div class="matches-loading">Loading matches...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const teamLogos = {};
+        const cache = {};
+        let currentSeason = 2;
+
+        async function loadTeams() {
+            try {
+                const [s1, s2] = await Promise.all([
+                    fetch('../data/s1/teams.json').then(r => r.json()),
+                    fetch('../data/s2/teams.json').then(r => r.json())
+                ]);
+                teamLogos.s1 = s1;
+                teamLogos.s2 = s2;
+            } catch (err) {}
+            loadMatches(currentSeason);
+        }
+
+        function switchSeason(s) {
+            currentSeason = s;
+            const btns = document.querySelectorAll('.season-sel-btn');
+            btns.forEach((btn, i) => btn.classList.toggle('active', i === s - 1));
+            loadMatches(s);
+        }
+
+        async function loadMatches(season) {
+            const upEl = document.getElementById('upcoming');
+            const compEl = document.getElementById('completed');
+
+            const key = `matches-s${season}`;
+            if (cache[key]) {
+                renderFromCache(cache[key], season);
+                return;
+            }
+
+            upEl.innerHTML = '<p class="matches-empty">No upcoming matches</p>';
+            compEl.innerHTML = '<div class="matches-loading">Loading matches...</div>';
+
+            try {
+                const res = await fetch(`../data/s${season}/matches.json`);
+                if (!res.ok) {
+                    compEl.innerHTML = '<p class="matches-empty">No match data available</p>';
+                    return;
+                }
+                const matches = await res.json();
+                cache[key] = matches;
+                renderFromCache(matches, season);
+            } catch (err) {
+                compEl.innerHTML = '<p class="matches-empty">No match data available</p>';
+            }
+        }
+
+        function renderFromCache(matches, season) {
+            const upcoming = matches.filter(m => !m.completed);
+            const completed = matches.filter(m => m.completed);
+            renderMatches('upcoming', upcoming, season, false);
+            renderMatches('completed', completed, season, true);
+        }
+
+        function getTeamLogo(abbr, season) {
+            const key = `s${season}`;
+            if (teamLogos[key] && teamLogos[key][abbr]) return teamLogos[key][abbr].logo;
+            return '';
+        }
+
+        function getTeamName(abbr, season) {
+            const key = `s${season}`;
+            if (teamLogos[key] && teamLogos[key][abbr]) return teamLogos[key][abbr].name;
+            return abbr;
+        }
+
+        function renderMatches(containerId, matches, season, showScores) {
+            const container = document.getElementById(containerId);
+            if (matches.length === 0) {
+                container.innerHTML = showScores
+                    ? '<p class="matches-empty">No completed matches</p>'
+                    : '<p class="matches-empty">No upcoming matches</p>';
+                return;
+            }
+
+            const sorted = [...matches].sort((a, b) => {
+                const da = new Date(a.date), db = new Date(b.date);
+                return showScores ? db - da : da - db;
+            });
+
+            let html = '';
+            sorted.forEach(match => {
+                const logo1 = getTeamLogo(match.team1, season);
+                const logo2 = getTeamLogo(match.team2, season);
+                const name1 = getTeamName(match.team1, season);
+                const name2 = getTeamName(match.team2, season);
+                const winner = match.score1 > match.score2 ? 1 : match.score2 > match.score1 ? 2 : 0;
+
+                html += '<div class="match-card">';
+                html += `<div class="match-meta">${match.stage || ''}${match.date ? ' · ' + match.date : ''}</div>`;
+                html += '<div class="match-teams">';
+
+                html += `<div class="match-team ${showScores && winner === 1 ? 'match-winner' : ''}">`;
+                if (logo1) html += `<img src="${logo1}" class="match-team-logo" onerror="this.style.display='none'">`;
+                html += `<span class="match-team-name">${name1}</span>`;
+                html += `<span class="match-team-abbr">${match.team1}</span>`;
+                html += '</div>';
+
+                if (showScores) {
+                    html += '<div class="match-score">';
+                    html += `<span class="${winner === 1 ? 'score-win' : 'score-loss'}">${match.score1}</span>`;
+                    html += '<span class="score-separator">:</span>';
+                    html += `<span class="${winner === 2 ? 'score-win' : 'score-loss'}">${match.score2}</span>`;
+                    html += '</div>';
+                } else {
+                    html += '<div class="match-vs">vs</div>';
+                }
+
+                html += `<div class="match-team ${showScores && winner === 2 ? 'match-winner' : ''}">`;
+                html += `<span class="match-team-abbr">${match.team2}</span>`;
+                html += `<span class="match-team-name">${name2}</span>`;
+                if (logo2) html += `<img src="${logo2}" class="match-team-logo" onerror="this.style.display='none'">`;
+                html += '</div>';
+
+                html += '</div>';
+
+                if (match.maps && match.maps.length > 0) {
+                    html += '<div class="match-maps">';
+                    match.maps.forEach(map => {
+                        html += `<span class="match-map-tag">${map.name} <span class="match-map-score">${map.score1}-${map.score2}</span></span>`;
+                    });
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        loadTeams();
+    </script>
+    </div>
+</body>
+</html>

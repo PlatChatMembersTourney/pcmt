@@ -412,6 +412,140 @@ body {
     text-align: center;
 }
 
+/* matches page */
+
+.matches-columns {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+.matches-col {
+    flex: 1;
+    min-width: 0;
+}
+.matches-col-title {
+    color: #6dc5c7;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #444;
+}
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.matches-empty {
+    color: #666;
+    font-size: 14px;
+    padding: 20px 0;
+}
+.matches-loading {
+    color: #777;
+    font-size: 14px;
+    padding: 20px 0;
+}
+.match-card {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    border: 1px solid #3a3a3a;
+    transition: border-color 0.2s;
+}
+.match-card:hover {
+    border-color: #555;
+}
+.match-meta {
+    color: #777;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+.match-teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.match-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+.match-team:last-child {
+    justify-content: flex-end;
+}
+.match-team-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.match-team-name {
+    color: #ccc;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.match-team-abbr {
+    color: #777;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.match-winner .match-team-name {
+    color: whitesmoke;
+    font-weight: 600;
+}
+.match-score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+.score-win {
+    color: #5cb85c;
+}
+.score-loss {
+    color: #888;
+}
+.score-separator {
+    color: #555;
+}
+.match-vs {
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    padding: 0 6px;
+}
+.match-maps {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.match-map-tag {
+    background: #333;
+    color: #aaa;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+.match-map-score {
+    color: #ccc;
+    font-weight: 600;
+}
+@media (max-width: 700px) {
+    .matches-columns {
+        flex-direction: column;
+    }
+}
+
 /* stats page */
 
 .season-selector-bar {
