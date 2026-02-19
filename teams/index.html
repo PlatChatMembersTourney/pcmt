@@ -38,24 +38,7 @@
             <span class="toggle-icon" id="season1-icon">▸</span>
         </button>
         <div class="season-content" id="season1">
-            <div class="teams-grid">
-                <a href="team/?team=CIN&season=1" class="team-card">
-                    <img src="../icons/s1_teams/Absolute Cinema.png" alt="Absolute Cinema" class="team-logo">
-                    <h3 class="team-name">Absolute Cinema</h3>
-                </a>
-                <a href="team/?team=KAT&season=1" class="team-card">
-                    <img src="../icons/s1_teams/Kurt's Kittens.png" alt="Kurt's Kittens" class="team-logo">
-                    <h3 class="team-name">Kurt's Kittens</h3>
-                </a>
-                <a href="team/?team=WALL&season=1" class="team-card">
-                    <img src="../icons/s1_teams/The Brick Wall.png" alt="The Brick Wall" class="team-logo">
-                    <h3 class="team-name">The Brick Wall</h3>
-                </a>
-                <a href="team/?team=YGSYD&season=1" class="team-card">
-                    <img src="../icons/s1_teams/You Get Shot You Die.png" alt="You Get Shot You Die" class="team-logo">
-                    <h3 class="team-name">You Get Shot You Die</h3>
-                </a>
-            </div>
+            <div class="teams-grid" id="grid-s1"></div>
         </div>
     </div>
 
@@ -65,60 +48,119 @@
             <span class="toggle-icon" id="season2-icon">▸</span>
         </button>
         <div class="season-content" id="season2">
-            <div class="teams-grid">
-                <a href="team/?team=EMEA&season=2" class="team-card">
-                    <img src="../icons/s2_teams/TechPauseEsports.png" alt="Tech Pause Esports" class="team-logo">
-                    <h3 class="team-name">Tech Pause Esports</h3>
-                </a>
-                <a href="team/?team=WING&season=2" class="team-card">
-                    <img src="../icons/s2_teams/WingmanWarriors.png" alt="Wingman Warriors" class="team-logo">
-                    <h3 class="team-name">Wingman Warriors</h3>
-                </a>
-                <a href="team/?team=JDG&season=2" class="team-card">
-                    <img src="../icons/s2_teams/JustDudesGaming.png" alt="Just Dudes Gaming" class="team-logo">
-                    <h3 class="team-name">Just Dudes Gaming</h3>
-                </a>
-                <a href="team/?team=ZIRC&season=2" class="team-card">
-                    <img src="../icons/s2_teams/Zirconians.png" alt="Zirconians" class="team-logo">
-                    <h3 class="team-name">Zirconians</h3>
-                </a>
-                <a href="team/?team=DRG&season=2" class="team-card">
-                    <img src="../icons/s2_teams/DeRankGamers.png" alt="DeRank Gamers" class="team-logo">
-                    <h3 class="team-name">DeRank Gamers</h3>
-                </a>
-                <a href="team/?team=MIBR&season=2" class="team-card">
-                    <img src="../icons/s2_teams/MadeInBronze.png" alt="Made in Bronze" class="team-logo">
-                    <h3 class="team-name">Made in Bronze</h3>
-                </a>
-                <a href="team/?team=KOI&season=2" class="team-card">
-                    <img src="../icons/s2_teams/KeepOnInting.png" alt="Keep On Inting" class="team-logo">
-                    <h3 class="team-name">Keep On Inting</h3>
-                </a>
-                <a href="team/?team=SLLY&season=2" class="team-card">
-                    <img src="../icons/s2_teams/SillyGeese.png" alt="Silly Geese" class="team-logo">
-                    <h3 class="team-name">Silly Geese</h3>
-                </a>
-                <a href="team/?team=DRX&season=2" class="team-card">
-                    <img src="../icons/s2_teams/DementiaReallyExists.png" alt="Dementia Really Exists" class="team-logo">
-                    <h3 class="team-name">Dementia Really Exists</h3>
-                </a>
-                <a href="team/?team=WOOD&season=2" class="team-card">
-                    <img src="../icons/s2_teams/TheWoodenFence.png" alt="The Wooden Fence" class="team-logo">
-                    <h3 class="team-name">The Wooden Fence</h3>
-                </a>
-                <a href="team/?team=KRU&season=2" class="team-card">
-                    <img src="../icons/s2_teams/KnivesRUs.png" alt="Knives R' Us" class="team-logo">
-                    <h3 class="team-name">Knives R' Us</h3>
-                </a>
-                <a href="team/?team=TS&season=2" class="team-card">
-                    <img src="../icons/s2_teams/TequilaSunrise.png" alt="Tequila Sunrise" class="team-logo">
-                    <h3 class="team-name">Tequila Sunrise</h3>
-                </a>
-            </div>
+            <div class="teams-grid" id="grid-s2"></div>
         </div>
     </div>
 
     <script>
+        const teamData = {};
+
+        const s1Cards = [
+            { abbr: 'CIN', name: 'Absolute Cinema', logo: '../icons/s1_teams/Absolute Cinema.png' },
+            { abbr: 'KAT', name: "Kurt's Kittens", logo: "../icons/s1_teams/Kurt's Kittens.png" },
+            { abbr: 'WALL', name: 'The Brick Wall', logo: '../icons/s1_teams/The Brick Wall.png' },
+            { abbr: 'YGSYD', name: 'You Get Shot You Die', logo: '../icons/s1_teams/You Get Shot You Die.png' }
+        ];
+
+        const s2Cards = [
+            { abbr: 'EMEA', name: 'Tech Pause Esports', logo: '../icons/s2_teams/TechPauseEsports.png' },
+            { abbr: 'WING', name: 'Wingman Warriors', logo: '../icons/s2_teams/WingmanWarriors.png' },
+            { abbr: 'JDG', name: 'Just Dudes Gaming', logo: '../icons/s2_teams/JustDudesGaming.png' },
+            { abbr: 'ZIRC', name: 'Zirconians', logo: '../icons/s2_teams/Zirconians.png' },
+            { abbr: 'DRG', name: 'DeRank Gamers', logo: '../icons/s2_teams/DeRankGamers.png' },
+            { abbr: 'MIBR', name: 'Made in Bronze', logo: '../icons/s2_teams/MadeInBronze.png' },
+            { abbr: 'KOI', name: 'Keep On Inting', logo: '../icons/s2_teams/KeepOnInting.png' },
+            { abbr: 'SLLY', name: 'Silly Geese', logo: '../icons/s2_teams/SillyGeese.png' },
+            { abbr: 'DRX', name: 'Dementia Really Exists', logo: '../icons/s2_teams/DementiaReallyExists.png' },
+            { abbr: 'WOOD', name: 'The Wooden Fence', logo: '../icons/s2_teams/TheWoodenFence.png' },
+            { abbr: 'KRU', name: "Knives R' Us", logo: '../icons/s2_teams/KnivesRUs.png' },
+            { abbr: 'TS', name: 'Tequila Sunrise', logo: '../icons/s2_teams/TequilaSunrise.png' }
+        ];
+
+        function buildGrid(gridId, cards, season) {
+            const grid = document.getElementById(gridId);
+            cards.forEach(card => {
+                const div = document.createElement('div');
+                div.className = 'team-card';
+                div.dataset.abbr = card.abbr;
+                div.dataset.season = season;
+                div.innerHTML = `<img src="${card.logo}" alt="${card.name}" class="team-logo"><h3 class="team-name">${card.name}</h3>`;
+                div.onclick = () => toggleExpand(div, card, season);
+                grid.appendChild(div);
+            });
+        }
+
+        function toggleExpand(cardEl, card, season) {
+            const grid = cardEl.parentElement;
+            const existingPanel = grid.querySelector(`.team-expand[data-abbr="${card.abbr}"]`);
+
+            // clicking same card — collapse
+            if (existingPanel && existingPanel.classList.contains('open')) {
+                existingPanel.classList.remove('open');
+                cardEl.classList.remove('expanded');
+                setTimeout(() => existingPanel.remove(), 10);
+                return;
+            }
+
+            // close any open panel
+            const openPanel = grid.querySelector('.team-expand.open');
+            if (openPanel) {
+                openPanel.classList.remove('open');
+                const openCard = grid.querySelector('.team-card.expanded');
+                if (openCard) openCard.classList.remove('expanded');
+                openPanel.remove();
+            }
+
+            // find the last card in this visual row
+            const cardRect = cardEl.getBoundingClientRect();
+            const allCards = [...grid.querySelectorAll('.team-card')];
+            let lastInRow = cardEl;
+            for (const c of allCards) {
+                const r = c.getBoundingClientRect();
+                if (Math.abs(r.top - cardRect.top) < 10) lastInRow = c;
+            }
+
+            // create expand panel
+            const panel = document.createElement('div');
+            panel.className = 'team-expand';
+            panel.dataset.abbr = card.abbr;
+
+            const key = `s${season}`;
+            const roster = teamData[key] && teamData[key][card.abbr] ? teamData[key][card.abbr].players : null;
+            const sortedRoster = roster ? [...roster].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : [];
+
+            panel.innerHTML = `
+                <div class="team-expand-header">
+                    <img src="${card.logo}" class="team-expand-logo" onerror="this.style.display='none'">
+                    <div>
+                        <div class="team-expand-name">${card.name}</div>
+                        <div class="team-expand-abbr">${card.abbr} · Season ${season}</div>
+                    </div>
+                </div>
+                <div class="team-expand-roster">
+                    ${sortedRoster.length > 0
+                        ? sortedRoster.map(p => `<span class="team-expand-player">${p}</span>`).join('')
+                        : '<span style="color:#777">Roster not available</span>'}
+                </div>
+                <a href="team/?team=${card.abbr}&season=${season}" class="team-expand-link">View full page →</a>
+            `;
+
+            lastInRow.after(panel);
+            requestAnimationFrame(() => panel.classList.add('open'));
+            cardEl.classList.add('expanded');
+        }
+
+        async function loadRosters() {
+            try {
+                const [s1, s2] = await Promise.all([
+                    fetch('../data/s1/teams.json').then(r => r.json()),
+                    fetch('../data/s2/teams.json').then(r => r.json())
+                ]);
+                teamData.s1 = s1;
+                teamData.s2 = s2;
+            } catch (err) {}
+        }
+
         function toggleSeason(id) {
             const content = document.getElementById(id);
             const icon = document.getElementById(id + '-icon');
@@ -126,13 +168,16 @@
             icon.textContent = content.classList.contains('open') ? '▾' : '▸';
         }
 
-        // handles bfcache (back/forward nav)
         window.addEventListener('pageshow', () => {
             document.getElementById('season1').classList.remove('open');
             document.getElementById('season1-icon').textContent = '▸';
             document.getElementById('season2').classList.remove('open');
             document.getElementById('season2-icon').textContent = '▸';
         });
+
+        buildGrid('grid-s1', s1Cards, 1);
+        buildGrid('grid-s2', s2Cards, 2);
+        loadRosters();
     </script>
     </div>
 </body>
