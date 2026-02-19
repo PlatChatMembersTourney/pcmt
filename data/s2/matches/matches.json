@@ -4340,11 +4340,6 @@
         "name": "Split",
         "score1": 13,
         "score2": 4
-      },
-      {
-        "name": "Pearl",
-        "score1": 0,
-        "score2": 0
       }
     ],
     "combinedStats": [
@@ -6114,11 +6109,6 @@
         "name": "Corrode",
         "score1": 13,
         "score2": 5
-      },
-      {
-        "name": "Pearl",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -6878,11 +6868,6 @@
         "name": "Sunset",
         "score1": 12,
         "score2": 14
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -12681,11 +12666,6 @@
         "name": "Bind",
         "score1": 15,
         "score2": 13
-      },
-      {
-        "name": "Haven",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -14520,11 +14500,6 @@
         "name": "Bind",
         "score1": 13,
         "score2": 4
-      },
-      {
-        "name": "Split",
-        "score1": 0,
-        "score2": 0
       }
     ],
     "combinedStats": [
@@ -16289,11 +16264,6 @@
         "name": "Breeze",
         "score1": 13,
         "score2": 2
-      },
-      {
-        "name": "Split",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -16993,11 +16963,6 @@
         "name": "Sunset",
         "score1": 15,
         "score2": 13
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -19862,11 +19827,6 @@
         "name": "Bind",
         "score1": 13,
         "score2": 11
-      },
-      {
-        "name": "Pearl",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -20621,11 +20581,6 @@
         "name": "Bind",
         "score1": 11,
         "score2": 13
-      },
-      {
-        "name": "Haven",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -22500,11 +22455,6 @@
         "name": "Corrode",
         "score1": 7,
         "score2": 13
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -24294,11 +24244,6 @@
         "name": "Bind",
         "score1": 10,
         "score2": 13
-      },
-      {
-        "name": "Sunset",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -26118,11 +26063,6 @@
         "name": "Lotus",
         "score1": 9,
         "score2": 13
-      },
-      {
-        "name": "Haven",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -26907,11 +26847,6 @@
         "name": "Map 2",
         "score1": 13,
         "score2": 9
-      },
-      {
-        "name": "Map 3",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -27681,11 +27616,6 @@
         "name": "Pearl",
         "score1": 11,
         "score2": 13
-      },
-      {
-        "name": "Split",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -30610,11 +30540,6 @@
         "name": "Split",
         "score1": 13,
         "score2": 11
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -31409,11 +31334,6 @@
         "name": "Abyss",
         "score1": 13,
         "score2": 7
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -32932,11 +32852,6 @@
         "name": "Bind",
         "score1": 13,
         "score2": 15
-      },
-      {
-        "name": "Ascent",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -33731,11 +33646,6 @@
         "name": "Corrode",
         "score1": 13,
         "score2": 11
-      },
-      {
-        "name": "Pearl",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -34454,11 +34364,6 @@
         "name": "Corrode",
         "score1": 13,
         "score2": 11
-      },
-      {
-        "name": "Map 3",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -35238,11 +35143,6 @@
         "name": "Split",
         "score1": 16,
         "score2": 14
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -36037,11 +35937,6 @@
         "name": "Corrode",
         "score1": 13,
         "score2": 10
-      },
-      {
-        "name": "Haven",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -37851,11 +37746,6 @@
         "name": "Pearl",
         "score1": 13,
         "score2": 4
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -38595,11 +38485,6 @@
         "name": "Breeze",
         "score1": 10,
         "score2": 13
-      },
-      {
-        "name": "Pearl",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -43313,11 +43198,6 @@
         "name": "Sunset",
         "score1": 13,
         "score2": 5
-      },
-      {
-        "name": "Split",
-        "score1": 0,
-        "score2": 0
       }
     ],
     "combinedStats": [
@@ -44072,11 +43952,6 @@
         "name": "Lotus",
         "score1": 11,
         "score2": 13
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -44861,11 +44736,6 @@
         "name": "Corrode",
         "score1": 13,
         "score2": 10
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -45620,11 +45490,6 @@
         "name": "Split",
         "score1": 8,
         "score2": 13
-      },
-      {
-        "name": "Bind",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -49569,11 +49434,6 @@
         "name": "Pearl",
         "score1": 13,
         "score2": 7
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -50333,11 +50193,6 @@
         "name": "Split",
         "score1": 13,
         "score2": 10
-      },
-      {
-        "name": "Sunset",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -51127,11 +50982,6 @@
         "name": "Bind",
         "score1": 13,
         "score2": 4
-      },
-      {
-        "name": "Split",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -52901,11 +52751,6 @@
         "name": "Breeze",
         "score1": 13,
         "score2": 10
-      },
-      {
-        "name": "Corrode",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
@@ -54780,11 +54625,6 @@
         "name": "Corrode",
         "score1": 18,
         "score2": 16
-      },
-      {
-        "name": "Sunset",
-        "score1": null,
-        "score2": null
       }
     ],
     "combinedStats": [
