@@ -28,7 +28,6 @@
     </div>
 
     <div class="page-container">
-
     <div id="team-detail">
         <div class="stats-loading">Loading team...</div>
     </div>
@@ -38,34 +37,23 @@
         const teamAbbr = params.get('team');
         const season = parseInt(params.get('season')) || 2;
         let currentTeam = null;
+        const cache = {};
 
         async function loadTeam() {
             const container = document.getElementById('team-detail');
-
-            if (!teamAbbr) {
-                container.innerHTML = '<p class="stats-error">No team specified.</p>';
-                return;
-            }
+            if (!teamAbbr) { container.innerHTML = '<p class="stats-error">No team specified.</p>'; return; }
 
             try {
                 const res = await fetch(`../../data/s${season}/teams.json`);
                 const teams = await res.json();
                 const team = teams[teamAbbr];
-
-                if (!team) {
-                    container.innerHTML = `<p class="stats-error">Team "${teamAbbr}" not found for Season ${season}.</p>`;
-                    return;
-                }
+                if (!team) { container.innerHTML = `<p class="stats-error">Team "${teamAbbr}" not found.</p>`; return; }
 
                 currentTeam = team;
                 document.title = `PCMT - ${team.name}`;
-
-                const sortedPlayers = [...team.players].sort((a, b) =>
-                    a.toLowerCase().localeCompare(b.toLowerCase())
-                );
+                const sortedPlayers = [...team.players].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
                 let html = '';
-
                 html += '<div class="td-header">';
                 html += `<img src="${team.logo}" alt="${team.name}" class="td-logo" onerror="this.style.display='none'">`;
                 html += '<div class="td-header-text">';
@@ -73,16 +61,11 @@
                 html += `<span class="td-meta">${team.abbr} · Season ${season}</span>`;
                 html += '</div></div>';
 
-                html += '<div class="td-section">';
-                html += '<h2 class="td-subtitle">Roster</h2>';
-                html += '<div class="td-roster">';
-                sortedPlayers.forEach(p => {
-                    html += `<div class="td-roster-player">${p}</div>`;
-                });
+                html += '<div class="td-section"><h2 class="td-subtitle">Roster</h2><div class="td-roster">';
+                sortedPlayers.forEach(p => { html += `<div class="td-roster-player">${p}</div>`; });
                 html += '</div></div>';
 
                 html += '<div class="td-columns">';
-
                 html += '<div class="td-col-left">';
                 html += '<h2 class="td-subtitle">Player Stats</h2>';
                 html += '<div class="td-stats-box">';
@@ -94,31 +77,28 @@
                     html += '</div>';
                 }
                 html += '<div id="td-stats-area"><div class="stats-loading">Loading stats...</div></div>';
-                html += `<a href="../../stats/" class="td-see-all">See all stats →</a>`;
-                html += '</div>';
-                html += '</div>';
+                html += '<a href="../../stats/" class="td-see-all">See all stats →</a>';
+                html += '</div></div>';
 
                 html += '<div class="td-col-right">';
-                html += '<h2 class="td-subtitle">Upcoming Matches</h2>';
+                html += '<h2 class="td-subtitle">Matches</h2>';
                 html += '<div class="td-matches-box">';
-                html += '<p class="td-no-matches">No upcoming matches</p>';
+                html += '<div class="stats-sub-tabs" id="td-match-tabs">';
+                html += '<button class="stats-sub-btn active" onclick="switchMatchTab(\'upcoming\')">Upcoming</button>';
+                html += '<button class="stats-sub-btn" onclick="switchMatchTab(\'completed\')">Completed</button>';
                 html += '</div>';
+                html += '<div id="td-matches-area"><p class="td-no-matches">No upcoming matches</p></div>';
+                html += '</div></div>';
                 html += '</div>';
 
-                html += '</div>';
-
-                html += '<div class="td-section">';
-                html += '<h2 class="td-subtitle">Map Stats</h2>';
-                html += '<div id="td-map-area"><div class="stats-loading">Loading stats...</div></div>';
-                html += '</div>';
+                html += '<div class="td-section"><h2 class="td-subtitle">Map Stats</h2>';
+                html += '<div id="td-map-area"><div class="stats-loading">Loading stats...</div></div></div>';
 
                 container.innerHTML = html;
-
                 loadRatingStats(team, season === 2 ? 'Angus' : 'toxic');
                 loadMapStats(team);
             } catch (err) {
                 container.innerHTML = '<p class="stats-error">Failed to load team data.</p>';
-                console.error(err);
             }
         }
 
@@ -129,105 +109,17 @@
             if (currentTeam) loadRatingStats(currentTeam, source);
         }
 
-        function matchesTeam(cellValue, team) {
-            if (!cellValue) return false;
-            const val = String(cellValue).trim().toUpperCase();
-            return val === team.abbr.toUpperCase() || val === team.name.toUpperCase();
+        function switchMatchTab(tab) {
+            const buttons = document.querySelectorAll('#td-match-tabs .stats-sub-btn');
+            const tabs = ['upcoming', 'completed'];
+            buttons.forEach((btn, i) => btn.classList.toggle('active', tabs[i] === tab));
+            const area = document.getElementById('td-matches-area');
+            area.innerHTML = tab === 'upcoming'
+                ? '<p class="td-no-matches">No upcoming matches</p>'
+                : '<p class="td-no-matches">No completed matches</p>';
         }
 
-        async function loadRatingStats(team, source) {
-            const area = document.getElementById('td-stats-area');
-
-            try {
-                if (source === 'toxic') {
-                    const path = `../../data/s${season}/Player Stats.xlsx`;
-                    const response = await fetch(path);
-                    if (!response.ok) { area.innerHTML = '<p class="stats-error">Not available.</p>'; return; }
-                    const ab = await response.arrayBuffer();
-                    const wb = XLSX.read(ab, { type: 'array' });
-                    const sheet = wb.Sheets['Overall'];
-                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                    const rawHeaders = data[0];
-                    const playerRows = data.slice(1).filter(r => r[0] && matchesTeam(r[1], team));
-
-                    if (playerRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
-
-                    const playerIdx = rawHeaders.indexOf('Player');
-                    const ratingIdx = rawHeaders.indexOf('R1.0');
-
-                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
-                    const sorted = [...playerRows].sort((a, b) => (b[ratingIdx] || 0) - (a[ratingIdx] || 0));
-                    sorted.forEach(row => {
-                        const rating = row[ratingIdx] != null ? Number(row[ratingIdx]).toFixed(2) : '-';
-                        html += `<tr><td>${row[playerIdx]}</td><td>${rating}</td></tr>`;
-                    });
-                    html += '</tbody></table>';
-                    area.innerHTML = html;
-
-                } else if (source === 'Angus') {
-                    const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
-                    const gid = '821526300';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-                    const response = await fetch(url);
-                    const csvText = await response.text();
-                    const lines = parseCSV(csvText);
-                    const headers = lines[0];
-                    const rows = lines.slice(1).filter(r => r[0] || r[1]);
-
-                    const teamCol = findCol(headers, ['team']);
-                    const playerCol = findCol(headers, ['player']);
-                    const ratingCol = findCol(headers, ['r', 'r1.0', 'rating']);
-
-                    if (teamCol === -1 || ratingCol === -1) { area.innerHTML = '<p class="stats-error">Column not found.</p>'; return; }
-
-                    const teamRows = rows.filter(r => matchesTeam(r[teamCol], team));
-                    if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
-
-                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
-                    const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
-                    sorted.forEach(row => {
-                        const name = playerCol !== -1 ? row[playerCol] : row[0];
-                        const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
-                        html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
-                    });
-                    html += '</tbody></table>';
-                    area.innerHTML = html;
-
-                } else if (source === 'pi') {
-                    const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
-                    const gid = '1023990137';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-                    const response = await fetch(url);
-                    const csvText = await response.text();
-                    const lines = parseCSV(csvText);
-
-                    const headers = lines[1];
-                    const rows = lines.slice(2).filter(r => r[1] || r[2]);
-
-                    const teamCol = findCol(headers, ['team']);
-                    const playerCol = findCol(headers, ['player']);
-                    const ratingCol = findCol(headers, ['r', 'r1.0']);
-
-                    if (teamCol === -1 || ratingCol === -1) { area.innerHTML = '<p class="stats-error">Column not found.</p>'; return; }
-
-                    const teamRows = rows.filter(r => matchesTeam(r[teamCol], team));
-                    if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">No stats found.</p>'; return; }
-
-                    let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
-                    const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
-                    sorted.forEach(row => {
-                        const name = playerCol !== -1 ? row[playerCol] : row[2];
-                        const rating = row[ratingCol] ? parseFloat(row[ratingCol]).toFixed(2) : '-';
-                        html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
-                    });
-                    html += '</tbody></table>';
-                    area.innerHTML = html;
-                }
-            } catch (err) {
-                area.innerHTML = '<p class="stats-error">Failed to load stats.</p>';
-                console.error(err);
-            }
-        }
+        // --- data loading ---
 
         function findCol(headers, names) {
             return headers.findIndex(h => {
@@ -235,6 +127,110 @@
                 const lower = h.trim().toLowerCase();
                 return names.some(n => lower === n);
             });
+        }
+
+        function filterTeamRows(rows, headers, team) {
+            const teamCol = findCol(headers, ['team']);
+            const rosterUpper = team.players.map(p => p.toUpperCase());
+
+            if (teamCol !== -1) {
+                const uniqueVals = [...new Set(rows.map(r => String(r[teamCol] || '').trim()))].slice(0, 15);
+                const byTeam = rows.filter(r => {
+                    const val = String(r[teamCol] || '').trim().toUpperCase();
+                    return val === team.abbr.toUpperCase() || val === team.name.toUpperCase();
+                });
+                if (byTeam.length > 0) return byTeam;
+                alert('DEBUG filterTeamRows: team col found at index ' + teamCol + ', but no match.\nLooking for: "' + team.abbr + '" or "' + team.name + '"\nValues in sheet: ' + uniqueVals.join(', '));
+            } else {
+                alert('DEBUG filterTeamRows: no "Team" column found.\nHeaders: ' + headers.join(', '));
+            }
+
+            // fallback: match player names against roster
+            for (let col = 0; col < headers.length; col++) {
+                if (col === teamCol) continue;
+                const byCol = rows.filter(r => rosterUpper.includes(String(r[col] || '').trim().toUpperCase()));
+                if (byCol.length >= 2) return byCol;
+            }
+            alert('DEBUG filterTeamRows: roster fallback also failed.\nRoster: ' + rosterUpper.join(', ') + '\nSample row values: ' + (rows[0] || []).join(', '));
+            return [];
+        }
+
+        async function getDataset(source) {
+            const key = `dataset-${source}-s${season}`;
+            if (cache[key]) return cache[key];
+
+            let headers, rows;
+
+            try {
+                if (source === 'toxic') {
+                    const response = await fetch(`../../data/s${season}/Player Stats.xlsx`);
+                    if (!response.ok) { alert('DEBUG: toxic fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    const ab = await response.arrayBuffer();
+                    const wb = XLSX.read(ab, { type: 'array' });
+                    const sheet = wb.Sheets['Overall'];
+                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    headers = data[0];
+                    rows = data.slice(1).filter(r => r[0]);
+                } else if (source === 'Angus') {
+                    const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
+                    const gid = '821526300';
+                    const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
+                    if (!response.ok) { alert('DEBUG: Angus fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    const lines = parseCSV(await response.text());
+                    headers = lines[0];
+                    rows = lines.slice(1).filter(r => r[0] || r[1]);
+                    alert('DEBUG Angus loaded.\nHeaders: ' + headers.join(', ') + '\nRows: ' + rows.length);
+                } else if (source === 'pi') {
+                    const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
+                    const gid = '1023990137';
+                    const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
+                    if (!response.ok) { alert('DEBUG: pi fetch failed: ' + response.status); return { headers: [], rows: [] }; }
+                    const lines = parseCSV(await response.text());
+                    headers = lines[1];
+                    rows = lines.slice(2).filter(r => r[1] || r[2]);
+                    alert('DEBUG pi loaded.\nHeaders: ' + headers.join(', ') + '\nRows: ' + rows.length);
+                }
+            } catch (err) {
+                alert('DEBUG getDataset ERROR for ' + source + ': ' + err.message);
+                return { headers: [], rows: [] };
+            }
+
+            cache[key] = { headers, rows };
+            return { headers, rows };
+        }
+
+        async function loadRatingStats(team, source) {
+            const area = document.getElementById('td-stats-area');
+            try {
+                const { headers, rows } = await getDataset(source);
+                if (!headers || headers.length === 0) { area.innerHTML = '<p class="stats-error">Data not found.</p>'; return; }
+
+                const teamRows = filterTeamRows(rows, headers, team);
+                if (teamRows.length === 0) { area.innerHTML = '<p class="stats-error">Data not found.</p>'; return; }
+
+                const ratingCol = findCol(headers, ['r1.0', 'r', 'rating', 'rrating']);
+                const playerCol = findCol(headers, ['player', 'name', 'ign']);
+                if (ratingCol === -1) {
+                    alert('DEBUG loadRatingStats: no rating column.\nHeaders: ' + headers.join(', '));
+                    area.innerHTML = '<p class="stats-error">Data not found.</p>';
+                    return;
+                }
+
+                const nameCol = playerCol !== -1 ? playerCol : 0;
+                const sorted = [...teamRows].sort((a, b) => (parseFloat(b[ratingCol]) || 0) - (parseFloat(a[ratingCol]) || 0));
+
+                let html = '<table class="stats-table td-rating-table"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
+                sorted.forEach(row => {
+                    const name = row[nameCol] || '';
+                    const rating = row[ratingCol] != null && row[ratingCol] !== '' ? parseFloat(row[ratingCol]).toFixed(2) : '-';
+                    html += `<tr><td>${name}</td><td>${rating}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                area.innerHTML = html;
+            } catch (err) {
+                alert('DEBUG loadRatingStats ERROR: ' + err.message);
+                area.innerHTML = '<p class="stats-error">Failed to load stats.</p>';
+            }
         }
 
         function parseCSV(text) {
@@ -262,19 +258,28 @@
             return rows;
         }
 
+        // --- map stats ---
+
         async function loadMapStats(team) {
             const area = document.getElementById('td-map-area');
             try {
                 const path = `../../data/s${season}/Team Map Stats.xlsx`;
-                const response = await fetch(path);
-                if (!response.ok) { area.innerHTML = '<p class="stats-error">Map stats not available.</p>'; return; }
-                const ab = await response.arrayBuffer();
+                const mapCacheKey = `teammap-xlsx-s${season}`;
+                let ab;
+                if (cache[mapCacheKey]) {
+                    ab = cache[mapCacheKey];
+                } else {
+                    const response = await fetch(path);
+                    if (!response.ok) { area.innerHTML = '<p class="stats-error">Map stats not available.</p>'; return; }
+                    ab = await response.arrayBuffer();
+                    cache[mapCacheKey] = ab;
+                }
                 const wb = XLSX.read(ab, { type: 'array' });
 
                 const sheetName = wb.SheetNames.find(s =>
                     s === team.name || s.includes(team.abbr) || s.includes(team.name)
                 );
-                if (!sheetName) { area.innerHTML = '<p class="stats-error">No map stats found.</p>'; return; }
+                if (!sheetName) { area.innerHTML = '<p class="stats-error">Data not found.</p>'; return; }
 
                 const ws = wb.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
@@ -336,13 +341,72 @@
                 }
                 html += renderTable(mapHeaders, filteredRows, 'td-maps');
                 area.innerHTML = html;
+                highlightTable('td-maps', 'team');
             } catch (err) {
                 area.innerHTML = '<p class="stats-error">Failed to load map stats.</p>';
-                console.error(err);
             }
         }
 
+        // --- table rendering ---
+
         const sortState = {};
+        const lowerIsBetter = ['d', 'dpr', 'fdpr', 'fd', 'ban'];
+
+        function highlightTable(tableId, mode) {
+            const table = document.getElementById(`table-${tableId}`);
+            if (!table) return;
+            const state = sortState[tableId];
+            if (!state) return;
+            state.highlightMode = mode;
+            const headers = state.headers;
+            const tbody = table.querySelector('tbody');
+            const trs = tbody.querySelectorAll('tr');
+            if (trs.length < 2) return;
+
+            const skipCols = new Set();
+            headers.forEach((h, i) => {
+                const lower = (h || '').trim().toLowerCase();
+                if (['#', 'player', 'team', 'map', 'mp'].includes(lower)) skipCols.add(i);
+            });
+
+            for (let col = 0; col < headers.length; col++) {
+                if (skipCols.has(col)) continue;
+                const hLower = (headers[col] || '').trim().toLowerCase();
+                const invert = lowerIsBetter.includes(hLower);
+                let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
+
+                trs.forEach((tr, rowIdx) => {
+                    const td = tr.children[col];
+                    if (!td) return;
+                    let raw = td.textContent.trim();
+                    if (raw === '' || raw === '-') return;
+                    if (raw.endsWith('%')) raw = raw.slice(0, -1);
+                    const num = parseFloat(raw);
+                    if (isNaN(num)) return;
+
+                    if (bestVal === null) {
+                        bestVal = num; worstVal = num; bestIdx = rowIdx; worstIdx = rowIdx;
+                    } else {
+                        if (invert) {
+                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        } else {
+                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        }
+                    }
+                });
+
+                if (bestIdx !== -1 && bestVal !== worstVal) {
+                    const bestTd = trs[bestIdx].children[col];
+                    if (bestTd) bestTd.classList.add('stat-best');
+                }
+                if (mode === 'team' && worstIdx !== -1 && bestVal !== worstVal) {
+                    const worstTd = trs[worstIdx].children[col];
+                    if (worstTd) worstTd.classList.add('stat-worst');
+                }
+            }
+        }
 
         function renderTable(headers, rows, tableId) {
             let html = `<table class="stats-table" id="table-${tableId}">`;
@@ -357,7 +421,7 @@
                 html += '</tr>';
             });
             html += '</tbody></table>';
-            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0 };
+            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
             return html;
         }
 
@@ -388,6 +452,7 @@
                 if (i === colIndex && state.currentCol !== -1) arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
                 else arrow.textContent = '';
             });
+            if (state.highlightMode) highlightTable(tableId, state.highlightMode);
         }
 
         function fmtPct(val) {
@@ -403,7 +468,6 @@
 
         loadTeam();
     </script>
-
     </div>
 </body>
 </html>
