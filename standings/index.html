@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../icons/PCMT Logo.png">
-    <title>PCMT - Standings</title>
+    <title>PCMT - standings</title>
     <style>
         .bracket-date {
             font-size: 0.7em;
@@ -28,7 +28,7 @@
         <nav class="header-content">
             <a class="header-link" href="../">Home</a>
             <a class="header-link" href="../matches/">Matches</a>
-            <a class="header-link active" href="../Standings/">Standings</a>
+            <a class="header-link active" href="../standings/">standings</a>
             <a class="header-link" href="../teams/">Teams</a>
             <a class="header-link" href="../stats/">Stats</a>
             <div class="header-buffer"></div>
@@ -38,7 +38,7 @@
 
     <div class="page-container">
     <div class="page-title-bar">
-        <h1 class="page-title">Standings</h1>
+        <h1 class="page-title">standings</h1>
     </div>
 
     <div class="season-selector-bar">
@@ -52,8 +52,8 @@
         <button class="stats-sub-btn" onclick="switchStage('playoffs')">Playoffs</button>
     </div>
 
-    <div class="Standings-content" id="Standings-area">
-        <div class="stats-loading">Loading Standings...</div>
+    <div class="standings-content" id="standings-area">
+        <div class="stats-loading">Loading standings...</div>
     </div>
 
     <script>
@@ -75,7 +75,7 @@
             const stageTabs = document.getElementById('stage-tabs');
             stageTabs.style.display = (season === 2) ? '' : 'none';
 
-            loadStandings();
+            loadstandings();
         }
 
         function switchStage(stage) {
@@ -83,7 +83,7 @@
             const buttons = document.querySelectorAll('#stage-tabs .stats-sub-btn');
             const stages = ['groups', 'lcq', 'playoffs'];
             buttons.forEach((btn, i) => btn.classList.toggle('active', stages[i] === stage));
-            loadStandings();
+            loadstandings();
         }
 
         function parseCSV(csvText) {
@@ -117,11 +117,11 @@
             return `${month} ${day}`;
         }
 
-        function loadStandings() {
-            const area = document.getElementById('Standings-area');
+        function loadstandings() {
+            const area = document.getElementById('standings-area');
 
             if (currentSeason === 1) {
-                area.innerHTML = '<div class="Standings-empty"><p>Season 1 Standings are currently under review.</p></div>';
+                area.innerHTML = '<div class="standings-empty"><p>Season 1 standings are currently under review.</p></div>';
                 return;
             }
 
@@ -132,7 +132,7 @@
             }
 
             if (currentStage === 'playoffs') {
-                area.innerHTML = '<div class="Standings-empty"><p>Playoff bracket will be available once playoffs begin.</p></div>';
+                area.innerHTML = '<div class="standings-empty"><p>Playoff bracket will be available once playoffs begin.</p></div>';
                 return;
             }
 
@@ -142,12 +142,12 @@
                 return;
             }
 
-            area.innerHTML = '<div class="stats-loading">Loading Standings...</div>';
+            area.innerHTML = '<div class="stats-loading">Loading standings...</div>';
             loadS2Groups();
         }
 
         async function loadS2Groups() {
-            const area = document.getElementById('Standings-area');
+            const area = document.getElementById('standings-area');
 
             try {
                 const sheetId = '16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8';
@@ -216,8 +216,8 @@
                 }
 
                 // render scoreboard
-                let html = '<div class="Standings-section">';
-                html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky Standings-table">';
+                let html = '<div class="standings-section">';
+                html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table">';
 
                 html += '<thead><tr class="category-row">';
                 html += '<th colspan="3"></th>';
@@ -269,8 +269,8 @@
 
                 // render H2H matrix
                 if (h2hData.length > 0 && h2hTeams.length > 0) {
-                    html += '<div class="Standings-section">';
-                    html += '<h2 class="Standings-subtitle">Head-to-Head</h2>';
+                    html += '<div class="standings-section">';
+                    html += '<h2 class="standings-subtitle">Head-to-Head</h2>';
                     html += '<div class="h2h-scroll"><table class="stats-table h2h-table">';
 
                     html += '<thead><tr><th></th>';
@@ -303,13 +303,13 @@
                 cacheSet('s2-groups', html);
                 area.innerHTML = html;
             } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Standings. The sheet may not be publicly shared.</p></div>';
-                console.error('Standings error:', err);
+                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load standings. The sheet may not be publicly shared.</p></div>';
+                console.error('standings error:', err);
             }
         }
 
         async function loadLCQBracket() {
-            const area = document.getElementById('Standings-area');
+            const area = document.getElementById('standings-area');
 
             // LCQ seeds from group stage (3rd vs 6th, 4th vs 5th)
             const seeds = {

@@ -1348,20 +1348,20 @@ body {
     font-weight: 700;
 }
 
-/* Standings page */
+/* standings page */
 
-.Standings-content {
+.standings-content {
     margin: 20px 0 30px;
 }
-.Standings-section {
+.standings-section {
     margin-bottom: 30px;
 }
-.Standings-subtitle {
+.standings-subtitle {
     color: #6dc5c7;
     font-size: 22px;
     margin: 20px 0 12px;
 }
-.Standings-empty {
+.standings-empty {
     background: linear-gradient(to right, #272727, #282828);
     border-radius: 12px;
     padding: 40px;
@@ -1370,7 +1370,7 @@ body {
     font-style: italic;
     font-size: 16px;
 }
-.Standings-table .team-abbr-cell {
+.standings-table .team-abbr-cell {
     color: #6dc5c7;
     font-weight: 600;
 }
@@ -1585,12 +1585,12 @@ body {
     padding: 30px;
     text-align: center;
 }
-/* Standings scrollbar hide */
-.Standings-section .stats-table-scroll {
+/* standings scrollbar hide */
+.standings-section .stats-table-scroll {
     overflow-x: auto;
     scrollbar-width: none;
 }
-.Standings-section .stats-table-scroll::-webkit-scrollbar {
+.standings-section .stats-table-scroll::-webkit-scrollbar {
     display: none;
 }
 
