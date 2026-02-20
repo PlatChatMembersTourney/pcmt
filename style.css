@@ -1348,20 +1348,20 @@ body {
     font-weight: 700;
 }
 
-/* rankings page */
+/* Standings page */
 
-.rankings-content {
+.Standings-content {
     margin: 20px 0 30px;
 }
-.rankings-section {
+.Standings-section {
     margin-bottom: 30px;
 }
-.rankings-subtitle {
+.Standings-subtitle {
     color: #6dc5c7;
     font-size: 22px;
     margin: 20px 0 12px;
 }
-.rankings-empty {
+.Standings-empty {
     background: linear-gradient(to right, #272727, #282828);
     border-radius: 12px;
     padding: 40px;
@@ -1370,7 +1370,7 @@ body {
     font-style: italic;
     font-size: 16px;
 }
-.rankings-table .team-abbr-cell {
+.Standings-table .team-abbr-cell {
     color: #6dc5c7;
     font-weight: 600;
 }
@@ -1585,12 +1585,12 @@ body {
     padding: 30px;
     text-align: center;
 }
-/* rankings scrollbar hide */
-.rankings-section .stats-table-scroll {
+/* Standings scrollbar hide */
+.Standings-section .stats-table-scroll {
     overflow-x: auto;
     scrollbar-width: none;
 }
-.rankings-section .stats-table-scroll::-webkit-scrollbar {
+.Standings-section .stats-table-scroll::-webkit-scrollbar {
     display: none;
 }
 
