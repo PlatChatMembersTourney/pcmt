@@ -1813,3 +1813,18 @@ a.md-team-info:hover .md-team-name {
 .md-stats-table thead th.md-col-agent {
     text-align: center;
 }
+
+/* Add these rules to style.css for sortable match tables */
+
+.md-stats-table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+.md-stats-table thead th.sortable:hover {
+    color: #6dc5c7;
+}
+.md-stats-table .sort-arrow {
+    font-size: 11px;
+    color: #888;
+}

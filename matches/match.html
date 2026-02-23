@@ -41,6 +41,9 @@
         let teams = {};
         let currentMapTab = 'all';
 
+        // --- Sort state for match tables ---
+        const matchSortState = {};
+
         function logoFor(abbr, cls) {
             if (!abbr || !teams[abbr]) return '';
             const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
@@ -189,6 +192,274 @@
             </div>`;
         }
 
+        // --- Sortable match tables ---
+
+        const mdLowerIsBetter = ['d', 'fd'];
+
+        function sortMatchTable(tableId, colIndex) {
+            const state = matchSortState[tableId];
+            if (!state) return;
+
+            if (state.currentCol === colIndex) {
+                state.clicks++;
+            } else {
+                state.currentCol = colIndex;
+                state.clicks = 1;
+            }
+
+            let sorted;
+            if (state.clicks % 3 === 0) {
+                sorted = [...state.originalRows];
+                state.currentCol = -1;
+                state.clicks = 0;
+            } else {
+                const asc = state.clicks % 3 === 2;
+                sorted = [...state.rows].sort((a, b) => {
+                    let valA = a[colIndex];
+                    let valB = b[colIndex];
+                    // strip HTML from player cell for sorting
+                    const stripHtml = v => typeof v === 'string' ? v.replace(/<[^>]*>/g, '') : v;
+                    valA = stripHtml(valA);
+                    valB = stripHtml(valB);
+                    if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
+                    if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return asc ? numA - numB : numB - numA;
+                    }
+                    const strA = String(valA || '').toLowerCase();
+                    const strB = String(valB || '').toLowerCase();
+                    return asc ? strA.localeCompare(strB) : strB.localeCompare(strA);
+                });
+            }
+
+            state.rows = sorted;
+
+            const table = document.getElementById(`table-${tableId}`);
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = sorted.map(row =>
+                '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
+            ).join('');
+
+            // Restore CSS classes on cells
+            applyMatchCellClasses(tableId);
+
+            // Update sort arrows
+            const ths = table.querySelectorAll('thead th');
+            ths.forEach((th, i) => {
+                const arrow = th.querySelector('.sort-arrow');
+                if (!arrow) return;
+                if (i === colIndex && state.currentCol !== -1) {
+                    arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
+                } else {
+                    arrow.textContent = '';
+                }
+            });
+
+            highlightMatchTable(tableId);
+        }
+
+        function applyMatchCellClasses(tableId) {
+            const state = matchSortState[tableId];
+            if (!state) return;
+            const table = document.getElementById(`table-${tableId}`);
+            if (!table) return;
+            const tbody = table.querySelector('tbody');
+            const trs = tbody.querySelectorAll('tr');
+
+            trs.forEach(tr => {
+                const tds = tr.querySelectorAll('td');
+                tds.forEach((td, i) => {
+                    // Player column
+                    if (i === state.playerColIdx) {
+                        td.classList.add('md-col-player');
+                    }
+                    // Agent column
+                    if (state.agentColIdx !== undefined && i === state.agentColIdx) {
+                        td.classList.add('md-col-agent');
+                    }
+                    // Rating column
+                    if (i === state.ratingColIdx) {
+                        td.classList.add('md-col-rating');
+                    }
+                    // +/- columns
+                    const raw = td.textContent.trim();
+                    if (state.plusMinusCols && state.plusMinusCols.has(i)) {
+                        const num = parseInt(raw);
+                        if (!isNaN(num)) {
+                            td.className = '';
+                            if (num > 0) td.classList.add('md-stat-pos');
+                            else if (num < 0) td.classList.add('md-stat-neg');
+                        }
+                    }
+                });
+            });
+        }
+
+        function highlightMatchTable(tableId) {
+            const state = matchSortState[tableId];
+            if (!state) return;
+            const table = document.getElementById(`table-${tableId}`);
+            if (!table) return;
+            const tbody = table.querySelector('tbody');
+            const trs = tbody.querySelectorAll('tr');
+            if (trs.length < 2) return;
+
+            const headers = state.headers;
+            const skipCols = new Set();
+            headers.forEach((h, i) => {
+                const lower = (h || '').trim().toLowerCase();
+                if (['player', 'agent'].includes(lower)) skipCols.add(i);
+            });
+
+            for (let col = 0; col < headers.length; col++) {
+                if (skipCols.has(col)) continue;
+
+                const hLower = (headers[col] || '').trim().toLowerCase();
+                const invert = mdLowerIsBetter.includes(hLower);
+
+                let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
+
+                trs.forEach((tr, rowIdx) => {
+                    const td = tr.children[col];
+                    if (!td) return;
+                    let raw = td.textContent.trim();
+                    if (raw === '' || raw === '-') return;
+                    if (raw.endsWith('%')) raw = raw.slice(0, -1);
+                    const num = parseFloat(raw);
+                    if (isNaN(num)) return;
+
+                    if (bestVal === null) {
+                        bestVal = num; worstVal = num;
+                        bestIdx = rowIdx; worstIdx = rowIdx;
+                    } else {
+                        if (invert) {
+                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        } else {
+                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
+                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
+                        }
+                    }
+                });
+
+                if (bestIdx !== -1 && bestVal !== worstVal) {
+                    const bestTd = trs[bestIdx].children[col];
+                    if (bestTd) bestTd.classList.add('stat-best');
+                }
+            }
+        }
+
+        function buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, hasAgent) {
+            const headers = hasAgent ? ['Player', 'Agent', ...displayHeaders] : ['Player', ...displayHeaders];
+            const playerColIdx = 0;
+            const agentColIdx = hasAgent ? 1 : undefined;
+            const ratingIdx = hasAgent ? 2 : 1;
+            const plusMinusCols = new Set();
+
+            displayHeaders.forEach((h, i) => {
+                if (h === '+/-' || h === 'FK±') {
+                    plusMinusCols.add(hasAgent ? i + 2 : i + 1);
+                }
+            });
+
+            // Build row data
+            const sorted = [...teamStats.players].sort((a, b) =>
+                (parseFloat(b['R1.0']) || 0) - (parseFloat(a['R1.0']) || 0)
+            );
+
+            const rows = sorted.map(player => {
+                const row = [];
+                // Player
+                row.push(player.Player || '');
+                // Agent (if applicable)
+                if (hasAgent) {
+                    const agent = player.Agent;
+                    if (agent && agent !== '-') {
+                        row.push(`<img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'">`);
+                    } else {
+                        row.push('-');
+                    }
+                }
+                // Stats
+                statCols.forEach(col => {
+                    let val = player[col];
+                    if (val == null || val === '') {
+                        row.push('-');
+                    } else if (col === 'R1.0') {
+                        row.push(parseFloat(val).toFixed(2));
+                    } else if (col === 'KAST' || col === 'HS%') {
+                        row.push((parseFloat(val) * 100).toFixed(0) + '%');
+                    } else if (col === 'ACS' || col === 'ADR') {
+                        row.push(String(Math.round(parseFloat(val))));
+                    } else if (col === 'PlusMinus' || col === 'PlusMinus2') {
+                        const num = parseInt(val);
+                        const prefix = num > 0 ? '+' : '';
+                        row.push(`${prefix}${num}`);
+                    } else {
+                        row.push(String(val));
+                    }
+                });
+                return row;
+            });
+
+            // Store sort state
+            matchSortState[tableId] = {
+                headers,
+                rows: [...rows],
+                originalRows: [...rows],
+                currentCol: ratingIdx,
+                clicks: 1,
+                playerColIdx,
+                agentColIdx,
+                ratingColIdx: ratingIdx,
+                plusMinusCols
+            };
+
+            // Build HTML
+            let html = '';
+            html += `<div class="md-team-stats ${isWinner ? 'md-team-stats-win' : 'md-team-stats-loss'}">`;
+            html += `<div class="md-team-stats-header">`;
+            html += `<span class="md-team-stats-name">${teamStats.teamName}</span>`;
+            html += `<span class="md-team-stats-abbr">${teamStats.team}</span>`;
+            html += `</div>`;
+
+            html += `<div class="md-stats-scroll"><table class="md-stats-table" id="table-${tableId}">`;
+            html += '<thead><tr>';
+            headers.forEach((h, i) => {
+                let cls = '';
+                if (h === 'Player') cls = ' class="md-col-player sortable"';
+                else if (h === 'Agent') cls = ' class="md-col-agent sortable"';
+                else cls = ' class="sortable"';
+                const arrow = (i === ratingIdx) ? ' ▼' : '';
+                html += `<th${cls} onclick="sortMatchTable('${tableId}', ${i})">${h} <span class="sort-arrow">${arrow}</span></th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            rows.forEach(row => {
+                html += '<tr>';
+                row.forEach((cell, i) => {
+                    let cls = '';
+                    if (i === playerColIdx) cls = ' class="md-col-player"';
+                    else if (hasAgent && i === agentColIdx) cls = ' class="md-col-agent"';
+                    else if (i === ratingIdx) cls = ' class="md-col-rating"';
+                    else if (plusMinusCols.has(i)) {
+                        const num = parseInt(String(cell).replace('+', ''));
+                        if (!isNaN(num)) {
+                            if (num > 0) cls = ' class="md-stat-pos"';
+                            else if (num < 0) cls = ' class="md-stat-neg"';
+                        }
+                    }
+                    html += `<td${cls}>${cell ?? ''}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div></div>';
+            return html;
+        }
+
         function renderAllMaps(area) {
             if (!match.combinedStats || match.combinedStats.length === 0) {
                 area.innerHTML = '<p class="stats-error">No stats available.</p>';
@@ -203,49 +474,8 @@
 
             match.combinedStats.forEach((teamStats, teamIdx) => {
                 const isWinner = (teamIdx === 0 && winner === 1) || (teamIdx === 1 && winner === 2);
-
-                html += `<div class="md-team-stats ${isWinner ? 'md-team-stats-win' : 'md-team-stats-loss'}">`;
-                html += `<div class="md-team-stats-header">`;
-                html += `<span class="md-team-stats-name">${teamStats.teamName}</span>`;
-                html += `<span class="md-team-stats-abbr">${teamStats.team}</span>`;
-                html += `</div>`;
-
-                html += '<div class="md-stats-scroll"><table class="md-stats-table">';
-                html += '<thead><tr>';
-                html += '<th class="md-col-player">Player</th>';
-                displayHeaders.forEach(h => html += `<th>${h}</th>`);
-                html += '</tr></thead><tbody>';
-
-                const sorted = [...teamStats.players].sort((a, b) =>
-                    (parseFloat(b['R1.0']) || 0) - (parseFloat(a['R1.0']) || 0)
-                );
-
-                sorted.forEach(player => {
-                    html += '<tr>';
-                    html += `<td class="md-col-player">${player.Player || ''}</td>`;
-                    statCols.forEach(col => {
-                        let val = player[col];
-                        if (val == null || val === '') {
-                            html += '<td>-</td>';
-                        } else if (col === 'R1.0') {
-                            html += `<td class="md-col-rating">${parseFloat(val).toFixed(2)}</td>`;
-                        } else if (col === 'KAST' || col === 'HS%') {
-                            html += `<td>${(parseFloat(val) * 100).toFixed(0)}%</td>`;
-                        } else if (col === 'ACS' || col === 'ADR') {
-                            html += `<td>${Math.round(parseFloat(val))}</td>`;
-                        } else if (col === 'PlusMinus' || col === 'PlusMinus2') {
-                            const num = parseInt(val);
-                            const cls = num > 0 ? 'md-stat-pos' : num < 0 ? 'md-stat-neg' : '';
-                            const prefix = num > 0 ? '+' : '';
-                            html += `<td class="${cls}">${prefix}${num}</td>`;
-                        } else {
-                            html += `<td>${val}</td>`;
-                        }
-                    });
-                    html += '</tr>';
-                });
-
-                html += '</tbody></table></div></div>';
+                const tableId = `md-all-team${teamIdx}`;
+                html += buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, false);
             });
 
             html += '</div>';
@@ -258,6 +488,11 @@
             }
 
             area.innerHTML = html;
+
+            // Apply highlights after DOM is ready
+            match.combinedStats.forEach((_, teamIdx) => {
+                highlightMatchTable(`md-all-team${teamIdx}`);
+            });
         }
 
         function renderSingleMap(area, md) {
@@ -289,7 +524,17 @@
             // Per-map stats table
             if (md.stats && md.stats.length > 0) {
                 const winner = md.score1 > md.score2 ? 1 : 2;
-                html += renderMapStatsTable(md.stats, winner);
+                const statCols = ['R1.0', 'ACS', 'K', 'D', 'A', 'PlusMinus', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'PlusMinus2'];
+                const displayHeaders = ['R', 'ACS', 'K', 'D', 'A', '+/-', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'FK±'];
+
+                html += '<div class="md-map-section">';
+                md.stats.forEach((teamStats, teamIdx) => {
+                    const isWinner = (teamIdx === 0 && winner === 1) || (teamIdx === 1 && winner === 2);
+                    const mapSlug = md.name.replace(/\s+/g, '').toLowerCase();
+                    const tableId = `md-map-${mapSlug}-team${teamIdx}`;
+                    html += buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, true);
+                });
+                html += '</div>';
             }
 
             // VOD embed
@@ -300,67 +545,14 @@
             }
 
             area.innerHTML = html;
-        }
 
-        function renderMapStatsTable(stats, winner) {
-            const statCols = ['R1.0', 'ACS', 'K', 'D', 'A', 'PlusMinus', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'PlusMinus2'];
-            const displayHeaders = ['R', 'ACS', 'K', 'D', 'A', '+/-', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'FK±'];
-            let html = '<div class="md-map-section">';
-
-            stats.forEach((teamStats, teamIdx) => {
-                const isWinner = (teamIdx === 0 && winner === 1) || (teamIdx === 1 && winner === 2);
-
-                html += `<div class="md-team-stats ${isWinner ? 'md-team-stats-win' : 'md-team-stats-loss'}">`;
-                html += `<div class="md-team-stats-header">`;
-                html += `<span class="md-team-stats-name">${teamStats.teamName}</span>`;
-                html += `<span class="md-team-stats-abbr">${teamStats.team}</span>`;
-                html += `</div>`;
-
-                html += '<div class="md-stats-scroll"><table class="md-stats-table">';
-                html += '<thead><tr>';
-                html += '<th class="md-col-player">Player</th>';
-                html += '<th class="md-col-agent">Agent</th>';
-                displayHeaders.forEach(h => html += `<th>${h}</th>`);
-                html += '</tr></thead><tbody>';
-
-                const sorted = [...teamStats.players].sort((a, b) =>
-                    (parseFloat(b['R1.0']) || 0) - (parseFloat(a['R1.0']) || 0)
-                );
-
-                sorted.forEach(player => {
-                    html += '<tr>';
-                    html += `<td class="md-col-player">${player.Player || ''}</td>`;
-                    const agent = player.Agent;
-                    html += agent && agent !== '-'
-                        ? `<td class="md-col-agent"><img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'"></td>`
-                        : '<td class="md-col-agent">-</td>';
-                    statCols.forEach(col => {
-                        let val = player[col];
-                        if (val == null || val === '') {
-                            html += '<td>-</td>';
-                        } else if (col === 'R1.0') {
-                            html += `<td class="md-col-rating">${parseFloat(val).toFixed(2)}</td>`;
-                        } else if (col === 'KAST' || col === 'HS%') {
-                            html += `<td>${(parseFloat(val) * 100).toFixed(0)}%</td>`;
-                        } else if (col === 'ACS' || col === 'ADR') {
-                            html += `<td>${Math.round(parseFloat(val))}</td>`;
-                        } else if (col === 'PlusMinus' || col === 'PlusMinus2') {
-                            const num = parseInt(val);
-                            const cls = num > 0 ? 'md-stat-pos' : num < 0 ? 'md-stat-neg' : '';
-                            const prefix = num > 0 ? '+' : '';
-                            html += `<td class="${cls}">${prefix}${num}</td>`;
-                        } else {
-                            html += `<td>${val}</td>`;
-                        }
-                    });
-                    html += '</tr>';
+            // Apply highlights after DOM is ready
+            if (md.stats) {
+                md.stats.forEach((_, teamIdx) => {
+                    const mapSlug = md.name.replace(/\s+/g, '').toLowerCase();
+                    highlightMatchTable(`md-map-${mapSlug}-team${teamIdx}`);
                 });
-
-                html += '</tbody></table></div></div>';
-            });
-
-            html += '</div>';
-            return html;
+            }
         }
 
         function renderTimeline(md) {
