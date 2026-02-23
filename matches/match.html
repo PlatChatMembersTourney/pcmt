@@ -152,7 +152,7 @@
             }
             html += '</div>';
 
-            // --- Stats area (empty for now) ---
+            // --- Stats area ---
             html += '<div id="md-stats-area"></div>';
 
             container.innerHTML = html;
@@ -175,6 +175,18 @@
             } else {
                 renderSingleMap(area, match.mapDetails[mapIndex]);
             }
+        }
+
+        function renderStreamEmbed(link) {
+            const vidMatch = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (!vidMatch) return '';
+            return `<div class="md-stream-embed">
+                <iframe src="https://www.youtube.com/embed/${vidMatch[1]}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>`;
         }
 
         function renderAllMaps(area) {
@@ -237,6 +249,14 @@
             });
 
             html += '</div>';
+
+            // VOD embed
+            const link = match.streamLink;
+            if (link) {
+                html += `<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>`;
+                html += renderStreamEmbed(link);
+            }
+
             area.innerHTML = html;
         }
 
@@ -272,10 +292,11 @@
                 html += renderMapStatsTable(md.stats, winner);
             }
 
-            // Stream link (per-map or match-level fallback)
+            // VOD embed
             const link = md.streamLink || match.streamLink;
             if (link) {
-                html += `<div class="md-stream-link"><a href="${link}" target="_blank" class="md-stream-btn">▶ Watch on YouTube</a></div>`;
+                html += `<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>`;
+                html += renderStreamEmbed(link);
             }
 
             area.innerHTML = html;
@@ -309,7 +330,10 @@
                 sorted.forEach(player => {
                     html += '<tr>';
                     html += `<td class="md-col-player">${player.Player || ''}</td>`;
-                    html += `<td class="md-col-agent">${player.Agent || '-'}</td>`;
+                    const agent = player.Agent;
+                    html += agent && agent !== '-'
+                        ? `<td class="md-col-agent"><img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'"></td>`
+                        : '<td class="md-col-agent">-</td>';
                     statCols.forEach(col => {
                         let val = player[col];
                         if (val == null || val === '') {
@@ -341,27 +365,23 @@
 
         function renderTimeline(md) {
             const rounds = md.rounds;
-            // Find the half split: first round where side flips for team1
-            // Rounds 1-12 are first half, 13+ second half (standard Valorant)
             const firstHalf = rounds.filter(r => r.round <= 12);
             const secondHalf = rounds.filter(r => r.round > 12);
 
-            // Count halftime scores
             let t1First = firstHalf.filter(r => r.winner === 1).length;
             let t2First = firstHalf.filter(r => r.winner === 2).length;
-            let t1Second = secondHalf.filter(r => r.winner === 1).length;
-            let t2Second = secondHalf.filter(r => r.winner === 2).length;
 
             const maxRound = Math.max(...rounds.map(x => x.round));
-            const hasOT = maxRound > 24;
-            const t1Reg = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 1).length;
-            const t2Reg = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 2).length;
-            const t1OT = hasOT ? rounds.filter(r => r.round >= 25 && r.winner === 1).length : 0;
-            const t2OT = hasOT ? rounds.filter(r => r.round >= 25 && r.winner === 2).length : 0;
+            const totalFromScore = md.score1 + md.score2;
+            const hasOT = maxRound > 24 || totalFromScore > 24;
+
+            const t1Reg2 = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 1).length;
+            const t2Reg2 = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 2).length;
+            const t1OT = hasOT ? md.score1 - t1First - t1Reg2 : 0;
+            const t2OT = hasOT ? md.score2 - t2First - t2Reg2 : 0;
 
             let html = '<div class="md-timeline">';
 
-            // OT label row
             if (hasOT) {
                 html += '<div class="md-timeline-row md-timeline-labels">';
                 html += '<span class="md-timeline-team"></span>';
@@ -376,10 +396,8 @@
                 html += '</div></div>';
             }
 
-            // Team 1 row
-            html += renderTimelineRow(match.team1, 1, rounds, maxRound, hasOT, t1First, hasOT ? t1Reg : t1Second, t1OT);
-            // Team 2 row
-            html += renderTimelineRow(match.team2, 2, rounds, maxRound, hasOT, t2First, hasOT ? t2Reg : t2Second, t2OT);
+            html += renderTimelineRow(match.team1, 1, rounds, maxRound, hasOT, t1First, hasOT ? t1Reg2 : rounds.filter(r => r.round > 12 && r.winner === 1).length, t1OT);
+            html += renderTimelineRow(match.team2, 2, rounds, maxRound, hasOT, t2First, hasOT ? t2Reg2 : rounds.filter(r => r.round > 12 && r.winner === 2).length, t2OT);
 
             html += '</div>';
             return html;
