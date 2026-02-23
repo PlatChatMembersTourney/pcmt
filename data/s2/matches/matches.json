@@ -1083,6 +1083,66 @@
             "round": 24,
             "winner": 2,
             "side": "def"
+          },
+          {
+            "round": 25,
+            "winner": 2,
+            "side": "atk"
+          },
+          {
+            "round": 26,
+            "winner": 1,
+            "side": "atk"
+          },
+          {
+            "round": 27,
+            "winner": 2,
+            "side": "atk"
+          },
+          {
+            "round": 28,
+            "winner": 1,
+            "side": "atk"
+          },
+          {
+            "round": 29,
+            "winner": 2,
+            "side": "atk"
+          },
+          {
+            "round": 30,
+            "winner": 1,
+            "side": "atk"
+          },
+          {
+            "round": 31,
+            "winner": 2,
+            "side": "atk"
+          },
+          {
+            "round": 32,
+            "winner": 1,
+            "side": "atk"
+          },
+          {
+            "round": 33,
+            "winner": 1,
+            "side": "def"
+          },
+          {
+            "round": 34,
+            "winner": 2,
+            "side": "def"
+          },
+          {
+            "round": 35,
+            "winner": 1,
+            "side": "def"
+          },
+          {
+            "round": 36,
+            "winner": 1,
+            "side": "atk"
           }
         ],
         "stats": [
@@ -1104,19 +1164,7 @@
                 "HS%": 0.33,
                 "FK": 11,
                 "FD": 2,
-                "PlusMinus2": 9,
-                "25": null,
-                "26": null,
-                "27": null,
-                "28": null,
-                "29": null,
-                "30": null,
-                "31": null,
-                "32": null,
-                "33": null,
-                "34": null,
-                "35": null,
-                "36": null
+                "PlusMinus2": 9
               },
               {
                 "Player": "jooah",
@@ -1132,19 +1180,7 @@
                 "HS%": 0.22,
                 "FK": 2,
                 "FD": 0,
-                "PlusMinus2": 2,
-                "25": null,
-                "26": null,
-                "27": null,
-                "28": null,
-                "29": null,
-                "30": null,
-                "31": null,
-                "32": null,
-                "33": null,
-                "34": null,
-                "35": null,
-                "36": null
+                "PlusMinus2": 2
               },
               {
                 "Player": "amara",
@@ -1160,19 +1196,7 @@
                 "HS%": 0.11,
                 "FK": 1,
                 "FD": 7,
-                "PlusMinus2": -6,
-                "25": null,
-                "26": null,
-                "27": null,
-                "28": null,
-                "29": null,
-                "30": null,
-                "31": null,
-                "32": null,
-                "33": null,
-                "34": null,
-                "35": null,
-                "36": null
+                "PlusMinus2": -6
               },
               {
                 "Player": "sizable",
@@ -1188,19 +1212,7 @@
                 "HS%": 0.2,
                 "FK": 5,
                 "FD": 5,
-                "PlusMinus2": 0,
-                "25": null,
-                "26": null,
-                "27": null,
-                "28": null,
-                "29": null,
-                "30": null,
-                "31": null,
-                "32": null,
-                "33": null,
-                "34": null,
-                "35": null,
-                "36": null
+                "PlusMinus2": 0
               },
               {
                 "Player": "hascan",
@@ -1216,19 +1228,7 @@
                 "HS%": 0.21,
                 "FK": 0,
                 "FD": 3,
-                "PlusMinus2": -3,
-                "25": null,
-                "26": null,
-                "27": null,
-                "28": null,
-                "29": null,
-                "30": null,
-                "31": null,
-                "32": null,
-                "33": null,
-                "34": null,
-                "35": null,
-                "36": null
+                "PlusMinus2": -3
               }
             ]
           },
@@ -1444,6 +1444,16 @@
             "round": 24,
             "winner": 1,
             "side": "atk"
+          },
+          {
+            "round": 25,
+            "winner": 2,
+            "side": "atk"
+          },
+          {
+            "round": 26,
+            "winner": 2,
+            "side": "def"
           }
         ],
         "stats": [
