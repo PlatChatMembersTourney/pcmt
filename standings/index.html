@@ -46,6 +46,8 @@
         <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
     </div>
 
+    <div class="region-selector-bar" id="region-selector" style="display:none;"></div>
+
     <div class="stats-sub-tabs" id="stage-tabs" style="display:none;">
         <button class="stats-sub-btn active" onclick="switchStage('groups')">Group Stage</button>
         <button class="stats-sub-btn" onclick="switchStage('lcq')">LCQ</button>
@@ -58,7 +60,53 @@
 
     <script>
         let currentSeason = 2;
+        let currentRegion = 'na';
         let currentStage = 'groups';
+        const seasonMeta = {};
+
+        function dataPath(season, region) {
+            return `../data/events/s${season || currentSeason}/${region || currentRegion}/`;
+        }
+
+        async function loadSeasonMeta(season) {
+            if (seasonMeta[season]) return seasonMeta[season];
+            try {
+                const res = await fetch(`../data/events/s${season}/season.json`);
+                if (res.ok) { seasonMeta[season] = await res.json(); return seasonMeta[season]; }
+            } catch(e) {}
+            seasonMeta[season] = { season, regions: [{ id: 'na', name: 'NA' }], default: 'na' };
+            return seasonMeta[season];
+        }
+
+        async function resolveRegion(season) {
+            const meta = await loadSeasonMeta(season);
+            const fromUrl = new URLSearchParams(window.location.search).get('region');
+            if (fromUrl && meta.regions.some(r => r.id === fromUrl)) return fromUrl;
+            return meta.default || 'na';
+        }
+
+        function renderRegionSelector(season) {
+            const meta = seasonMeta[season];
+            const bar = document.getElementById('region-selector');
+            if (!meta || meta.regions.length <= 1) { bar.style.display = 'none'; return; }
+            bar.style.display = '';
+            bar.innerHTML = meta.regions.map(r =>
+                `<button class="region-sel-btn ${r.id === currentRegion ? 'active' : ''}" onclick="switchRegion('${r.id}')">${r.name}</button>`
+            ).join('');
+        }
+
+        function switchRegion(region) {
+            currentRegion = region;
+            const url = new URL(window.location);
+            url.searchParams.set('region', region);
+            history.replaceState(null, '', url);
+            renderRegionSelector(currentSeason);
+            loadstandings();
+        }
+
+        function teamUrl(abbr) {
+            return `../teams/team/?team=${abbr}&season=${currentSeason}&region=${currentRegion}`;
+        }
 
         function cacheGet(key) {
             try { return sessionStorage.getItem('pcmt-rank-' + key); } catch(e) { return null; }
@@ -67,10 +115,13 @@
             try { sessionStorage.setItem('pcmt-rank-' + key, val); } catch(e) {}
         }
 
-        function switchSeason(season) {
+        async function switchSeason(season) {
             currentSeason = season;
             const buttons = document.querySelectorAll('.season-sel-btn');
             buttons.forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
+
+            currentRegion = await resolveRegion(season);
+            renderRegionSelector(season);
 
             const stageTabs = document.getElementById('stage-tabs');
             stageTabs.style.display = (season === 2) ? '' : 'none';
@@ -93,14 +144,9 @@
                 let inQuotes = false;
                 for (let i = 0; i < line.length; i++) {
                     const char = line[i];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        cells.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
+                    if (char === '"') { inQuotes = !inQuotes; }
+                    else if (char === ',' && !inQuotes) { cells.push(current.trim()); current = ''; }
+                    else { current += char; }
                 }
                 cells.push(current.trim());
                 return cells;
@@ -136,9 +182,9 @@
                 return;
             }
 
-            // Group Stage
-            if (cacheGet('s2-groups')) {
-                area.innerHTML = cacheGet('s2-groups');
+            const cKey = `s2-${currentRegion}-groups`;
+            if (cacheGet(cKey)) {
+                area.innerHTML = cacheGet(cKey);
                 return;
             }
 
@@ -150,8 +196,15 @@
             const area = document.getElementById('standings-area');
 
             try {
-                const sheetId = '16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8';
-                const gid = '1622887646';
+                const meta = seasonMeta[currentSeason];
+                const regionInfo = meta && meta.regions ? meta.regions.find(r => r.id === currentRegion) : null;
+                const standingsCfg = regionInfo && regionInfo.standings;
+                if (!standingsCfg || !standingsCfg.sheetId) {
+                    area.innerHTML = '<div class="standings-empty"><p>Standings not available for this region yet.</p></div>';
+                    return;
+                }
+                const sheetId = standingsCfg.sheetId;
+                const gid = standingsCfg.gid;
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
 
                 const response = await fetch(url);
@@ -159,7 +212,6 @@
                 const csvText = await response.text();
                 const lines = parseCSV(csvText);
 
-                // --- scoreboard ---
                 const teamRows = [];
                 let lastScoreboardIdx = 0;
                 for (let i = 0; i < lines.length; i++) {
@@ -183,23 +235,16 @@
                     }
                 }
 
-                // --- head-to-head matrix ---
                 let h2hLabelRowIdx = -1;
                 for (let i = lines.length - 1; i >= 0; i--) {
                     const row = lines[i];
                     if ((row[4] || '').trim() && (row[5] || '').trim() && (row[6] || '').trim()) {
                         const possibleTeams = row.slice(4, 16).map(c => (c || '').trim()).filter(Boolean);
-                        if (possibleTeams.length >= 10) {
-                            h2hLabelRowIdx = i;
-                            break;
-                        }
+                        if (possibleTeams.length >= 10) { h2hLabelRowIdx = i; break; }
                     }
                 }
 
-                const h2hTeams = h2hLabelRowIdx >= 0
-                    ? lines[h2hLabelRowIdx].slice(4, 16).map(c => (c || '').trim())
-                    : [];
-
+                const h2hTeams = h2hLabelRowIdx >= 0 ? lines[h2hLabelRowIdx].slice(4, 16).map(c => (c || '').trim()) : [];
                 const h2hData = [];
                 if (h2hLabelRowIdx >= 0) {
                     for (let i = 0; i < lines.length; i++) {
@@ -207,25 +252,21 @@
                         const teamCell = (row[3] || '').trim();
                         if (teamCell && i > lastScoreboardIdx && i < h2hLabelRowIdx) {
                             const scores = row.slice(4, 16).map(c => (c || '').trim());
-                            const hasScore = scores.some(s => /^\d+-\d+$/.test(s));
-                            if (hasScore) {
+                            if (scores.some(s => /^\d+-\d+$/.test(s))) {
                                 h2hData.push({ team: teamCell, scores: scores });
                             }
                         }
                     }
                 }
 
-                // render scoreboard
                 let html = '<div class="standings-section">';
                 html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table">';
-
                 html += '<thead><tr class="category-row">';
                 html += '<th colspan="3"></th>';
                 html += '<th colspan="2" class="category-header">Matches</th>';
                 html += '<th colspan="3" class="category-header">Maps</th>';
                 html += '<th colspan="3" class="category-header">Rounds</th>';
                 html += '</tr>';
-
                 html += '<tr>';
                 html += '<th>#</th><th>ABBR.</th><th>TEAM</th>';
                 html += '<th>W</th><th>L</th>';
@@ -234,18 +275,8 @@
                 html += '</tr></thead><tbody>';
 
                 teamRows.forEach(t => {
-                    const diffClass = val => {
-                        const n = parseInt(val);
-                        if (isNaN(n)) return '';
-                        if (n > 0) return ' class="diff-pos"';
-                        if (n < 0) return ' class="diff-neg"';
-                        return '';
-                    };
-                    const fmtDiff = val => {
-                        const n = parseInt(val);
-                        if (isNaN(n)) return val;
-                        return n > 0 ? `+${n}` : `${n}`;
-                    };
+                    const diffClass = val => { const n = parseInt(val); if (isNaN(n)) return ''; if (n > 0) return ' class="diff-pos"'; if (n < 0) return ' class="diff-neg"'; return ''; };
+                    const fmtDiff = val => { const n = parseInt(val); if (isNaN(n)) return val; return n > 0 ? `+${n}` : `${n}`; };
 
                     let rowClass = '';
                     if (t.rank <= 2) rowClass = 'rank-playoffs';
@@ -254,8 +285,8 @@
 
                     html += `<tr class="${rowClass}">`;
                     html += `<td>${t.rank}</td>`;
-                    html += `<td class="team-abbr-cell"><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.abbr}</a></td>`;
-                    html += `<td><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.name}</a></td>`;
+                    html += `<td class="team-abbr-cell"><a href="${teamUrl(t.abbr)}" class="team-link">${t.abbr}</a></td>`;
+                    html += `<td><a href="${teamUrl(t.abbr)}" class="team-link">${t.name}</a></td>`;
                     html += `<td>${t.matchW}</td><td>${t.matchL}</td>`;
                     html += `<td>${t.mapW}</td><td>${t.mapL}</td>`;
                     html += `<td${diffClass(t.mapDiff)}>${fmtDiff(t.mapDiff)}</td>`;
@@ -264,22 +295,18 @@
                     html += '</tr>';
                 });
 
-                html += '</tbody></table></div>';
-                html += '</div>';
+                html += '</tbody></table></div></div>';
 
-                // render H2H matrix
                 if (h2hData.length > 0 && h2hTeams.length > 0) {
                     html += '<div class="standings-section">';
                     html += '<h2 class="standings-subtitle">Head-to-Head</h2>';
                     html += '<div class="h2h-scroll"><table class="stats-table h2h-table">';
-
                     html += '<thead><tr><th></th>';
                     h2hTeams.forEach(t => html += `<th class="h2h-header">${t}</th>`);
                     html += '</tr></thead><tbody>';
-
                     h2hData.forEach(row => {
                         html += '<tr>';
-                        html += `<th class="h2h-row-label"><a href="../teams/team/?team=${row.team}&season=${currentSeason}" class="team-link">${row.team}</a></th>`;
+                        html += `<th class="h2h-row-label"><a href="${teamUrl(row.team)}" class="team-link">${row.team}</a></th>`;
                         row.scores.forEach((score, i) => {
                             if (!score || row.team === h2hTeams[i]) {
                                 html += '<td class="h2h-self"></td>';
@@ -295,12 +322,10 @@
                         });
                         html += '</tr>';
                     });
-
-                    html += '</tbody></table></div>';
-                    html += '</div>';
+                    html += '</tbody></table></div></div>';
                 }
 
-                cacheSet('s2-groups', html);
+                cacheSet(`s2-${currentRegion}-groups`, html);
                 area.innerHTML = html;
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load standings. The sheet may not be publicly shared.</p></div>';
@@ -311,21 +336,19 @@
         async function loadLCQBracket() {
             const area = document.getElementById('standings-area');
 
-            // LCQ seeds from group stage (3rd vs 6th, 4th vs 5th)
             const seeds = {
                 opening1: ['JDG', 'MIBR'],
                 opening2: ['ZIRC', 'DRG']
             };
 
-            // Load matches and teams
             let matches = [];
             let teams = {};
             try {
-                const res = await fetch(`../data/s${currentSeason}/matches/matches.json`);
+                const res = await fetch(dataPath() + 'matches/matches.json');
                 if (res.ok) matches = await res.json();
             } catch(e) {}
             try {
-                const res = await fetch(`../data/s${currentSeason}/teams.json`);
+                const res = await fetch(dataPath() + 'teams.json');
                 if (res.ok) teams = await res.json();
             } catch(e) {}
 
@@ -339,19 +362,10 @@
 
             function findMatch(t1, t2) {
                 if (!t1 || !t2) return null;
-                return lcqMatches.find(m =>
-                    (m.team1 === t1 && m.team2 === t2) ||
-                    (m.team1 === t2 && m.team2 === t1)
-                ) || null;
+                return lcqMatches.find(m => (m.team1 === t1 && m.team2 === t2) || (m.team1 === t2 && m.team2 === t1)) || null;
             }
-            function getWinner(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team1 : m.team2;
-            }
-            function getLoser(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team2 : m.team1;
-            }
+            function getWinner(m) { if (!m || !m.completed) return null; return m.score1 > m.score2 ? m.team1 : m.team2; }
+            function getLoser(m) { if (!m || !m.completed) return null; return m.score1 > m.score2 ? m.team2 : m.team1; }
 
             const o1 = findMatch(seeds.opening1[0], seeds.opening1[1]);
             const o2 = findMatch(seeds.opening2[0], seeds.opening2[1]);
@@ -391,11 +405,10 @@
                 const w2 = s.score1 !== null && s.score2 !== null && s.score2 > s.score1;
                 const hasMatch = !!s.match;
                 const upcoming = s.match && !s.match.completed;
-                const href = hasMatch ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
+                const href = hasMatch ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}&region=${currentRegion}` : null;
                 const tag = href ? 'a' : 'div';
                 const hrefAttr = href ? ` href="${href}"` : '';
                 const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
-
                 const dateTag = s.date ? `<span class="bracket-date">${formatDate(s.date)}</span>` : '';
 
                 return `
@@ -414,9 +427,7 @@
                     </div>`;
             }
 
-            function qualBox() {
-                return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
-            }
+            function qualBox() { return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`; }
 
             function conn(type) {
                 if (type === 'merge') return `<div class="bracket-connector bracket-conn-upper">
@@ -435,10 +446,7 @@
             return `
                 <div class="bracket-container">
                     <div class="bracket-upper">
-                        <div class="bracket-col bracket-col-opening">
-                            ${matchBox(bracket.opening1)}
-                            ${matchBox(bracket.opening2)}
-                        </div>
+                        <div class="bracket-col bracket-col-opening">${matchBox(bracket.opening1)}${matchBox(bracket.opening2)}</div>
                         ${conn('merge')}
                         <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
                         ${conn('single')}
@@ -454,8 +462,11 @@
                 </div>`;
         }
 
-        switchSeason(2);
-
+        (async () => {
+            currentRegion = await resolveRegion(currentSeason);
+            renderRegionSelector(currentSeason);
+            switchSeason(2);
+        })();
     </script>
     </div>
 </body>

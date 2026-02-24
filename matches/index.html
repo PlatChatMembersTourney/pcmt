@@ -37,6 +37,8 @@
         <button class="season-sel-btn active" onclick="switchSeason(2)">Season 2</button>
     </div>
 
+    <div class="region-selector-bar" id="region-selector" style="display:none;"></div>
+
     <div class="matches-columns" id="matches-area">
         <div class="matches-col">
             <h2 class="matches-col-title">Upcoming</h2>
@@ -55,24 +57,85 @@
     <script>
         const teamLogos = {};
         const cache = {};
+        const seasonMeta = {};
         let currentSeason = 2;
+        let currentRegion = 'na';
+
+        function dataPath(season, region) {
+            return `../data/events/s${season}/${region || currentRegion}/`;
+        }
+
+        async function loadSeasonMeta(season) {
+            if (seasonMeta[season]) return seasonMeta[season];
+            try {
+                const res = await fetch(`../data/events/s${season}/season.json`);
+                if (res.ok) {
+                    seasonMeta[season] = await res.json();
+                    return seasonMeta[season];
+                }
+            } catch(e) {}
+            seasonMeta[season] = { season, regions: [{ id: 'na', name: 'NA' }], default: 'na' };
+            return seasonMeta[season];
+        }
+
+        function getRegionFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('region');
+        }
+
+        async function resolveRegion(season) {
+            const meta = await loadSeasonMeta(season);
+            const fromUrl = getRegionFromUrl();
+            if (fromUrl && meta.regions.some(r => r.id === fromUrl)) return fromUrl;
+            return meta.default || 'na';
+        }
+
+        function renderRegionSelector(season) {
+            const meta = seasonMeta[season];
+            const bar = document.getElementById('region-selector');
+            if (!meta || meta.regions.length <= 1) {
+                bar.style.display = 'none';
+                return;
+            }
+            bar.style.display = '';
+            bar.innerHTML = meta.regions.map(r =>
+                `<button class="region-sel-btn ${r.id === currentRegion ? 'active' : ''}" onclick="switchRegion('${r.id}')">${r.name}</button>`
+            ).join('');
+        }
+
+        function switchRegion(region) {
+            currentRegion = region;
+            const url = new URL(window.location);
+            url.searchParams.set('region', region);
+            history.replaceState(null, '', url);
+            renderRegionSelector(currentSeason);
+            loadMatches(currentSeason);
+        }
 
         async function loadTeams() {
             try {
-                const [s1, s2] = await Promise.all([
-                    fetch('../data/s1/teams.json').then(r => r.json()),
-                    fetch('../data/s2/teams.json').then(r => r.json())
-                ]);
-                teamLogos.s1 = s1;
-                teamLogos.s2 = s2;
+                for (const s of [1, 2]) {
+                    const meta = await loadSeasonMeta(s);
+                    const key = `s${s}`;
+                    teamLogos[key] = {};
+                    for (const r of meta.regions) {
+                        try {
+                            const res = await fetch(dataPath(s, r.id) + 'teams.json');
+                            const data = await res.json();
+                            Object.assign(teamLogos[key], data);
+                        } catch(e) {}
+                    }
+                }
             } catch (err) {}
             loadMatches(currentSeason);
         }
 
-        function switchSeason(s) {
+        async function switchSeason(s) {
             currentSeason = s;
             const btns = document.querySelectorAll('.season-sel-btn');
             btns.forEach((btn, i) => btn.classList.toggle('active', i === s - 1));
+            currentRegion = await resolveRegion(s);
+            renderRegionSelector(s);
             loadMatches(s);
         }
 
@@ -80,7 +143,7 @@
             const upEl = document.getElementById('upcoming');
             const compEl = document.getElementById('completed');
 
-            const key = `matches-s${season}`;
+            const key = `matches-s${season}-${currentRegion}`;
             if (cache[key]) {
                 renderFromCache(cache[key], season);
                 return;
@@ -90,7 +153,7 @@
             compEl.innerHTML = '<div class="matches-loading">Loading matches...</div>';
 
             try {
-                const res = await fetch(`../data/s${season}/matches/matches.json`);
+                const res = await fetch(dataPath(season) + 'matches/matches.json');
                 if (!res.ok) {
                     compEl.innerHTML = '<p class="matches-empty">No match data available</p>';
                     return;
@@ -146,7 +209,7 @@
                 const name2 = getTeamName(match.team2, season);
                 const winner = match.score1 > match.score2 ? 1 : match.score2 > match.score1 ? 2 : 0;
 
-                html += `<a class="match-card" href="../matches/match.html?id=${match.id}&season=${season}">`;
+                html += `<a class="match-card" href="../matches/match.html?id=${match.id}&season=${season}&region=${currentRegion}">`;
                 html += `<div class="match-meta">${match.stage || ''}${match.date ? ' · ' + match.date : ''}</div>`;
                 html += '<div class="match-teams">';
 
@@ -188,7 +251,11 @@
             container.innerHTML = html;
         }
 
-        loadTeams();
+        (async () => {
+            currentRegion = await resolveRegion(currentSeason);
+            renderRegionSelector(currentSeason);
+            loadTeams();
+        })();
     </script>
     </div>
 </body>

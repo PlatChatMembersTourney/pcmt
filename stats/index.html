@@ -38,6 +38,8 @@
         <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
     </div>
 
+    <div class="region-selector-bar" id="region-selector" style="display:none;"></div>
+
     <div class="stats-toggle-bar">
         <button class="stats-toggle-btn active" onclick="switchMainTab('player')">Player Stats</button>
         <button class="stats-toggle-btn" onclick="switchMainTab('team')">Team Stats</button>
@@ -67,35 +69,72 @@
     <script>
         const sortState = {};
         let currentSeason = 2;
+        let currentRegion = 'na';
         let currentMainTab = 'player';
         let currentToxicStage = 'Overall';
         const teamsLookup = {};
+        const seasonMeta = {};
+
+        function dataPath(season, region) {
+            return `../data/events/s${season || currentSeason}/${region || currentRegion}/`;
+        }
+
+        async function loadSeasonMeta(season) {
+            if (seasonMeta[season]) return seasonMeta[season];
+            try {
+                const res = await fetch(`../data/events/s${season}/season.json`);
+                if (res.ok) { seasonMeta[season] = await res.json(); return seasonMeta[season]; }
+            } catch(e) {}
+            seasonMeta[season] = { season, regions: [{ id: 'na', name: 'NA' }], default: 'na' };
+            return seasonMeta[season];
+        }
+
+        async function resolveRegion(season) {
+            const meta = await loadSeasonMeta(season);
+            const fromUrl = new URLSearchParams(window.location.search).get('region');
+            if (fromUrl && meta.regions.some(r => r.id === fromUrl)) return fromUrl;
+            return meta.default || 'na';
+        }
+
+        function renderRegionSelector(season) {
+            const meta = seasonMeta[season];
+            const bar = document.getElementById('region-selector');
+            if (!meta || meta.regions.length <= 1) { bar.style.display = 'none'; return; }
+            bar.style.display = '';
+            bar.innerHTML = meta.regions.map(r =>
+                `<button class="region-sel-btn ${r.id === currentRegion ? 'active' : ''}" onclick="switchRegion('${r.id}')">${r.name}</button>`
+            ).join('');
+        }
+
+        function switchRegion(region) {
+            currentRegion = region;
+            const url = new URL(window.location);
+            url.searchParams.set('region', region);
+            history.replaceState(null, '', url);
+            renderRegionSelector(currentSeason);
+            buildTabs();
+        }
 
         // --- sessionStorage cache ---
-        function cacheGet(key) {
-            try { return sessionStorage.getItem('pcmt-stats-' + key); } catch(e) { return null; }
-        }
-        function cacheSet(key, val) {
-            try { sessionStorage.setItem('pcmt-stats-' + key, val); } catch(e) {}
-        }
-        function cacheGetJSON(key) {
-            const raw = cacheGet(key);
-            if (!raw) return null;
-            try { return JSON.parse(raw); } catch(e) { return null; }
-        }
-        function cacheSetJSON(key, val) {
-            try { cacheSet(key, JSON.stringify(val)); } catch(e) {}
-        }
+        function cacheGet(key) { try { return sessionStorage.getItem('pcmt-stats-' + key); } catch(e) { return null; } }
+        function cacheSet(key, val) { try { sessionStorage.setItem('pcmt-stats-' + key, val); } catch(e) {} }
+        function cacheGetJSON(key) { const raw = cacheGet(key); if (!raw) return null; try { return JSON.parse(raw); } catch(e) { return null; } }
+        function cacheSetJSON(key, val) { try { cacheSet(key, JSON.stringify(val)); } catch(e) {} }
 
         async function loadTeamsLookup() {
             try {
                 for (const s of [1, 2]) {
-                    const res = await fetch(`../data/s${s}/teams.json`);
-                    const data = await res.json();
+                    const meta = await loadSeasonMeta(s);
                     teamsLookup[`s${s}`] = {};
-                    for (const [abbr, team] of Object.entries(data)) {
-                        teamsLookup[`s${s}`][abbr.toUpperCase()] = abbr;
-                        teamsLookup[`s${s}`][team.name.toUpperCase()] = abbr;
+                    for (const r of meta.regions) {
+                        try {
+                            const res = await fetch(dataPath(s, r.id) + 'teams.json');
+                            const data = await res.json();
+                            for (const [abbr, team] of Object.entries(data)) {
+                                teamsLookup[`s${s}`][abbr.toUpperCase()] = abbr;
+                                teamsLookup[`s${s}`][team.name.toUpperCase()] = abbr;
+                            }
+                        } catch(e) {}
                     }
                 }
             } catch (err) {}
@@ -107,29 +146,22 @@
             if (!lookup) return cellValue;
             const abbr = lookup[String(cellValue).trim().toUpperCase()];
             if (!abbr) return cellValue;
-            return `<a href="../teams/team/?team=${abbr}&season=${season}" class="team-link">${cellValue}</a>`;
+            return `<a href="../teams/team/?team=${abbr}&season=${season}&region=${currentRegion}" class="team-link">${cellValue}</a>`;
         }
 
-        loadTeamsLookup();
         const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
 
         const seasonConfig = {
-            1: {
-                playerTabs: ['toxic'],
-                teamTabs: ['toxic'],
-            },
-            2: {
-                playerTabs: ['Angus', 'pi', 'toxic'],
-                teamTabs: ['pi', 'toxic'],
-            }
+            1: { playerTabs: ['toxic'], teamTabs: ['toxic'] },
+            2: { playerTabs: ['Angus', 'pi', 'toxic'], teamTabs: ['pi', 'toxic'] }
         };
 
-        function switchSeason(season) {
+        async function switchSeason(season) {
             currentSeason = season;
             const buttons = document.querySelectorAll('.season-sel-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', i === season - 1);
-            });
+            buttons.forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
+            currentRegion = await resolveRegion(season);
+            renderRegionSelector(season);
             buildTabs();
         }
 
@@ -140,12 +172,10 @@
             const buttons = document.querySelectorAll('.stats-toggle-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             if (tab === 'player') {
-                playerStats.classList.remove('hidden');
-                teamStats.classList.add('hidden');
+                playerStats.classList.remove('hidden'); teamStats.classList.add('hidden');
                 buttons[0].classList.add('active');
             } else {
-                teamStats.classList.remove('hidden');
-                playerStats.classList.add('hidden');
+                teamStats.classList.remove('hidden'); playerStats.classList.add('hidden');
                 buttons[1].classList.add('active');
             }
         }
@@ -171,9 +201,7 @@
         function switchPlayerTab(name) {
             const config = seasonConfig[currentSeason];
             const buttons = document.querySelectorAll('#player-sub-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', config.playerTabs[i] === name);
-            });
+            buttons.forEach((btn, i) => btn.classList.toggle('active', config.playerTabs[i] === name));
 
             const stageBar = document.getElementById('player-stage-tabs');
             if (name === 'toxic' && currentSeason === 2) {
@@ -182,10 +210,7 @@
                 stageBar.innerHTML = toxicStages.map((s, i) =>
                     `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
                 ).join('');
-            } else {
-                stageBar.style.display = 'none';
-                stageBar.innerHTML = '';
-            }
+            } else { stageBar.style.display = 'none'; stageBar.innerHTML = ''; }
 
             loadPlayerTab(name);
         }
@@ -193,18 +218,14 @@
         function switchToxicStage(stage) {
             currentToxicStage = stage;
             const buttons = document.querySelectorAll('#player-stage-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', toxicStages[i] === stage);
-            });
+            buttons.forEach((btn, i) => btn.classList.toggle('active', toxicStages[i] === stage));
             loadToxicPlayerStats(currentSeason, stage);
         }
 
         function switchTeamTab(name) {
             const config = seasonConfig[currentSeason];
             const buttons = document.querySelectorAll('#team-sub-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', config.teamTabs[i] === name);
-            });
+            buttons.forEach((btn, i) => btn.classList.toggle('active', config.teamTabs[i] === name));
             loadTeamTab(name);
         }
 
@@ -217,11 +238,7 @@
                 html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
             });
             html += '</tr></thead><tbody>';
-            rows.forEach(row => {
-                html += '<tr>';
-                row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
-                html += '</tr>';
-            });
+            rows.forEach(row => { html += '<tr>'; row.forEach(cell => html += `<td>${cell ?? ''}</td>`); html += '</tr>'; });
             html += '</tbody></table>';
             sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
             return html;
@@ -231,84 +248,60 @@
             const teamIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'team');
             const playerIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'player');
             if (teamIdx === -1 || playerIdx === -1) return { headers, rows };
-
             const newRows = rows.map(r => {
                 const newRow = [...r];
-                const name = newRow[playerIdx] || '';
-                const team = newRow[teamIdx] || '';
-                newRow[playerIdx] = `${name}<span class="player-team-tag">${team}</span>`;
+                newRow[playerIdx] = `${newRow[playerIdx] || ''}<span class="player-team-tag">${newRow[teamIdx] || ''}</span>`;
                 return newRow;
             });
-
             const newHeaders = headers.filter((_, i) => i !== teamIdx);
             const finalRows = newRows.map(r => r.filter((_, i) => i !== teamIdx));
             return { headers: newHeaders, rows: finalRows };
         }
 
-        // 1st click = desc, 2nd = asc, 3rd = reset
         function sortTable(tableId, colIndex) {
             const state = sortState[tableId];
             if (!state) return;
-
-            if (state.currentCol === colIndex) {
-                state.clicks++;
-            } else {
-                state.currentCol = colIndex;
-                state.clicks = 1;
-            }
+            if (state.currentCol === colIndex) { state.clicks++; }
+            else { state.currentCol = colIndex; state.clicks = 1; }
 
             let sorted;
             if (state.clicks % 3 === 0) {
-                sorted = [...state.originalRows];
-                state.currentCol = -1;
-                state.clicks = 0;
+                sorted = [...state.originalRows]; state.currentCol = -1; state.clicks = 0;
             } else {
                 const asc = state.clicks % 3 === 2;
                 sorted = [...state.rows].sort((a, b) => {
-                    let valA = a[colIndex];
-                    let valB = b[colIndex];
+                    let valA = a[colIndex], valB = b[colIndex];
                     if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
                     if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
-                    const numA = parseFloat(valA);
-                    const numB = parseFloat(valB);
-                    if (!isNaN(numA) && !isNaN(numB)) {
-                        return asc ? numA - numB : numB - numA;
-                    }
-                    const strA = String(valA || '').toLowerCase();
-                    const strB = String(valB || '').toLowerCase();
+                    const numA = parseFloat(valA), numB = parseFloat(valB);
+                    if (!isNaN(numA) && !isNaN(numB)) return asc ? numA - numB : numB - numA;
+                    const strA = String(valA || '').toLowerCase(), strB = String(valB || '').toLowerCase();
                     return asc ? strA.localeCompare(strB) : strB.localeCompare(strA);
                 });
             }
 
             const table = document.getElementById(`table-${tableId}`);
             const tbody = table.querySelector('tbody');
-            tbody.innerHTML = sorted.map(row =>
-                '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
-            ).join('');
+            tbody.innerHTML = sorted.map(row => '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>').join('');
 
             const theadRows = table.querySelectorAll('thead tr');
             const lastHeaderRow = theadRows[theadRows.length - 1];
             const ths = lastHeaderRow.querySelectorAll('th');
             ths.forEach((th, i) => {
                 const arrow = th.querySelector('.sort-arrow');
-                if (i === colIndex && state.currentCol !== -1) {
-                    arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
-                } else {
-                    arrow.textContent = '';
-                }
+                if (i === colIndex && state.currentCol !== -1) arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
+                else arrow.textContent = '';
             });
 
             if (state.highlightMode) highlightTable(tableId, state.highlightMode);
         }
 
-        // auto-sort a table by rating column (desc)
         function sortByRating(tableId, headers) {
             const ratingNames = ['R1.0', 'R', 'Rating', 'rRating'];
             const idx = headers.findIndex(h => ratingNames.includes((h || '').trim()));
             if (idx !== -1) sortTable(tableId, idx);
         }
 
-        // highlight best (green) and optionally worst (red) in each numeric column
         const lowerIsBetter = ['d', 'dpr', 'fdpr', 'fd', 'ban'];
 
         function highlightTable(tableId, mode) {
@@ -317,7 +310,6 @@
             const state = sortState[tableId];
             if (!state) return;
             state.highlightMode = mode;
-
             const headers = state.headers;
             const tbody = table.querySelector('tbody');
             const trs = tbody.querySelectorAll('tr');
@@ -331,43 +323,26 @@
 
             for (let col = 0; col < headers.length; col++) {
                 if (skipCols.has(col)) continue;
-
                 const hLower = (headers[col] || '').trim().toLowerCase();
                 const invert = lowerIsBetter.includes(hLower);
-
                 let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
 
                 trs.forEach((tr, rowIdx) => {
-                    const td = tr.children[col];
-                    if (!td) return;
+                    const td = tr.children[col]; if (!td) return;
                     let raw = td.textContent.trim();
                     if (raw === '' || raw === '-') return;
                     if (raw.endsWith('%')) raw = raw.slice(0, -1);
-                    const num = parseFloat(raw);
-                    if (isNaN(num)) return;
+                    const num = parseFloat(raw); if (isNaN(num)) return;
 
-                    if (bestVal === null) {
-                        bestVal = num; worstVal = num;
-                        bestIdx = rowIdx; worstIdx = rowIdx;
-                    } else {
-                        if (invert) {
-                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        } else {
-                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        }
+                    if (bestVal === null) { bestVal = num; worstVal = num; bestIdx = rowIdx; worstIdx = rowIdx; }
+                    else {
+                        if (invert) { if (num < bestVal) { bestVal = num; bestIdx = rowIdx; } if (num > worstVal) { worstVal = num; worstIdx = rowIdx; } }
+                        else { if (num > bestVal) { bestVal = num; bestIdx = rowIdx; } if (num < worstVal) { worstVal = num; worstIdx = rowIdx; } }
                     }
                 });
 
-                if (bestIdx !== -1 && bestVal !== worstVal) {
-                    const bestTd = trs[bestIdx].children[col];
-                    if (bestTd) bestTd.classList.add('stat-best');
-                }
-                if (mode === 'team' && worstIdx !== -1 && bestVal !== worstVal) {
-                    const worstTd = trs[worstIdx].children[col];
-                    if (worstTd) worstTd.classList.add('stat-worst');
-                }
+                if (bestIdx !== -1 && bestVal !== worstVal) { const bestTd = trs[bestIdx].children[col]; if (bestTd) bestTd.classList.add('stat-best'); }
+                if (mode === 'team' && worstIdx !== -1 && bestVal !== worstVal) { const worstTd = trs[worstIdx].children[col]; if (worstTd) worstTd.classList.add('stat-worst'); }
             }
         }
 
@@ -375,19 +350,12 @@
 
         function parseCSV(csvText) {
             return csvText.split('\n').map(line => {
-                const cells = [];
-                let current = '';
-                let inQuotes = false;
+                const cells = []; let current = ''; let inQuotes = false;
                 for (let i = 0; i < line.length; i++) {
                     const char = line[i];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        cells.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
+                    if (char === '"') inQuotes = !inQuotes;
+                    else if (char === ',' && !inQuotes) { cells.push(current.trim()); current = ''; }
+                    else current += char;
                 }
                 cells.push(current.trim());
                 return cells;
@@ -406,16 +374,8 @@
             return value;
         }
 
-        function fmtPct(val) {
-            if (val == null || val === '') return '-';
-            if (typeof val === 'number') return (val * 100).toFixed(0) + '%';
-            return val;
-        }
-
-        function fmtNum(val) {
-            if (val == null || val === '') return '-';
-            return val;
-        }
+        function fmtPct(val) { if (val == null || val === '') return '-'; if (typeof val === 'number') return (val * 100).toFixed(0) + '%'; return val; }
+        function fmtNum(val) { if (val == null || val === '') return '-'; return val; }
 
         // --- player stats loaders ---
 
@@ -429,15 +389,12 @@
                 stageBar.innerHTML = toxicStages.map((s, i) =>
                     `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
                 ).join('');
-            } else {
-                stageBar.style.display = 'none';
-                stageBar.innerHTML = '';
-            }
+            } else { stageBar.style.display = 'none'; stageBar.innerHTML = ''; }
 
             let cacheKey;
-            if (season === 1) cacheKey = `s1-player-toxic`;
-            else if (name === 'toxic') cacheKey = `s2-player-toxic-${currentToxicStage}`;
-            else cacheKey = `s2-player-${name}`;
+            if (season === 1) cacheKey = `s1-${currentRegion}-player-toxic`;
+            else if (name === 'toxic') cacheKey = `s2-${currentRegion}-player-toxic-${currentToxicStage}`;
+            else cacheKey = `s2-${currentRegion}-player-${name}`;
 
             if (!cacheGet(cacheKey)) {
                 area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
@@ -451,7 +408,7 @@
 
         async function loadToxicPlayerStats(season, sheetName) {
             sheetName = sheetName || 'Overall';
-            const cacheKey = `s${season}-player-toxic-${sheetName}`;
+            const cacheKey = `s${season}-${currentRegion}-player-toxic-${sheetName}`;
             const area = document.getElementById('player-table-area');
 
             const cached = cacheGetJSON(cacheKey);
@@ -459,30 +416,23 @@
                 const { headers, rows } = cached;
                 const tableId = `toxic-player-s${season}-${sheetName}`;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
-                sortByRating(tableId, headers);
-                highlightTable(tableId, 'player');
+                sortByRating(tableId, headers); highlightTable(tableId, 'player');
                 return;
             }
 
             try {
-                const path = `../data/s${season}/Player Stats.xlsx`;
+                const path = dataPath(season) + 'Player Stats.xlsx';
                 const response = await fetch(path);
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
                 const sheet = workbook.Sheets[sheetName];
-                if (!sheet) {
-                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Sheet not found.</p></div>';
-                    return;
-                }
+                if (!sheet) { area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Sheet not found.</p></div>'; return; }
                 const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                 const rawHeaders = sheetData[0];
                 const playerRows = sheetData.slice(1).filter(r => r[0]);
 
-                if (playerRows.length === 0) {
-                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">No data available yet.</p></div>';
-                    return;
-                }
+                if (playerRows.length === 0) { area.innerHTML = '<div class="stats-table-container"><p class="stats-error">No data available yet.</p></div>'; return; }
 
                 const changeIdx = rawHeaders.indexOf('Change');
                 let headers = rawHeaders.filter(h => h != null && h !== 'Change');
@@ -498,8 +448,7 @@
                 const merged = mergeTeamIntoPlayer(headers, formattedRows);
                 cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
-                sortByRating(tableId, merged.headers);
-                highlightTable(tableId, 'player');
+                sortByRating(tableId, merged.headers); highlightTable(tableId, 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
                 console.error('toxic player stats:', err);
@@ -507,15 +456,14 @@
         }
 
         async function loadAngusStats() {
-            const cacheKey = 's2-player-Angus';
+            const cacheKey = `s2-${currentRegion}-player-Angus`;
             const area = document.getElementById('player-table-area');
 
             const cached = cacheGetJSON(cacheKey);
             if (cached) {
                 const { headers, rows } = cached;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
-                sortByRating('angus-player-s2', headers);
-                highlightTable('angus-player-s2', 'player');
+                sortByRating('angus-player-s2', headers); highlightTable('angus-player-s2', 'player');
                 return;
             }
 
@@ -524,28 +472,19 @@
                 const gid = '821526300';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
 
-                const response = await fetch(url);
-                const csvText = await response.text();
+                const response = await fetch(url); const csvText = await response.text();
                 const lines = parseCSV(csvText);
-
                 let headers = lines[0];
                 let rows = lines.slice(1).filter(r => r[0] || r[1]);
 
                 const removeCols = [];
-                headers.forEach((h, i) => {
-                    const lower = h.toLowerCase().trim();
-                    if (lower === 'points' || lower === 'agents') removeCols.push(i);
-                });
-                removeCols.sort((a, b) => b - a).forEach(idx => {
-                    headers.splice(idx, 1);
-                    rows.forEach(r => r.splice(idx, 1));
-                });
+                headers.forEach((h, i) => { const lower = h.toLowerCase().trim(); if (lower === 'points' || lower === 'agents') removeCols.push(i); });
+                removeCols.sort((a, b) => b - a).forEach(idx => { headers.splice(idx, 1); rows.forEach(r => r.splice(idx, 1)); });
 
                 const merged = mergeTeamIntoPlayer(headers, rows);
                 cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'angus-player-s2')}</div>`;
-                sortByRating('angus-player-s2', merged.headers);
-                highlightTable('angus-player-s2', 'player');
+                sortByRating('angus-player-s2', merged.headers); highlightTable('angus-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
                 console.error('angus stats:', err);
@@ -553,15 +492,14 @@
         }
 
         async function loadPiPlayerStats() {
-            const cacheKey = 's2-player-pi';
+            const cacheKey = `s2-${currentRegion}-player-pi`;
             const area = document.getElementById('player-table-area');
 
             const cached = cacheGetJSON(cacheKey);
             if (cached) {
                 const { headers, rows } = cached;
                 area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
-                sortByRating('pi-player-s2', headers);
-                highlightTable('pi-player-s2', 'player');
+                sortByRating('pi-player-s2', headers); highlightTable('pi-player-s2', 'player');
                 return;
             }
 
@@ -570,10 +508,8 @@
                 const gid = '1023990137';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
 
-                const response = await fetch(url);
-                const csvText = await response.text();
+                const response = await fetch(url); const csvText = await response.text();
                 const lines = parseCSV(csvText);
-
                 const allHeaders = lines[1];
                 const dataRows = lines.slice(2).filter(r => r[0] || r[1]);
 
@@ -592,8 +528,7 @@
                 const merged = mergeTeamIntoPlayer(headers, rows);
                 cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
                 area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'pi-player-s2')}</div>`;
-                sortByRating('pi-player-s2', merged.headers);
-                highlightTable('pi-player-s2', 'player');
+                sortByRating('pi-player-s2', merged.headers); highlightTable('pi-player-s2', 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
                 console.error('pi stats:', err);
@@ -605,10 +540,9 @@
         function loadTeamTab(name) {
             const area = document.getElementById('team-table-area');
             const season = currentSeason;
-
             let cacheKey;
-            if (season === 1) cacheKey = 's1-team-toxic';
-            else cacheKey = `s2-team-${name}`;
+            if (season === 1) cacheKey = `s1-${currentRegion}-team-toxic`;
+            else cacheKey = `s2-${currentRegion}-team-${name}`;
 
             if (!cacheGet(cacheKey)) {
                 area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
@@ -620,7 +554,7 @@
         }
 
         async function loadPiTeamStats() {
-            const cacheKey = 's2-team-pi';
+            const cacheKey = `s2-${currentRegion}-team-pi`;
             const area = document.getElementById('team-table-area');
 
             const cached = cacheGetJSON(cacheKey);
@@ -638,29 +572,22 @@
                 const gid = '1030932262';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
 
-                const response = await fetch(url);
-                const csvText = await response.text();
+                const response = await fetch(url); const csvText = await response.text();
                 const lines = parseCSV(csvText);
-
-                const categoryRow = lines[0];
-                const headers = lines[1];
+                const categoryRow = lines[0]; const headers = lines[1];
                 const rows = lines.slice(2).filter(r => r[0] || r[1]);
 
                 const categorySpans = [];
                 for (let i = 0; i < categoryRow.length; i++) {
                     if (categoryRow[i] && categoryRow[i].trim() !== '') {
                         let span = 1;
-                        for (let j = i + 1; j < categoryRow.length; j++) {
-                            if (categoryRow[j] && categoryRow[j].trim() !== '') break;
-                            span++;
-                        }
+                        for (let j = i + 1; j < categoryRow.length; j++) { if (categoryRow[j] && categoryRow[j].trim() !== '') break; span++; }
                         categorySpans.push({ text: categoryRow[i].trim(), start: i, span: span });
                     }
                 }
 
                 const tableId = 'piTeam-s2';
                 let html = `<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tableId}">`;
-
                 html += '<thead><tr class="category-row">';
                 let colCovered = 0;
                 categorySpans.forEach(cat => {
@@ -678,11 +605,7 @@
                 rows.forEach(row => {
                     html += '<tr>';
                     row.forEach((cell, i) => {
-                        if (i === teamColIdx) {
-                            html += `<td>${teamLink(cell, 2)}</td>`;
-                        } else {
-                            html += `<td>${cell ?? ''}</td>`;
-                        }
+                        html += (i === teamColIdx) ? `<td>${teamLink(cell, 2)}</td>` : `<td>${cell ?? ''}</td>`;
                     });
                     html += '</tr>';
                 });
@@ -702,38 +625,28 @@
 
         async function loadToxicTeamStats(season) {
             const area = document.getElementById('team-table-area');
-            const cacheKey = `s${season}-team-toxic`;
+            const cacheKey = `s${season}-${currentRegion}-team-toxic`;
 
-            // Check if we have cached sheet data
             const cachedSheets = cacheGetJSON(cacheKey);
 
             try {
-                let sheetDataMap;
-                let teamNames;
+                let sheetDataMap, teamNames;
 
                 if (cachedSheets) {
-                    sheetDataMap = cachedSheets.sheets;
-                    teamNames = cachedSheets.teamNames;
+                    sheetDataMap = cachedSheets.sheets; teamNames = cachedSheets.teamNames;
                 } else {
-                    const path = `../data/s${season}/Team Map Stats.xlsx`;
+                    const path = dataPath(season) + 'Team Map Stats.xlsx';
                     const response = await fetch(path);
-                    if (!response.ok) {
-                        area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Team map stats not available for this season.</p></div>';
-                        return;
-                    }
+                    if (!response.ok) { area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Team map stats not available for this season.</p></div>'; return; }
                     const arrayBuffer = await response.arrayBuffer();
                     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
                     teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
                     sheetDataMap = {};
-                    for (const name of teamNames) {
-                        const ws = workbook.Sheets[name];
-                        sheetDataMap[name] = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                    }
+                    for (const name of teamNames) { sheetDataMap[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 }); }
                     cacheSetJSON(cacheKey, { teamNames, sheets: sheetDataMap });
                 }
 
-                // Store in memory for renderToxicTeamMap
                 toxicTeamWorkbooks[season] = sheetDataMap;
 
                 let html = '<div class="stats-table-container">';
@@ -760,15 +673,11 @@
         }
 
         function renderToxicTeamMap(season, teamName) {
-            const sheetDataMap = toxicTeamWorkbooks[season];
-            if (!sheetDataMap) return;
-            const data = sheetDataMap[teamName];
-            if (!data) return;
+            const sheetDataMap = toxicTeamWorkbooks[season]; if (!sheetDataMap) return;
+            const data = sheetDataMap[teamName]; if (!data) return;
 
-            // detect format: S1 has no Pick column (9 cols per map), S2 has Pick (10 cols)
             const headerRow = data[1] || [];
             const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
-
             const leftCols = hasPick ? 10 : 9;
             const rightStart = hasPick ? 11 : 10;
             const rightEnd = hasPick ? 21 : 19;
@@ -779,8 +688,7 @@
                 : ['Map', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
 
             const mapRows = [];
-            let overallAtk = null;
-            let overallDef = null;
+            let overallAtk = null, overallDef = null;
 
             for (let i = 0; i < data.length; i++) {
                 if (data[i][0] === 'Atk%') overallAtk = data[i][overallValCol];
@@ -789,29 +697,19 @@
 
             for (let startRow = 0; startRow < data.length; startRow += 4) {
                 if (startRow + 2 >= data.length) break;
-                const nameRow = data[startRow];
-                const dataRow = data[startRow + 2];
+                const nameRow = data[startRow]; const dataRow = data[startRow + 2];
                 if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
 
-                // left map
                 if (nameRow[0]) {
                     const d = dataRow.slice(0, leftCols);
                     const rebuilt = [nameRow[0]];
-                    for (let i = 0; i < d.length; i++) {
-                        const hdr = mapHeaders[i + 1];
-                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
-                    }
+                    for (let i = 0; i < d.length; i++) { const hdr = mapHeaders[i + 1]; rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i])); }
                     mapRows.push(rebuilt);
                 }
-
-                // right map
                 if (nameRow[rightStart]) {
                     const d = dataRow.slice(rightStart, rightEnd);
                     const rebuilt = [nameRow[rightStart]];
-                    for (let i = 0; i < d.length; i++) {
-                        const hdr = mapHeaders[i + 1];
-                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
-                    }
+                    for (let i = 0; i < d.length; i++) { const hdr = mapHeaders[i + 1]; rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i])); }
                     mapRows.push(rebuilt);
                 }
             }
@@ -832,7 +730,12 @@
             highlightTable(`toxicTeamMap-s${season}`, 'team');
         }
 
-        switchSeason(2);
+        (async () => {
+            currentRegion = await resolveRegion(currentSeason);
+            await loadTeamsLookup();
+            renderRegionSelector(currentSeason);
+            switchSeason(2);
+        })();
     </script>
     </div>
 </body>

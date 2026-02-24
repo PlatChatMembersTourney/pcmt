@@ -1,0 +1,6 @@
+{
+    "regions": [
+      {"id": "na", "name": "NA"},
+      {"id": "emea", "name": "EMEA"}
+    ]
+  }

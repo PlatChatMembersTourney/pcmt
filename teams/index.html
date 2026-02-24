@@ -56,25 +56,25 @@
         const teamData = {};
 
         const s1Cards = [
-            { abbr: 'CIN', name: 'Absolute Cinema', logo: '../icons/s1_teams/Absolute Cinema.png' },
-            { abbr: 'KAT', name: "Kurt's Kittens", logo: "../icons/s1_teams/Kurt's Kittens.png" },
-            { abbr: 'WALL', name: 'The Brick Wall', logo: '../icons/s1_teams/The Brick Wall.png' },
-            { abbr: 'YGSYD', name: 'You Get Shot You Die', logo: '../icons/s1_teams/You Get Shot You Die.png' }
+            { abbr: 'CIN', name: 'Absolute Cinema', logo: '../icons/s1_teams/Absolute Cinema.png', region: 'na' },
+            { abbr: 'KAT', name: "Kurt's Kittens", logo: "../icons/s1_teams/Kurt's Kittens.png", region: 'na' },
+            { abbr: 'WALL', name: 'The Brick Wall', logo: '../icons/s1_teams/The Brick Wall.png', region: 'na' },
+            { abbr: 'YGSYD', name: 'You Get Shot You Die', logo: '../icons/s1_teams/You Get Shot You Die.png', region: 'na' }
         ];
 
         const s2Cards = [
-            { abbr: 'EMEA', name: 'Tech Pause Esports', logo: '../icons/s2_teams/TechPauseEsports.png' },
-            { abbr: 'WING', name: 'Wingman Warriors', logo: '../icons/s2_teams/WingmanWarriors.png' },
-            { abbr: 'JDG', name: 'Just Dudes Gaming', logo: '../icons/s2_teams/JustDudesGaming.png' },
-            { abbr: 'ZIRC', name: 'Zirconians', logo: '../icons/s2_teams/Zirconians.png' },
-            { abbr: 'DRG', name: 'DeRank Gamers', logo: '../icons/s2_teams/DeRankGamers.png' },
-            { abbr: 'MIBR', name: 'Made in Bronze', logo: '../icons/s2_teams/MadeInBronze.png' },
-            { abbr: 'KOI', name: 'Keep On Inting', logo: '../icons/s2_teams/KeepOnInting.png' },
-            { abbr: 'SLLY', name: 'Silly Geese', logo: '../icons/s2_teams/SillyGeese.png' },
-            { abbr: 'DRX', name: 'Dementia Real Exists', logo: '../icons/s2_teams/DementiaRealExists.png' },
-            { abbr: 'WOOD', name: 'The Wooden Fence', logo: '../icons/s2_teams/TheWoodenFence.png' },
-            { abbr: 'KRU', name: "Knives R' Us", logo: '../icons/s2_teams/KnivesRUs.png' },
-            { abbr: 'TS', name: 'Tequila Sunrise', logo: '../icons/s2_teams/TequilaSunrise.png' }
+            { abbr: 'EMEA', name: 'Tech Pause Esports', logo: '../icons/s2_teams/TechPauseEsports.png', region: 'na' },
+            { abbr: 'WING', name: 'Wingman Warriors', logo: '../icons/s2_teams/WingmanWarriors.png', region: 'na' },
+            { abbr: 'JDG', name: 'Just Dudes Gaming', logo: '../icons/s2_teams/JustDudesGaming.png', region: 'na' },
+            { abbr: 'ZIRC', name: 'Zirconians', logo: '../icons/s2_teams/Zirconians.png', region: 'na' },
+            { abbr: 'DRG', name: 'DeRank Gamers', logo: '../icons/s2_teams/DeRankGamers.png', region: 'na' },
+            { abbr: 'MIBR', name: 'Made in Bronze', logo: '../icons/s2_teams/MadeInBronze.png', region: 'na' },
+            { abbr: 'KOI', name: 'Keep On Inting', logo: '../icons/s2_teams/KeepOnInting.png', region: 'na' },
+            { abbr: 'SLLY', name: 'Silly Geese', logo: '../icons/s2_teams/SillyGeese.png', region: 'na' },
+            { abbr: 'DRX', name: 'Dementia Real Exists', logo: '../icons/s2_teams/DementiaRealExists.png', region: 'na' },
+            { abbr: 'WOOD', name: 'The Wooden Fence', logo: '../icons/s2_teams/TheWoodenFence.png', region: 'na' },
+            { abbr: 'KRU', name: "Knives R' Us", logo: '../icons/s2_teams/KnivesRUs.png', region: 'na' },
+            { abbr: 'TS', name: 'Tequila Sunrise', logo: '../icons/s2_teams/TequilaSunrise.png', region: 'na' }
         ];
 
         function buildGrid(gridId, cards, season) {
@@ -94,7 +94,6 @@
             const grid = cardEl.parentElement;
             const existingPanel = grid.querySelector(`.team-expand[data-abbr="${card.abbr}"]`);
 
-            // clicking same card — collapse
             if (existingPanel && existingPanel.classList.contains('open')) {
                 existingPanel.classList.remove('open');
                 cardEl.classList.remove('expanded');
@@ -102,7 +101,6 @@
                 return;
             }
 
-            // close any open panel
             const openPanel = grid.querySelector('.team-expand.open');
             if (openPanel) {
                 openPanel.classList.remove('open');
@@ -111,7 +109,6 @@
                 openPanel.remove();
             }
 
-            // find the last card in this visual row
             const cardRect = cardEl.getBoundingClientRect();
             const allCards = [...grid.querySelectorAll('.team-card')];
             let lastInRow = cardEl;
@@ -120,7 +117,6 @@
                 if (Math.abs(r.top - cardRect.top) < 10) lastInRow = c;
             }
 
-            // create expand panel
             const panel = document.createElement('div');
             panel.className = 'team-expand';
             panel.dataset.abbr = card.abbr;
@@ -128,6 +124,7 @@
             const key = `s${season}`;
             const roster = teamData[key] && teamData[key][card.abbr] ? teamData[key][card.abbr].players : null;
             const sortedRoster = roster ? [...roster].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : [];
+            const regionParam = card.region || 'na';
 
             panel.innerHTML = `
                 <div class="team-expand-header">
@@ -142,7 +139,7 @@
                         ? sortedRoster.map(p => `<span class="team-expand-player">${p}</span>`).join('')
                         : '<span style="color:#777">Roster not available</span>'}
                 </div>
-                <a href="team/?team=${card.abbr}&season=${season}" class="team-expand-link">View full page →</a>
+                <a href="team/?team=${card.abbr}&season=${season}&region=${regionParam}" class="team-expand-link">View full page →</a>
             `;
 
             lastInRow.after(panel);
@@ -150,15 +147,58 @@
             cardEl.classList.add('expanded');
         }
 
+        const seasonMetaCache = {};
+
         async function loadRosters() {
             try {
-                const [s1, s2] = await Promise.all([
-                    fetch('../data/s1/teams.json').then(r => r.json()),
-                    fetch('../data/s2/teams.json').then(r => r.json())
-                ]);
-                teamData.s1 = s1;
-                teamData.s2 = s2;
+                for (const s of [1, 2]) {
+                    let meta;
+                    try {
+                        const res = await fetch(`../data/events/s${s}/season.json`);
+                        meta = await res.json();
+                    } catch(e) {
+                        meta = { regions: [{ id: 'na', name: 'NA' }] };
+                    }
+                    seasonMetaCache[s] = meta;
+                    teamData[`s${s}`] = {};
+                    const regionTeams = {};
+                    for (const r of meta.regions) {
+                        try {
+                            const res = await fetch(`../data/events/s${s}/${r.id}/teams.json`);
+                            const data = await res.json();
+                            regionTeams[r.id] = data;
+                            Object.assign(teamData[`s${s}`], data);
+                        } catch(e) {}
+                    }
+
+                    if (meta.regions.length > 1) {
+                        rebuildGridByRegion(s, meta, regionTeams);
+                    }
+                }
             } catch (err) {}
+        }
+
+        function rebuildGridByRegion(season, meta, regionTeams) {
+            const container = document.getElementById(`season${season}`);
+            if (!container) return;
+            container.innerHTML = '';
+            for (const r of meta.regions) {
+                const data = regionTeams[r.id];
+                if (!data || Object.keys(data).length === 0) continue;
+                const header = document.createElement('h3');
+                header.className = 'region-grid-header';
+                header.textContent = r.name;
+                container.appendChild(header);
+                const grid = document.createElement('div');
+                grid.className = 'teams-grid';
+                grid.id = `grid-s${season}-${r.id}`;
+                container.appendChild(grid);
+                const cards = Object.entries(data).map(([abbr, t]) => ({
+                    abbr, name: t.name, logo: t.logo, region: r.id
+                }));
+                cards.sort((a, b) => a.name.localeCompare(b.name));
+                buildGrid(grid.id, cards, season);
+            }
         }
 
         function toggleSeason(id) {

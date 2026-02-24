@@ -1828,3 +1828,30 @@ a.md-team-info:hover .md-team-name {
     font-size: 11px;
     color: #888;
 }
+
+/* region selector */
+
+.region-selector-bar {
+    display: flex;
+    margin: 0;
+    border-bottom: 1px solid #333;
+}
+.region-sel-btn {
+    padding: 12px 28px;
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+.region-sel-btn:hover {
+    color: white;
+}
+.region-sel-btn.active {
+    color: #6dc5c7;
+    border-bottom-color: #6dc5c7;
+}
