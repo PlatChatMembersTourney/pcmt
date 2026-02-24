@@ -90,12 +90,12 @@
         async function loadTeamsLookup() {
             try {
                 for (const s of [1, 2]) {
-                    const res = await fetch(`../data/s${s}/teams.json`);
+                    const res = await fetch('../data/s' + s + '/teams.json');
                     const data = await res.json();
-                    teamsLookup[`s${s}`] = {};
+                    teamsLookup['s' + s] = {};
                     for (const [abbr, team] of Object.entries(data)) {
-                        teamsLookup[`s${s}`][abbr.toUpperCase()] = abbr;
-                        teamsLookup[`s${s}`][team.name.toUpperCase()] = abbr;
+                        teamsLookup['s' + s][abbr.toUpperCase()] = abbr;
+                        teamsLookup['s' + s][team.name.toUpperCase()] = abbr;
                     }
                 }
             } catch (err) {}
@@ -103,11 +103,11 @@
 
         function teamLink(cellValue, season) {
             if (!cellValue) return cellValue;
-            const lookup = teamsLookup[`s${season}`];
+            const lookup = teamsLookup['s' + season];
             if (!lookup) return cellValue;
             const abbr = lookup[String(cellValue).trim().toUpperCase()];
             if (!abbr) return cellValue;
-            return `<a href="../teams/team/?team=${abbr}&season=${season}" class="team-link">${cellValue}</a>`;
+            return '<a href="../teams/team/?team=' + abbr + '&season=' + season + '" class="team-link">' + cellValue + '</a>';
         }
 
         loadTeamsLookup();
@@ -395,7 +395,7 @@
         }
 
         function formatCell(value, header) {
-            if (value == null || value === '') return '';
+            if (value == null || value === '') return '-';
             if (typeof value === 'number') {
                 if (['KAST', 'HS%', 'CL%'].includes(header)) return (value * 100).toFixed(0) + '%';
                 if (header === 'ACS') return Math.round(value);
@@ -484,12 +484,15 @@
                     return;
                 }
 
-                const changeIdx = rawHeaders.indexOf('Change');
-                let headers = rawHeaders.filter(h => h != null && h !== 'Change');
+                const removeCols = [];
+                rawHeaders.forEach((h, i) => {
+                    if (h == null || h === '' || h === 'Change') removeCols.push(i);
+                });
+                const removeSet = new Set(removeCols);
+                let headers = rawHeaders.filter((_, i) => !removeSet.has(i));
 
                 const formattedRows = playerRows.map(row => {
-                    let r = [...row];
-                    if (changeIdx !== -1) r.splice(changeIdx, 1);
+                    let r = row.filter((_, i) => !removeSet.has(i));
                     while (r.length > headers.length) r.pop();
                     return r.map((cell, i) => formatCell(cell, headers[i]));
                 });
@@ -704,7 +707,6 @@
             const area = document.getElementById('team-table-area');
             const cacheKey = `s${season}-team-toxic`;
 
-            // Check if we have cached sheet data
             const cachedSheets = cacheGetJSON(cacheKey);
 
             try {
@@ -733,7 +735,6 @@
                     cacheSetJSON(cacheKey, { teamNames, sheets: sheetDataMap });
                 }
 
-                // Store in memory for renderToxicTeamMap
                 toxicTeamWorkbooks[season] = sheetDataMap;
 
                 let html = '<div class="stats-table-container">';
@@ -765,7 +766,6 @@
             const data = sheetDataMap[teamName];
             if (!data) return;
 
-            // detect format: S1 has no Pick column (9 cols per map), S2 has Pick (10 cols)
             const headerRow = data[1] || [];
             const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
 
@@ -793,7 +793,6 @@
                 const dataRow = data[startRow + 2];
                 if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
 
-                // left map
                 if (nameRow[0]) {
                     const d = dataRow.slice(0, leftCols);
                     const rebuilt = [nameRow[0]];
@@ -804,7 +803,6 @@
                     mapRows.push(rebuilt);
                 }
 
-                // right map
                 if (nameRow[rightStart]) {
                     const d = dataRow.slice(rightStart, rightEnd);
                     const rebuilt = [nameRow[rightStart]];
