@@ -1628,8 +1628,8 @@ body {
     width: 200px;
 }
 .bracket-label {
-    color: #888;
-    font-size: 13px;
+    color: #6dc5c7;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 6px;
     text-transform: uppercase;
@@ -1651,7 +1651,7 @@ body {
 }
 .bracket-upcoming {
     border-color: #666;
-    border-style: dashed;
+    border-style: solid;
 }
 .bracket-team {
     display: flex;
@@ -1779,8 +1779,8 @@ a.md-team-info:hover .md-team-name {
 }
 
 .bracket-date {
-    font-size: 0.7em;
-    color: #888;
+    font-size: 0.85em;
+    color: #6dc5c7;
     font-weight: 400;
     margin-left: 6px;
 }
