@@ -55853,7 +55853,83 @@
       {
         "team": "KRU",
         "teamName": "Knives R' Us",
-        "players": []
+        "players": [
+          {
+            "Player": "masao",
+            "R1.0": 1.24,
+            "ACS": 245,
+            "K": 42,
+            "D": 30,
+            "A": 11,
+            "PlusMinus": 12,
+            "KAST": 0.795,
+            "ADR": 157.15,
+            "HS%": 0.22,
+            "FK": 4,
+            "FD": 0,
+            "PlusMinus2": 4
+          },
+          {
+            "Player": "amiable",
+            "R1.0": 0.988,
+            "ACS": 219,
+            "K": 37,
+            "D": 40,
+            "A": 20,
+            "PlusMinus": -3,
+            "KAST": 0.71,
+            "ADR": 145.15,
+            "HS%": 0.345,
+            "FK": 3,
+            "FD": 5,
+            "PlusMinus2": -2
+          },
+          {
+            "Player": "Tenyaku",
+            "R1.0": 0.872,
+            "ACS": 193.5,
+            "K": 31,
+            "D": 37,
+            "A": 14,
+            "PlusMinus": -6,
+            "KAST": 0.665,
+            "ADR": 121.5,
+            "HS%": 0.3,
+            "FK": 3,
+            "FD": 6,
+            "PlusMinus2": -3
+          },
+          {
+            "Player": "art",
+            "R1.0": 0.857,
+            "ACS": 211,
+            "K": 33,
+            "D": 36,
+            "A": 5,
+            "PlusMinus": -3,
+            "KAST": 0.54,
+            "ADR": 131.6,
+            "HS%": 0.125,
+            "FK": 7,
+            "FD": 11,
+            "PlusMinus2": -4
+          },
+          {
+            "Player": "teklo",
+            "R1.0": 0.663,
+            "ACS": 140.5,
+            "K": 23,
+            "D": 39,
+            "A": 8,
+            "PlusMinus": -16,
+            "KAST": 0.665,
+            "ADR": 100.15,
+            "HS%": 0.195,
+            "FK": 2,
+            "FD": 7,
+            "PlusMinus2": -5
+          }
+        ]
       }
     ],
     "mapDetails": [
