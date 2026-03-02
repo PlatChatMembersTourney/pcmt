@@ -1,6 +1,6 @@
 [
   {
-    "id": "jdg-vs-mibr-s2-TBD",
+    "id": "jdg-vs-mibr-s2-lcq-TBD",
     "team1": "JDG",
     "team2": "MIBR",
     "team1Name": "JDG",
@@ -17,7 +17,7 @@
     "mapDetails": []
   },
   {
-    "id": "jdg-vs-drg-s2-2026-03-01",
+    "id": "jdg-vs-drg-s2-lcq-2026-03-01",
     "team1": "JDG",
     "team2": "DRG",
     "team1Name": "Just Dudes Gaming",
@@ -807,7 +807,7 @@
     "streamLink": "https://www.youtube.com/watch?v=qVgR8j80dG8"
   },
   {
-    "id": "zirc-vs-mibr-s2-2026-02-28",
+    "id": "zirc-vs-mibr-s2-lcq-2026-02-28",
     "team1": "ZIRC",
     "team2": "MIBR",
     "team1Name": "Zirconians",
@@ -1863,7 +1863,7 @@
     "streamLink": "https://www.youtube.com/watch?v=CbX4t9sQBIc"
   },
   {
-    "id": "jdg-vs-mibr-s2-2026-02-22",
+    "id": "jdg-vs-mibr-s2-lcq-2026-02-22",
     "team1": "JDG",
     "team2": "MIBR",
     "team1Name": "Just Dudes Gaming",
@@ -2628,7 +2628,7 @@
     "streamLink": "https://www.youtube.com/watch?v=M1qw4JY-CJo&t=180s"
   },
   {
-    "id": "drg-vs-zirc-s2-2026-02-15",
+    "id": "drg-vs-zirc-s2-lcq-2026-02-15",
     "team1": "DRG",
     "team2": "ZIRC",
     "team1Name": "DeRank Gamers",
@@ -3794,7 +3794,7 @@
     "streamLink": "https://www.youtube.com/watch?v=_1-kvSCHTEs"
   },
   {
-    "id": "drg-vs-drx-s2",
+    "id": "drg-vs-drx-s2-group-stage",
     "team1": "DRG",
     "team2": "DRX",
     "team1Name": "DeRank Gamers",
@@ -4829,7 +4829,7 @@
     ]
   },
   {
-    "id": "drg-vs-jdg-s2",
+    "id": "drg-vs-jdg-s2-group-stage",
     "team1": "DRG",
     "team2": "JDG",
     "team1Name": "DeRank Gamers",
@@ -5894,7 +5894,7 @@
     ]
   },
   {
-    "id": "drg-vs-koi-s2",
+    "id": "drg-vs-koi-s2-group-stage",
     "team1": "DRG",
     "team2": "KOI",
     "team1Name": "DeRank Gamers",
@@ -6949,7 +6949,7 @@
     ]
   },
   {
-    "id": "drg-vs-mibr-s2",
+    "id": "drg-vs-mibr-s2-group-stage",
     "team1": "DRG",
     "team2": "MIBR",
     "team1Name": "DeRank Gamers",
@@ -7693,7 +7693,7 @@
     ]
   },
   {
-    "id": "drg-vs-slly-s2",
+    "id": "drg-vs-slly-s2-group-stage",
     "team1": "DRG",
     "team2": "SLLY",
     "team1Name": "DeRank Gamers",
@@ -8718,7 +8718,7 @@
     ]
   },
   {
-    "id": "drg-vs-emea-s2",
+    "id": "drg-vs-emea-s2-group-stage",
     "team1": "DRG",
     "team2": "EMEA",
     "team1Name": "DeRank Gamers",
@@ -9477,7 +9477,7 @@
     ]
   },
   {
-    "id": "drg-vs-zirc-s2",
+    "id": "drg-vs-zirc-s2-group-stage",
     "team1": "DRG",
     "team2": "ZIRC",
     "team1Name": "DeRank Gamers",
@@ -10251,7 +10251,7 @@
     ]
   },
   {
-    "id": "drx-vs-koi-s2",
+    "id": "drx-vs-koi-s2-group-stage",
     "team1": "DRX",
     "team2": "KOI",
     "team1Name": "Dementia Real Exists",
@@ -11301,7 +11301,7 @@
     ]
   },
   {
-    "id": "drx-vs-mibr-s2",
+    "id": "drx-vs-mibr-s2-group-stage",
     "team1": "DRX",
     "team2": "MIBR",
     "team1Name": "Dementia Real Exists",
@@ -12381,7 +12381,7 @@
     ]
   },
   {
-    "id": "drx-vs-slly-s2",
+    "id": "drx-vs-slly-s2-group-stage",
     "team1": "DRX",
     "team2": "SLLY",
     "team1Name": "Dementia Real Exists",
@@ -13421,7 +13421,7 @@
     ]
   },
   {
-    "id": "drx-vs-emea-s2",
+    "id": "drx-vs-emea-s2-group-stage",
     "team1": "DRX",
     "team2": "EMEA",
     "team1Name": "Dementia Real Exists",
@@ -14506,7 +14506,7 @@
     ]
   },
   {
-    "id": "drx-vs-ts-s2",
+    "id": "drx-vs-ts-s2-group-stage",
     "team1": "DRX",
     "team2": "TS",
     "team1Name": "Dementia Real Exists",
@@ -15305,7 +15305,7 @@
     ]
   },
   {
-    "id": "jdg-vs-koi-s2",
+    "id": "jdg-vs-koi-s2-group-stage",
     "team1": "JDG",
     "team2": "KOI",
     "team1Name": "Just Dudes Gaming",
@@ -16360,7 +16360,7 @@
     ]
   },
   {
-    "id": "jdg-vs-slly-s2",
+    "id": "jdg-vs-slly-s2-group-stage",
     "team1": "JDG",
     "team2": "SLLY",
     "team1Name": "Just Dudes Gaming",
@@ -17099,7 +17099,7 @@
     ]
   },
   {
-    "id": "jdg-vs-emea-s2",
+    "id": "jdg-vs-emea-s2-group-stage",
     "team1": "JDG",
     "team2": "EMEA",
     "team1Name": "Just Dudes Gaming",
@@ -18154,7 +18154,7 @@
     ]
   },
   {
-    "id": "jdg-vs-ts-s2",
+    "id": "jdg-vs-ts-s2-group-stage",
     "team1": "JDG",
     "team2": "TS",
     "team1Name": "Just Dudes Gaming",
@@ -18853,7 +18853,7 @@
     ]
   },
   {
-    "id": "jdg-vs-wood-s2",
+    "id": "jdg-vs-wood-s2-group-stage",
     "team1": "JDG",
     "team2": "WOOD",
     "team1Name": "Just Dudes Gaming",
@@ -19642,7 +19642,7 @@
     ]
   },
   {
-    "id": "koi-vs-emea-s2",
+    "id": "koi-vs-emea-s2-group-stage",
     "team1": "KOI",
     "team2": "EMEA",
     "team1Name": "Keep On Inting",
@@ -20692,7 +20692,7 @@
     ]
   },
   {
-    "id": "koi-vs-zirc-s2",
+    "id": "koi-vs-zirc-s2-group-stage",
     "team1": "KOI",
     "team2": "ZIRC",
     "team1Name": "Keep On Inting",
@@ -21446,7 +21446,7 @@
     ]
   },
   {
-    "id": "kru-vs-drx-s2",
+    "id": "kru-vs-drx-s2-group-stage",
     "team1": "KRU",
     "team2": "DRX",
     "team1Name": "Knives R' Us",
@@ -22576,7 +22576,7 @@
     ]
   },
   {
-    "id": "kru-vs-mibr-s2",
+    "id": "kru-vs-mibr-s2-group-stage",
     "team1": "KRU",
     "team2": "MIBR",
     "team1Name": "Knives R' Us",
@@ -23616,7 +23616,7 @@
     ]
   },
   {
-    "id": "mibr-vs-jdg-s2",
+    "id": "mibr-vs-jdg-s2-group-stage",
     "team1": "MIBR",
     "team2": "JDG",
     "team1Name": "Made in Bronze",
@@ -24676,7 +24676,7 @@
     ]
   },
   {
-    "id": "koi-vs-mibr-s2",
+    "id": "koi-vs-mibr-s2-group-stage",
     "team1": "KOI",
     "team2": "MIBR",
     "team1Name": "Keep on Inting",
@@ -25460,7 +25460,7 @@
     ]
   },
   {
-    "id": "mibr-vs-slly-s2",
+    "id": "mibr-vs-slly-s2-group-stage",
     "team1": "MIBR",
     "team2": "SLLY",
     "team1Name": "Made in Bronze",
@@ -26229,7 +26229,7 @@
     ]
   },
   {
-    "id": "mibr-vs-emea-s2",
+    "id": "mibr-vs-emea-s2-group-stage",
     "team1": "MIBR",
     "team2": "EMEA",
     "team1Name": "Made in Bronze",
@@ -27043,7 +27043,7 @@
     ]
   },
   {
-    "id": "mibr-vs-wood-s2",
+    "id": "mibr-vs-wood-s2-group-stage",
     "team1": "MIBR",
     "team2": "WOOD",
     "team1Name": "Made in Bronze",
@@ -28133,7 +28133,7 @@
     ]
   },
   {
-    "id": "slly-vs-koi-s2",
+    "id": "slly-vs-koi-s2-group-stage",
     "team1": "SLLY",
     "team2": "KOI",
     "team1Name": "Silly Geese",
@@ -29173,7 +29173,7 @@
     ]
   },
   {
-    "id": "slly-vs-kru-s2",
+    "id": "slly-vs-kru-s2-group-stage",
     "team1": "SLLY",
     "team2": "KRU",
     "team1Name": "Silly Geese",
@@ -29997,7 +29997,7 @@
     ]
   },
   {
-    "id": "slly-vs-wood-s2",
+    "id": "slly-vs-wood-s2-group-stage",
     "team1": "SLLY",
     "team2": "WOOD",
     "team1Name": "Silly Geese",
@@ -30771,7 +30771,7 @@
     ]
   },
   {
-    "id": "slly-vs-wing-s2",
+    "id": "slly-vs-wing-s2-group-stage",
     "team1": "SLLY",
     "team2": "WING",
     "team1Name": "Silly Geese",
@@ -31515,7 +31515,7 @@
     ]
   },
   {
-    "id": "slly-vs-zirc-s2",
+    "id": "slly-vs-zirc-s2-group-stage",
     "team1": "SLLY",
     "team2": "ZIRC",
     "team1Name": "Silly Geese",
@@ -32329,7 +32329,7 @@
     ]
   },
   {
-    "id": "emea-vs-kru-s2",
+    "id": "emea-vs-kru-s2-group-stage",
     "team1": "EMEA",
     "team2": "KRU",
     "team1Name": "Tech Pause Esports",
@@ -33047,7 +33047,7 @@
     ]
   },
   {
-    "id": "emea-vs-slly-s2",
+    "id": "emea-vs-slly-s2-group-stage",
     "team1": "EMEA",
     "team2": "SLLY",
     "team1Name": "Tech Pause Esports",
@@ -33826,7 +33826,7 @@
     ]
   },
   {
-    "id": "emea-vs-wood-s2",
+    "id": "emea-vs-wood-s2-group-stage",
     "team1": "EMEA",
     "team2": "WOOD",
     "team1Name": "Tech Pause Esports",
@@ -34650,7 +34650,7 @@
     ]
   },
   {
-    "id": "emea-vs-wing-s2",
+    "id": "emea-vs-wing-s2-group-stage",
     "team1": "EMEA",
     "team2": "WING",
     "team1Name": "Tech Pause Esports",
@@ -35409,7 +35409,7 @@
     ]
   },
   {
-    "id": "ts-vs-drg-s2",
+    "id": "ts-vs-drg-s2-group-stage",
     "team1": "TS",
     "team2": "DRG",
     "team1Name": "Tequila Sunrise",
@@ -36459,7 +36459,7 @@
     ]
   },
   {
-    "id": "ts-vs-koi-s2",
+    "id": "ts-vs-koi-s2-group-stage",
     "team1": "TS",
     "team2": "KOI",
     "team1Name": "Tequila Sunrise",
@@ -37198,7 +37198,7 @@
     ]
   },
   {
-    "id": "ts-vs-slly-s2",
+    "id": "ts-vs-slly-s2-group-stage",
     "team1": "TS",
     "team2": "SLLY",
     "team1Name": "Tequila Sunrise",
@@ -37982,7 +37982,7 @@
     ]
   },
   {
-    "id": "ts-vs-emea-s2",
+    "id": "ts-vs-emea-s2-group-stage",
     "team1": "TS",
     "team2": "EMEA",
     "team1Name": "Tequila Sunrise",
@@ -38751,7 +38751,7 @@
     ]
   },
   {
-    "id": "ts-vs-wood-s2",
+    "id": "ts-vs-wood-s2-group-stage",
     "team1": "TS",
     "team2": "WOOD",
     "team1Name": "Tequila Sunrise",
@@ -39791,7 +39791,7 @@
     ]
   },
   {
-    "id": "wing-vs-ts-s2",
+    "id": "wing-vs-ts-s2-group-stage",
     "team1": "WING",
     "team2": "TS",
     "team1Name": "Wingman Warriors",
@@ -40886,7 +40886,7 @@
     ]
   },
   {
-    "id": "ts-vs-zirc-s2",
+    "id": "ts-vs-zirc-s2-group-stage",
     "team1": "TS",
     "team2": "ZIRC",
     "team1Name": "Tequila Sunrise",
@@ -41931,7 +41931,7 @@
     ]
   },
   {
-    "id": "wood-vs-drx-s2",
+    "id": "wood-vs-drx-s2-group-stage",
     "team1": "WOOD",
     "team2": "DRX",
     "team1Name": "The Wooden Fence",
@@ -42685,7 +42685,7 @@
     ]
   },
   {
-    "id": "wood-vs-koi-s2",
+    "id": "wood-vs-koi-s2-group-stage",
     "team1": "WOOD",
     "team2": "KOI",
     "team1Name": "The Wooden Fence",
@@ -43469,7 +43469,7 @@
     ]
   },
   {
-    "id": "wing-vs-drg-s2",
+    "id": "wing-vs-drg-s2-group-stage",
     "team1": "WING",
     "team2": "DRG",
     "team1Name": "Wingman Warriors",
@@ -44223,7 +44223,7 @@
     ]
   },
   {
-    "id": "wing-vs-drx-s2",
+    "id": "wing-vs-drx-s2-group-stage",
     "team1": "WING",
     "team2": "DRX",
     "team1Name": "Wingman Warriors",
@@ -45037,7 +45037,7 @@
     ]
   },
   {
-    "id": "wing-vs-jdg-s2",
+    "id": "wing-vs-jdg-s2-group-stage",
     "team1": "WING",
     "team2": "JDG",
     "team1Name": "Wingman Warriors",
@@ -46087,7 +46087,7 @@
     ]
   },
   {
-    "id": "wing-vs-koi-s2",
+    "id": "wing-vs-koi-s2-group-stage",
     "team1": "WING",
     "team2": "KOI",
     "team1Name": "Wingman Warriors",
@@ -47172,7 +47172,7 @@
     ]
   },
   {
-    "id": "wing-vs-kru-s2",
+    "id": "wing-vs-kru-s2-group-stage",
     "team1": "WING",
     "team2": "KRU",
     "team1Name": "Wingman Warriors",
@@ -48207,7 +48207,7 @@
     ]
   },
   {
-    "id": "wing-vs-mibr-s2",
+    "id": "wing-vs-mibr-s2-group-stage",
     "team1": "WING",
     "team2": "MIBR",
     "team1Name": "Wingman Warriors",
@@ -48966,7 +48966,7 @@
     ]
   },
   {
-    "id": "wing-vs-zirc-s2",
+    "id": "wing-vs-zirc-s2-group-stage",
     "team1": "WING",
     "team2": "ZIRC",
     "team1Name": "Wingman Warriors",
@@ -49785,7 +49785,7 @@
     ]
   },
   {
-    "id": "zirc-vs-drx-s2",
+    "id": "zirc-vs-drx-s2-group-stage",
     "team1": "ZIRC",
     "team2": "DRX",
     "team1Name": "Zirconians",
@@ -50514,7 +50514,7 @@
     ]
   },
   {
-    "id": "zirc-vs-jdg-s2",
+    "id": "zirc-vs-jdg-s2-group-stage",
     "team1": "ZIRC",
     "team2": "JDG",
     "team1Name": "Zirconians",
@@ -51554,7 +51554,7 @@
     ]
   },
   {
-    "id": "zirc-vs-mibr-s2",
+    "id": "zirc-vs-mibr-s2-group-stage",
     "team1": "ZIRC",
     "team2": "MIBR",
     "team1Name": "Zirconians",
@@ -52338,7 +52338,7 @@
     ]
   },
   {
-    "id": "zirc-vs-emea-s2",
+    "id": "zirc-vs-emea-s2-group-stage",
     "team1": "ZIRC",
     "team2": "EMEA",
     "team1Name": "Zirconians",
@@ -53468,7 +53468,7 @@
     ]
   },
   {
-    "id": "zirc-vs-wood-s2",
+    "id": "zirc-vs-wood-s2-group-stage",
     "team1": "ZIRC",
     "team2": "WOOD",
     "team1Name": "Zirconians",
