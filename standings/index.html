@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../icons/PCMT Logo.png">
-    <title>PCMT - Standings</title>
+    <title>PCMT - standings</title>
+    <style>
+        .bracket-date {
+            font-size: 0.7em;
+            color: #888;
+            font-weight: 400;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <div id="header-bar">
@@ -335,35 +344,6 @@
                     (m.team1 === t2 && m.team2 === t1)
                 ) || null;
             }
-
-            // Find the most recent match between two teams (for rematches)
-            function findLatestMatch(t1, t2) {
-                if (!t1 || !t2) return null;
-                const found = lcqMatches.filter(m =>
-                    (m.team1 === t1 && m.team2 === t2) ||
-                    (m.team1 === t2 && m.team2 === t1)
-                );
-                if (found.length === 0) return null;
-                if (found.length === 1) return found[0];
-                // Sort by date descending, pick most recent
-                found.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-                return found[0];
-            }
-
-            // Find the earliest match between two teams (for opening matches)
-            function findEarliestMatch(t1, t2) {
-                if (!t1 || !t2) return null;
-                const found = lcqMatches.filter(m =>
-                    (m.team1 === t1 && m.team2 === t2) ||
-                    (m.team1 === t2 && m.team2 === t1)
-                );
-                if (found.length === 0) return null;
-                if (found.length === 1) return found[0];
-                // Sort by date ascending, pick earliest
-                found.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-                return found[0];
-            }
-
             function getWinner(m) {
                 if (!m || !m.completed) return null;
                 return m.score1 > m.score2 ? m.team1 : m.team2;
@@ -373,20 +353,19 @@
                 return m.score1 > m.score2 ? m.team2 : m.team1;
             }
 
-            // Opening matches — use earliest match for teams that play twice
-            const o1 = findEarliestMatch(seeds.opening1[0], seeds.opening1[1]);
-            const o2 = findEarliestMatch(seeds.opening2[0], seeds.opening2[1]);
+            const o1 = findMatch(seeds.opening1[0], seeds.opening1[1]);
+            const o2 = findMatch(seeds.opening2[0], seeds.opening2[1]);
             const w1 = getWinner(o1), w2 = getWinner(o2);
             const l1 = getLoser(o1), l2 = getLoser(o2);
-
-            // Winners and elimination use findMatch (unique matchups)
             const wMatch = findMatch(w1, w2);
             const eMatch = findMatch(l1, l2);
             const wLoser = getLoser(wMatch);
             const eWinner = getWinner(eMatch);
+            const dMatch = findMatch(wLoser, eWinner);
 
-            // Decider — could be a rematch, use findLatestMatch
-            const dMatch = findLatestMatch(wLoser, eWinner);
+            // Qualified teams
+            const upperQual = getWinner(wMatch);
+            const lowerQual = getWinner(dMatch);
 
             function slot(label, m, fb1, fb2) {
                 const t1 = m ? m.team1 : fb1;
@@ -402,15 +381,13 @@
                 opening2: slot('Opening', o2, seeds.opening2[0], seeds.opening2[1]),
                 winners:  slot("Winner's", wMatch, w1 || 'Winner M1', w2 || 'Winner M2'),
                 elim:     slot('Elimination', eMatch, l1 || 'Loser M1', l2 || 'Loser M2'),
-                decider:  slot('Decider', dMatch, wLoser || 'Loser M3', eWinner || 'Winner M4'),
-                qualUpper: getWinner(wMatch),
-                qualLower: getWinner(dMatch)
+                decider:  slot('Decider', dMatch, wLoser || 'Loser M3', eWinner || 'Winner M4')
             };
 
-            area.innerHTML = renderLCQBracket(bracket, logoFor);
+            area.innerHTML = renderLCQBracket(bracket, logoFor, upperQual, lowerQual);
         }
 
-        function renderLCQBracket(bracket, logoFor) {
+        function renderLCQBracket(bracket, logoFor, upperQual, lowerQual) {
             function matchBox(s) {
                 const s1 = s.score1 !== null ? s.score1 : '-';
                 const s2 = s.score2 !== null ? s.score2 : '-';
@@ -441,12 +418,13 @@
                     </div>`;
             }
 
-            function qualBox(teamAbbr) {
-                if (teamAbbr) {
-                    return `<div class="bracket-qual"><div class="bracket-qual-tag">${logoFor(teamAbbr)} ${teamAbbr}
-                        </div></div>`;
+            function qualBox(team) {
+                if (!team) {
+                    return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
                 }
-                return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
+                return `<div class="bracket-qual bracket-qual-filled">
+                    <div class="bracket-qual-tag">${logoFor(team)} ${team}</div>
+                </div>`;
             }
 
             function conn(type) {
@@ -473,14 +451,14 @@
                         ${conn('merge')}
                         <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
                         ${conn('single')}
-                        <div class="bracket-col bracket-col-qual">${qualBox(bracket.qualUpper)}</div>
+                        <div class="bracket-col bracket-col-qual">${qualBox(upperQual)}</div>
                     </div>
                     <div class="bracket-lower">
                         <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
                         ${conn('single')}
                         <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
                         ${conn('single')}
-                        <div class="bracket-col bracket-col-qual">${qualBox(bracket.qualLower)}</div>
+                        <div class="bracket-col bracket-col-qual">${qualBox(lowerQual)}</div>
                     </div>
                 </div>`;
         }
