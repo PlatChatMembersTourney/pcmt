@@ -25,7 +25,7 @@
             Sorry for the inconvenience<br>— toxic
         </p>
         <div style="display:flex; gap:12px; justify-content:center;">
-            <a href="https://docs.google.com/spreadsheets/d/1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak" 
+            <a href="https://docs.google.com/spreadsheets/d/1ea1gKWPE1kBkK9d0O6Mky0r5iBkBX9qkTA3OBS0LKMY" 
                target="_blank" 
                style="background:#5cb85c; color:#111; padding:10px 24px; border-radius:6px; 
                       font-weight:700; text-decoration:none; font-size:14px;">
@@ -104,7 +104,17 @@ function closeDisclaimer() {
         let currentSeason = 2;
         let currentMainTab = 'player';
         let currentToxicStage = 'Overall';
+        let currentAngusStage = 'Group Stage';
         const teamsLookup = {};
+
+        const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
+        const angusStages = ['Group Stage', 'Playoffs'];
+
+        // Angus sheet config per stage
+        const angusSheets = {
+            'Group Stage': { sheetId: '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak', gid: '821526300' },
+            'Playoffs':    { sheetId: '1ea1gKWPE1kBkK9d0O6Mky0r5iBkBX9qkTA3OBS0LKMY', gid: '821526300' }
+        };
 
         // --- sessionStorage cache ---
         function cacheGet(key) {
@@ -146,7 +156,6 @@ function closeDisclaimer() {
         }
 
         loadTeamsLookup();
-        const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
 
         const seasonConfig = {
             1: {
@@ -188,6 +197,7 @@ function closeDisclaimer() {
         function buildTabs() {
             const config = seasonConfig[currentSeason];
             currentToxicStage = 'Overall';
+            currentAngusStage = 'Group Stage';
 
             const playerTabBar = document.getElementById('player-sub-tabs');
             playerTabBar.innerHTML = config.playerTabs.map((name, i) =>
@@ -211,11 +221,18 @@ function closeDisclaimer() {
             });
 
             const stageBar = document.getElementById('player-stage-tabs');
+
             if (name === 'toxic' && currentSeason === 2) {
                 currentToxicStage = currentToxicStage || 'Overall';
                 stageBar.style.display = '';
-                stageBar.innerHTML = toxicStages.map((s, i) =>
+                stageBar.innerHTML = toxicStages.map((s) =>
                     `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
+                ).join('');
+            } else if (name === 'Angus' && currentSeason === 2) {
+                currentAngusStage = currentAngusStage || 'Group Stage';
+                stageBar.style.display = '';
+                stageBar.innerHTML = angusStages.map((s) =>
+                    `<button class="stats-sub-btn ${s === currentAngusStage ? 'active' : ''}" onclick="switchAngusStage('${s}')">${s}</button>`
                 ).join('');
             } else {
                 stageBar.style.display = 'none';
@@ -232,6 +249,15 @@ function closeDisclaimer() {
                 btn.classList.toggle('active', toxicStages[i] === stage);
             });
             loadToxicPlayerStats(currentSeason, stage);
+        }
+
+        function switchAngusStage(stage) {
+            currentAngusStage = stage;
+            const buttons = document.querySelectorAll('#player-stage-tabs .stats-sub-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.toggle('active', angusStages[i] === stage);
+            });
+            loadAngusStats(stage);
         }
 
         function switchTeamTab(name) {
@@ -461,8 +487,13 @@ function closeDisclaimer() {
 
             if (name === 'toxic' && season === 2) {
                 stageBar.style.display = '';
-                stageBar.innerHTML = toxicStages.map((s, i) =>
+                stageBar.innerHTML = toxicStages.map((s) =>
                     `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
+                ).join('');
+            } else if (name === 'Angus' && season === 2) {
+                stageBar.style.display = '';
+                stageBar.innerHTML = angusStages.map((s) =>
+                    `<button class="stats-sub-btn ${s === currentAngusStage ? 'active' : ''}" onclick="switchAngusStage('${s}')">${s}</button>`
                 ).join('');
             } else {
                 stageBar.style.display = 'none';
@@ -472,6 +503,7 @@ function closeDisclaimer() {
             let cacheKey;
             if (season === 1) cacheKey = `s1-player-toxic`;
             else if (name === 'toxic') cacheKey = `s2-player-toxic-${currentToxicStage}`;
+            else if (name === 'Angus') cacheKey = `s2-player-angus-${currentAngusStage}`;
             else cacheKey = `s2-player-${name}`;
 
             if (!cacheGet(cacheKey)) {
@@ -480,7 +512,7 @@ function closeDisclaimer() {
 
             if (season === 1) loadToxicPlayerStats(1, 'Overall');
             else if (name === 'toxic') loadToxicPlayerStats(2, currentToxicStage);
-            else if (name === 'Angus') loadAngusStats();
+            else if (name === 'Angus') loadAngusStats(currentAngusStage);
             else if (name === 'pi') loadPiPlayerStats();
         }
 
@@ -544,23 +576,29 @@ function closeDisclaimer() {
             }
         }
 
-        async function loadAngusStats() {
-            const cacheKey = 's2-player-Angus';
+        async function loadAngusStats(stage) {
+            stage = stage || 'Group Stage';
+            const cacheKey = `s2-player-angus-${stage}`;
             const area = document.getElementById('player-table-area');
+            const tableId = `angus-player-s2-${stage.replace(/\s+/g, '')}`;
 
             const cached = cacheGetJSON(cacheKey);
             if (cached) {
                 const { headers, rows } = cached;
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'angus-player-s2')}</div>`;
-                sortByRating('angus-player-s2', headers);
-                highlightTable('angus-player-s2', 'player');
+                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
+                sortByRating(tableId, headers);
+                highlightTable(tableId, 'player');
                 return;
             }
 
             try {
-                const sheetId = '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak';
-                const gid = '821526300';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                const config = angusSheets[stage];
+                if (!config) {
+                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Unknown stage.</p></div>';
+                    return;
+                }
+
+                const url = `https://docs.google.com/spreadsheets/d/${config.sheetId}/export?format=csv&gid=${config.gid}`;
 
                 const response = await fetch(url);
                 const csvText = await response.text();
@@ -572,18 +610,24 @@ function closeDisclaimer() {
                 const removeCols = [];
                 headers.forEach((h, i) => {
                     const lower = h.toLowerCase().trim();
-                    if (lower === 'points' || lower === 'agents') removeCols.push(i);
+                    if (lower === 'points' || lower === 'agents' || lower === '+/-') removeCols.push(i);
                 });
                 removeCols.sort((a, b) => b - a).forEach(idx => {
                     headers.splice(idx, 1);
                     rows.forEach(r => r.splice(idx, 1));
                 });
 
+                // Filter out MEDIAN/MEAN rows
+                rows = rows.filter(r => {
+                    const first = String(r[0] || '').trim().toUpperCase();
+                    return first !== 'MEDIAN' && first !== 'MEAN';
+                });
+
                 const merged = mergeTeamIntoPlayer(headers, rows);
                 cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
-                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'angus-player-s2')}</div>`;
-                sortByRating('angus-player-s2', merged.headers);
-                highlightTable('angus-player-s2', 'player');
+                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
+                sortByRating(tableId, merged.headers);
+                highlightTable(tableId, 'player');
             } catch (err) {
                 area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
                 console.error('angus stats:', err);

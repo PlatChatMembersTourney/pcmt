@@ -335,14 +335,22 @@
                 return `<img src="../${logo}" alt="${abbr}" class="bracket-team-logo" onerror="this.style.display='none'">`;
             }
 
-            const lcqMatches = matches.filter(m => m.stage && m.stage.toLowerCase().includes('lcq'));
+            const lcqMatches = matches
+                .filter(m => m.stage && m.stage.toLowerCase().includes('lcq'))
+                .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
-            function findMatch(t1, t2) {
+            const usedIds = new Set();
+
+            // Find a match between t1 and t2 that hasn't been claimed yet
+            function claimMatch(t1, t2) {
                 if (!t1 || !t2) return null;
-                return lcqMatches.find(m =>
-                    (m.team1 === t1 && m.team2 === t2) ||
-                    (m.team1 === t2 && m.team2 === t1)
+                const m = lcqMatches.find(m =>
+                    !usedIds.has(m.id) &&
+                    ((m.team1 === t1 && m.team2 === t2) ||
+                     (m.team1 === t2 && m.team2 === t1))
                 ) || null;
+                if (m) usedIds.add(m.id);
+                return m;
             }
             function getWinner(m) {
                 if (!m || !m.completed) return null;
@@ -353,15 +361,15 @@
                 return m.score1 > m.score2 ? m.team2 : m.team1;
             }
 
-            const o1 = findMatch(seeds.opening1[0], seeds.opening1[1]);
-            const o2 = findMatch(seeds.opening2[0], seeds.opening2[1]);
+            const o1 = claimMatch(seeds.opening1[0], seeds.opening1[1]);
+            const o2 = claimMatch(seeds.opening2[0], seeds.opening2[1]);
             const w1 = getWinner(o1), w2 = getWinner(o2);
             const l1 = getLoser(o1), l2 = getLoser(o2);
-            const wMatch = findMatch(w1, w2);
-            const eMatch = findMatch(l1, l2);
+            const wMatch = claimMatch(w1, w2);
+            const eMatch = claimMatch(l1, l2);
             const wLoser = getLoser(wMatch);
             const eWinner = getWinner(eMatch);
-            const dMatch = findMatch(wLoser, eWinner);
+            const dMatch = claimMatch(wLoser, eWinner);
 
             // Qualified teams
             const upperQual = getWinner(wMatch);
