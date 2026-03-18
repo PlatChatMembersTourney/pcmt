@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="../icons/PCMT Logo.png">
-    <title>PCMT - standings</title>
+    <title>PCMT - Standings</title>
     <style>
         .bracket-date {
             font-size: 0.7em;
@@ -13,31 +13,6 @@
             font-weight: 400;
             margin-left: 6px;
             vertical-align: middle;
-        }
-        .bracket-grand-final {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #444;
-        }
-        .bracket-playoff-wrapper {
-            display: flex;
-            align-items: center;
-        }
-        .bracket-playoff-left {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .bracket-playoff-left .bracket-upper,
-        .bracket-playoff-left .bracket-lower {
-            margin-bottom: 0;
-        }
-        .bracket-conn-gf {
-            height: 100%;
-            min-height: 300px;
         }
         .bracket-qual-tag {
             display: flex;
@@ -48,6 +23,18 @@
             width: 20px;
             height: 20px;
             object-fit: contain;
+        }
+        .bracket-gf-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid #444;
+        }
+        .bracket-gf-section .bracket-match {
+            width: 240px;
         }
     </style>
 </head>
@@ -95,586 +82,276 @@
         let currentSeason = 2;
         let currentStage = 'groups';
 
-        function cacheGet(key) {
-            try { return sessionStorage.getItem('pcmt-rank-' + key); } catch(e) { return null; }
-        }
-        function cacheSet(key, val) {
-            try { sessionStorage.setItem('pcmt-rank-' + key, val); } catch(e) {}
-        }
+        // ── Bracket configs ────────────────────────────────────────────────
+        const bracketConfigs = {
+            lcq: {
+                stageFilter: 'lcq',
+                openingLabel: 'Opening',
+                seeds: { opening1: ['JDG', 'MIBR'], opening2: ['ZIRC', 'DRG'] },
+                hasGrandFinal: false
+            },
+            playoffs: {
+                stageFilter: 'playoff',
+                openingLabel: 'Quarterfinal',
+                seeds: { opening1: ['EMEA', 'JDG'], opening2: ['WING', 'DRG'] },
+                hasGrandFinal: true
+            }
+        };
 
+        // ── Cache ──────────────────────────────────────────────────────────
+        function cacheGet(key) { try { return sessionStorage.getItem('pcmt-rank-' + key); } catch(e) { return null; } }
+        function cacheSet(key, val) { try { sessionStorage.setItem('pcmt-rank-' + key, val); } catch(e) {} }
+
+        // ── Navigation ─────────────────────────────────────────────────────
         function switchSeason(season) {
             currentSeason = season;
-            const buttons = document.querySelectorAll('.season-sel-btn');
-            buttons.forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
-
-            const stageTabs = document.getElementById('stage-tabs');
-            stageTabs.style.display = (season === 2) ? '' : 'none';
-
-            loadstandings();
+            document.querySelectorAll('.season-sel-btn').forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
+            document.getElementById('stage-tabs').style.display = (season === 2) ? '' : 'none';
+            loadStandings();
         }
 
         function switchStage(stage) {
             currentStage = stage;
-            const buttons = document.querySelectorAll('#stage-tabs .stats-sub-btn');
             const stages = ['groups', 'lcq', 'playoffs'];
-            buttons.forEach((btn, i) => btn.classList.toggle('active', stages[i] === stage));
-            loadstandings();
+            document.querySelectorAll('#stage-tabs .stats-sub-btn').forEach((btn, i) => btn.classList.toggle('active', stages[i] === stage));
+            loadStandings();
         }
 
+        function loadStandings() {
+            const area = document.getElementById('standings-area');
+            if (currentSeason === 1) { area.innerHTML = '<div class="standings-empty"><p>Season 1 standings are currently under review.</p></div>'; return; }
+            if (bracketConfigs[currentStage]) { area.innerHTML = '<div class="stats-loading">Loading bracket...</div>'; loadBracket(bracketConfigs[currentStage]); return; }
+            if (cacheGet('s2-groups')) { area.innerHTML = cacheGet('s2-groups'); return; }
+            area.innerHTML = '<div class="stats-loading">Loading standings...</div>';
+            loadS2Groups();
+        }
+
+        // ── Helpers ────────────────────────────────────────────────────────
         function parseCSV(csvText) {
             return csvText.split('\n').map(line => {
-                const cells = [];
-                let current = '';
-                let inQuotes = false;
+                const cells = []; let current = ''; let inQuotes = false;
                 for (let i = 0; i < line.length; i++) {
-                    const char = line[i];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        cells.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
+                    const c = line[i];
+                    if (c === '"') inQuotes = !inQuotes;
+                    else if (c === ',' && !inQuotes) { cells.push(current.trim()); current = ''; }
+                    else current += c;
                 }
-                cells.push(current.trim());
-                return cells;
+                cells.push(current.trim()); return cells;
             });
         }
 
         function formatDate(dateStr) {
             if (!dateStr) return '';
             const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const parts = dateStr.split('-');
-            if (parts.length < 3) return dateStr;
-            const month = months[parseInt(parts[1], 10) - 1] || '';
-            const day = parseInt(parts[2], 10);
-            return `${month} ${day}`;
+            const p = dateStr.split('-');
+            return p.length < 3 ? dateStr : `${months[parseInt(p[1], 10) - 1] || ''} ${parseInt(p[2], 10)}`;
         }
 
-        function loadstandings() {
-            const area = document.getElementById('standings-area');
-
-            if (currentSeason === 1) {
-                area.innerHTML = '<div class="standings-empty"><p>Season 1 standings are currently under review.</p></div>';
-                return;
-            }
-
-            if (currentStage === 'lcq') {
-                area.innerHTML = '<div class="stats-loading">Loading bracket...</div>';
-                loadLCQBracket();
-                return;
-            }
-
-            if (currentStage === 'playoffs') {
-                area.innerHTML = '<div class="stats-loading">Loading bracket...</div>';
-                loadPlayoffBracket();
-                return;
-            }
-
-            // Group Stage
-            if (cacheGet('s2-groups')) {
-                area.innerHTML = cacheGet('s2-groups');
-                return;
-            }
-
-            area.innerHTML = '<div class="stats-loading">Loading standings...</div>';
-            loadS2Groups();
-        }
-
+        // ── Group Stage ────────────────────────────────────────────────────
         async function loadS2Groups() {
             const area = document.getElementById('standings-area');
-
             try {
-                const sheetId = '16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8';
-                const gid = '1622887646';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                const res = await fetch('https://docs.google.com/spreadsheets/d/16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8/export?format=csv&gid=1622887646');
+                if (!res.ok) throw new Error();
+                const lines = parseCSV(await res.text());
 
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to fetch');
-                const csvText = await response.text();
-                const lines = parseCSV(csvText);
-
-                // --- scoreboard ---
-                const teamRows = [];
-                let lastScoreboardIdx = 0;
+                const teamRows = []; let lastIdx = 0;
                 for (let i = 0; i < lines.length; i++) {
-                    const row = lines[i];
-                    const rankCell = (row[1] || '').trim();
-                    if (/^\d+\)$/.test(rankCell)) {
-                        teamRows.push({
-                            rank: parseInt(rankCell),
-                            abbr: (row[3] || '').trim(),
-                            name: (row[5] || '').trim(),
-                            matchW: row[9] || '',
-                            matchL: row[10] || '',
-                            mapW: row[11] || '',
-                            mapL: row[12] || '',
-                            mapDiff: row[13] || '',
-                            rndW: row[14] || '',
-                            rndL: row[15] || '',
-                            rndDiff: row[16] || ''
-                        });
-                        lastScoreboardIdx = i;
+                    const rc = (lines[i][1] || '').trim();
+                    if (/^\d+\)$/.test(rc)) {
+                        const r = lines[i];
+                        teamRows.push({ rank: parseInt(rc), abbr: (r[3]||'').trim(), name: (r[5]||'').trim(),
+                            matchW: r[9]||'', matchL: r[10]||'', mapW: r[11]||'', mapL: r[12]||'', mapDiff: r[13]||'',
+                            rndW: r[14]||'', rndL: r[15]||'', rndDiff: r[16]||'' });
+                        lastIdx = i;
                     }
                 }
 
-                // --- head-to-head matrix ---
-                let h2hLabelRowIdx = -1;
+                let h2hRow = -1;
                 for (let i = lines.length - 1; i >= 0; i--) {
-                    const row = lines[i];
-                    if ((row[4] || '').trim() && (row[5] || '').trim() && (row[6] || '').trim()) {
-                        const possibleTeams = row.slice(4, 16).map(c => (c || '').trim()).filter(Boolean);
-                        if (possibleTeams.length >= 10) {
-                            h2hLabelRowIdx = i;
-                            break;
-                        }
-                    }
+                    if ((lines[i][4]||'').trim() && lines[i].slice(4, 16).map(c => (c||'').trim()).filter(Boolean).length >= 10) { h2hRow = i; break; }
                 }
-
-                const h2hTeams = h2hLabelRowIdx >= 0
-                    ? lines[h2hLabelRowIdx].slice(4, 16).map(c => (c || '').trim())
-                    : [];
-
+                const h2hTeams = h2hRow >= 0 ? lines[h2hRow].slice(4, 16).map(c => (c||'').trim()) : [];
                 const h2hData = [];
-                if (h2hLabelRowIdx >= 0) {
-                    for (let i = 0; i < lines.length; i++) {
-                        const row = lines[i];
-                        const teamCell = (row[3] || '').trim();
-                        if (teamCell && i > lastScoreboardIdx && i < h2hLabelRowIdx) {
-                            const scores = row.slice(4, 16).map(c => (c || '').trim());
-                            const hasScore = scores.some(s => /^\d+-\d+$/.test(s));
-                            if (hasScore) {
-                                h2hData.push({ team: teamCell, scores: scores });
-                            }
-                        }
+                if (h2hRow >= 0) {
+                    for (let i = lastIdx + 1; i < h2hRow; i++) {
+                        const tc = (lines[i][3]||'').trim();
+                        if (tc) { const sc = lines[i].slice(4, 16).map(c => (c||'').trim()); if (sc.some(s => /^\d+-\d+$/.test(s))) h2hData.push({ team: tc, scores: sc }); }
                     }
                 }
 
-                // render scoreboard
-                let html = '<div class="standings-section">';
-                html += '<div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table">';
+                const dc = v => { const n = parseInt(v); return isNaN(n) ? '' : n > 0 ? ' class="diff-pos"' : n < 0 ? ' class="diff-neg"' : ''; };
+                const fd = v => { const n = parseInt(v); return isNaN(n) ? v : n > 0 ? `+${n}` : `${n}`; };
 
-                html += '<thead><tr class="category-row">';
-                html += '<th colspan="3"></th>';
-                html += '<th colspan="2" class="category-header">Matches</th>';
-                html += '<th colspan="3" class="category-header">Maps</th>';
-                html += '<th colspan="3" class="category-header">Rounds</th>';
-                html += '</tr>';
-
-                html += '<tr>';
-                html += '<th>#</th><th>ABBR.</th><th>TEAM</th>';
-                html += '<th>W</th><th>L</th>';
-                html += '<th>W</th><th>L</th><th>Δ</th>';
-                html += '<th>W</th><th>L</th><th>Δ</th>';
-                html += '</tr></thead><tbody>';
-
+                let html = '<div class="standings-section"><div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table">';
+                html += '<thead><tr class="category-row"><th colspan="3"></th><th colspan="2" class="category-header">Matches</th><th colspan="3" class="category-header">Maps</th><th colspan="3" class="category-header">Rounds</th></tr>';
+                html += '<tr><th>#</th><th>ABBR.</th><th>TEAM</th><th>W</th><th>L</th><th>W</th><th>L</th><th>&Delta;</th><th>W</th><th>L</th><th>&Delta;</th></tr></thead><tbody>';
                 teamRows.forEach(t => {
-                    const diffClass = val => {
-                        const n = parseInt(val);
-                        if (isNaN(n)) return '';
-                        if (n > 0) return ' class="diff-pos"';
-                        if (n < 0) return ' class="diff-neg"';
-                        return '';
-                    };
-                    const fmtDiff = val => {
-                        const n = parseInt(val);
-                        if (isNaN(n)) return val;
-                        return n > 0 ? `+${n}` : `${n}`;
-                    };
-
-                    let rowClass = '';
-                    if (t.rank <= 2) rowClass = 'rank-playoffs';
-                    else if (t.rank <= 6) rowClass = 'rank-lcq';
-                    else rowClass = 'rank-eliminated';
-
-                    html += `<tr class="${rowClass}">`;
-                    html += `<td>${t.rank}</td>`;
-                    html += `<td class="team-abbr-cell"><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.abbr}</a></td>`;
-                    html += `<td><a href="../teams/team/?team=${t.abbr}&season=${currentSeason}" class="team-link">${t.name}</a></td>`;
-                    html += `<td>${t.matchW}</td><td>${t.matchL}</td>`;
-                    html += `<td>${t.mapW}</td><td>${t.mapL}</td>`;
-                    html += `<td${diffClass(t.mapDiff)}>${fmtDiff(t.mapDiff)}</td>`;
-                    html += `<td>${t.rndW}</td><td>${t.rndL}</td>`;
-                    html += `<td${diffClass(t.rndDiff)}>${fmtDiff(t.rndDiff)}</td>`;
-                    html += '</tr>';
+                    const cls = t.rank <= 2 ? 'rank-playoffs' : t.rank <= 6 ? 'rank-lcq' : 'rank-eliminated';
+                    const link = `../teams/team/?team=${t.abbr}&season=${currentSeason}`;
+                    html += `<tr class="${cls}"><td>${t.rank}</td><td class="team-abbr-cell"><a href="${link}" class="team-link">${t.abbr}</a></td><td><a href="${link}" class="team-link">${t.name}</a></td>`;
+                    html += `<td>${t.matchW}</td><td>${t.matchL}</td><td>${t.mapW}</td><td>${t.mapL}</td><td${dc(t.mapDiff)}>${fd(t.mapDiff)}</td>`;
+                    html += `<td>${t.rndW}</td><td>${t.rndL}</td><td${dc(t.rndDiff)}>${fd(t.rndDiff)}</td></tr>`;
                 });
+                html += '</tbody></table></div></div>';
 
-                html += '</tbody></table></div>';
-                html += '</div>';
-
-                // render H2H matrix
-                if (h2hData.length > 0 && h2hTeams.length > 0) {
-                    html += '<div class="standings-section">';
-                    html += '<h2 class="standings-subtitle">Head-to-Head</h2>';
-                    html += '<div class="h2h-scroll"><table class="stats-table h2h-table">';
-
-                    html += '<thead><tr><th></th>';
+                if (h2hData.length && h2hTeams.length) {
+                    html += '<div class="standings-section"><h2 class="standings-subtitle">Head-to-Head</h2><div class="h2h-scroll"><table class="stats-table h2h-table"><thead><tr><th></th>';
                     h2hTeams.forEach(t => html += `<th class="h2h-header">${t}</th>`);
                     html += '</tr></thead><tbody>';
-
                     h2hData.forEach(row => {
-                        html += '<tr>';
-                        html += `<th class="h2h-row-label"><a href="../teams/team/?team=${row.team}&season=${currentSeason}" class="team-link">${row.team}</a></th>`;
-                        row.scores.forEach((score, i) => {
-                            if (!score || row.team === h2hTeams[i]) {
-                                html += '<td class="h2h-self"></td>';
-                            } else {
-                                const parts = score.split('-').map(Number);
-                                let cls = 'h2h-cell';
-                                if (parts.length === 2) {
-                                    if (parts[0] > parts[1]) cls += ' h2h-win';
-                                    else if (parts[0] < parts[1]) cls += ' h2h-loss';
-                                }
-                                html += `<td class="${cls}">${score}</td>`;
-                            }
+                        html += `<tr><th class="h2h-row-label"><a href="../teams/team/?team=${row.team}&season=${currentSeason}" class="team-link">${row.team}</a></th>`;
+                        row.scores.forEach((s, i) => {
+                            if (!s || row.team === h2hTeams[i]) { html += '<td class="h2h-self"></td>'; return; }
+                            const p = s.split('-').map(Number); let c = 'h2h-cell';
+                            if (p.length === 2) { if (p[0] > p[1]) c += ' h2h-win'; else if (p[0] < p[1]) c += ' h2h-loss'; }
+                            html += `<td class="${c}">${s}</td>`;
                         });
                         html += '</tr>';
                     });
-
-                    html += '</tbody></table></div>';
-                    html += '</div>';
+                    html += '</tbody></table></div></div>';
                 }
-
                 cacheSet('s2-groups', html);
                 area.innerHTML = html;
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load standings. The sheet may not be publicly shared.</p></div>';
-                console.error('standings error:', err);
-            }
+            } catch (err) { area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load standings.</p></div>'; }
         }
 
-        async function loadLCQBracket() {
+        // ── Shared Bracket Loader ──────────────────────────────────────────
+        async function loadBracket(config) {
             const area = document.getElementById('standings-area');
+            let matches = [], teams = {};
+            try { const r = await fetch(`../data/s${currentSeason}/matches/matches.json`); if (r.ok) matches = await r.json(); } catch(e) {}
+            try { const r = await fetch(`../data/s${currentSeason}/teams.json`); if (r.ok) teams = await r.json(); } catch(e) {}
 
-            // LCQ seeds from group stage (3rd vs 6th, 4th vs 5th)
-            const seeds = {
-                opening1: ['JDG', 'MIBR'],
-                opening2: ['ZIRC', 'DRG']
-            };
-
-            // Load matches and teams
-            let matches = [];
-            let teams = {};
-            try {
-                const res = await fetch(`../data/s${currentSeason}/matches/matches.json`);
-                if (res.ok) matches = await res.json();
-            } catch(e) {}
-            try {
-                const res = await fetch(`../data/s${currentSeason}/teams.json`);
-                if (res.ok) teams = await res.json();
-            } catch(e) {}
-
-            function logoFor(abbr) {
-                if (!abbr || !teams[abbr]) return '';
-                const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
-                return `<img src="../${logo}" alt="${abbr}" class="bracket-team-logo" onerror="this.style.display='none'">`;
+            function logoFor(a) {
+                if (!a || !teams[a]) return '';
+                return `<img src="../${teams[a].logo.replace(/^(\.\.\/)+/, '')}" alt="${a}" class="bracket-team-logo" onerror="this.style.display='none'">`;
             }
 
-            const lcqMatches = matches
-                .filter(m => m.stage && m.stage.toLowerCase().includes('lcq'))
-                .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-
+            const stageMatches = matches.filter(m => m.stage && m.stage.toLowerCase().includes(config.stageFilter)).sort((a, b) => (a.date||'').localeCompare(b.date||''));
             const usedIds = new Set();
-
-            // Find a match between t1 and t2 that hasn't been claimed yet
-            function claimMatch(t1, t2) {
+            function claim(t1, t2) {
                 if (!t1 || !t2) return null;
-                const m = lcqMatches.find(m =>
-                    !usedIds.has(m.id) &&
-                    ((m.team1 === t1 && m.team2 === t2) ||
-                     (m.team1 === t2 && m.team2 === t1))
-                ) || null;
-                if (m) usedIds.add(m.id);
-                return m;
+                const m = stageMatches.find(m => !usedIds.has(m.id) && ((m.team1===t1&&m.team2===t2)||(m.team1===t2&&m.team2===t1))) || null;
+                if (m) usedIds.add(m.id); return m;
             }
-            function getWinner(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team1 : m.team2;
-            }
-            function getLoser(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team2 : m.team1;
-            }
+            function win(m) { return m && m.completed ? (m.score1 > m.score2 ? m.team1 : m.team2) : null; }
+            function lose(m) { return m && m.completed ? (m.score1 > m.score2 ? m.team2 : m.team1) : null; }
 
-            const o1 = claimMatch(seeds.opening1[0], seeds.opening1[1]);
-            const o2 = claimMatch(seeds.opening2[0], seeds.opening2[1]);
-            const w1 = getWinner(o1), w2 = getWinner(o2);
-            const l1 = getLoser(o1), l2 = getLoser(o2);
-            const wMatch = claimMatch(w1, w2);
-            const eMatch = claimMatch(l1, l2);
-            const wLoser = getLoser(wMatch);
-            const eWinner = getWinner(eMatch);
-            const dMatch = claimMatch(wLoser, eWinner);
-
-            // Qualified teams
-            const upperQual = getWinner(wMatch);
-            const lowerQual = getWinner(dMatch);
+            const o1 = claim(config.seeds.opening1[0], config.seeds.opening1[1]);
+            const o2 = claim(config.seeds.opening2[0], config.seeds.opening2[1]);
+            const w1 = win(o1), w2 = win(o2), l1 = lose(o1), l2 = lose(o2);
+            const wM = claim(w1, w2), eM = claim(l1, l2);
+            const wL = lose(wM), eW = win(eM);
+            const dM = claim(wL, eW);
 
             function slot(label, m, fb1, fb2) {
-                const t1 = m ? m.team1 : fb1;
-                const t2 = m ? m.team2 : fb2;
-                const s1 = m && m.completed ? m.score1 : null;
-                const s2 = m && m.completed ? m.score2 : null;
-                const date = m ? m.date : null;
-                return { label, match: m, team1: t1 || 'TBD', team2: t2 || 'TBD', score1: s1, score2: s2, date };
+                return { label, match: m, team1: m ? m.team1 : (fb1||'TBD'), team2: m ? m.team2 : (fb2||'TBD'),
+                    score1: m && m.completed ? m.score1 : null, score2: m && m.completed ? m.score2 : null, date: m ? m.date : null };
             }
 
             const bracket = {
-                opening1: slot('Opening', o1, seeds.opening1[0], seeds.opening1[1]),
-                opening2: slot('Opening', o2, seeds.opening2[0], seeds.opening2[1]),
-                winners:  slot("Winner's", wMatch, w1 || 'Winner M1', w2 || 'Winner M2'),
-                elim:     slot('Elimination', eMatch, l1 || 'Loser M1', l2 || 'Loser M2'),
-                decider:  slot('Decider', dMatch, wLoser || 'Loser M3', eWinner || 'Winner M4')
+                opening1: slot(config.openingLabel, o1, config.seeds.opening1[0], config.seeds.opening1[1]),
+                opening2: slot(config.openingLabel, o2, config.seeds.opening2[0], config.seeds.opening2[1]),
+                winners:  slot("Winner's", wM, w1||'Winner M1', w2||'Winner M2'),
+                elim:     slot('Elimination', eM, l1||'Loser M1', l2||'Loser M2'),
+                decider:  slot('Decider', dM, wL||'Loser M3', eW||'Winner M4')
             };
 
-            area.innerHTML = renderLCQBracket(bracket, logoFor, upperQual, lowerQual);
+            let gfSlot = null, champion = null;
+            if (config.hasGrandFinal) {
+                const ubF = win(wM), lbF = win(dM);
+                const gfM = claim(ubF, lbF);
+                champion = win(gfM);
+                gfSlot = slot('Grand Final', gfM, ubF||'UB Winner', lbF||'LB Winner');
+            }
+
+            area.innerHTML = renderBracket(bracket, logoFor, config, win(wM), win(dM), gfSlot, champion);
         }
 
-        function renderLCQBracket(bracket, logoFor, upperQual, lowerQual) {
+        // ── Shared Bracket Renderer ────────────────────────────────────────
+        function renderBracket(bracket, logoFor, config, upperQual, lowerQual, gfSlot, champion) {
             function matchBox(s) {
                 const s1 = s.score1 !== null ? s.score1 : '-';
                 const s2 = s.score2 !== null ? s.score2 : '-';
                 const w1 = s.score1 !== null && s.score2 !== null && s.score1 > s.score2;
                 const w2 = s.score1 !== null && s.score2 !== null && s.score2 > s.score1;
-                const hasMatch = !!s.match;
                 const upcoming = s.match && !s.match.completed;
-                const href = hasMatch ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
+                const href = s.match ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
                 const tag = href ? 'a' : 'div';
                 const hrefAttr = href ? ` href="${href}"` : '';
                 const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
-
                 const dateTag = s.date ? `<span class="bracket-date">${formatDate(s.date)}</span>` : '';
-
-                return `
-                    <div class="bracket-match">
-                        <div class="bracket-label">${s.label}${dateTag}</div>
-                        <${tag}${hrefAttr} class="${cls}">
-                            <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
-                                <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>
-                                <span class="bracket-team-score">${s1}</span>
-                            </div>
-                            <div class="bracket-team ${w2 ? 'bracket-winner' : ''}">
-                                <div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div>
-                                <span class="bracket-team-score">${s2}</span>
-                            </div>
-                        </${tag}>
-                    </div>`;
+                return `<div class="bracket-match">
+                    <div class="bracket-label">${s.label}${dateTag}</div>
+                    <${tag}${hrefAttr} class="${cls}">
+                        <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
+                            <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>
+                            <span class="bracket-team-score">${s1}</span>
+                        </div>
+                        <div class="bracket-team ${w2 ? 'bracket-winner' : ''}">
+                            <div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div>
+                            <span class="bracket-team-score">${s2}</span>
+                        </div>
+                    </${tag}>
+                </div>`;
             }
 
             function qualBox(team) {
-                if (!team) {
-                    return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
-                }
-                return `<div class="bracket-qual bracket-qual-filled">
-                    <div class="bracket-qual-tag">${logoFor(team)} ${team}</div>
-                </div>`;
-            }
-
-            function conn(type) {
-                if (type === 'merge') return `<div class="bracket-connector bracket-conn-upper">
-                    <svg viewBox="0 0 60 200" preserveAspectRatio="none">
-                        <line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    </svg></div>`;
-                return `<div class="bracket-connector bracket-conn-single">
-                    <svg viewBox="0 0 60 20" preserveAspectRatio="none">
-                        <line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    </svg></div>`;
-            }
-
-            return `
-                <div class="bracket-container">
-                    <div class="bracket-upper">
-                        <div class="bracket-col bracket-col-opening">
-                            ${matchBox(bracket.opening1)}
-                            ${matchBox(bracket.opening2)}
-                        </div>
-                        ${conn('merge')}
-                        <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
-                        ${conn('single')}
-                        <div class="bracket-col bracket-col-qual">${qualBox(upperQual)}</div>
-                    </div>
-                    <div class="bracket-lower">
-                        <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
-                        ${conn('single')}
-                        <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
-                        ${conn('single')}
-                        <div class="bracket-col bracket-col-qual">${qualBox(lowerQual)}</div>
-                    </div>
-                </div>`;
-        }
-
-        async function loadPlayoffBracket() {
-            const area = document.getElementById('standings-area');
-
-            const seeds = {
-                opening1: ['EMEA', 'JDG'],
-                opening2: ['WING', 'DRG']
-            };
-
-            let matches = [];
-            let teams = {};
-            try {
-                const res = await fetch(`../data/s${currentSeason}/matches/matches.json`);
-                if (res.ok) matches = await res.json();
-            } catch(e) {}
-            try {
-                const res = await fetch(`../data/s${currentSeason}/teams.json`);
-                if (res.ok) teams = await res.json();
-            } catch(e) {}
-
-            function logoFor(abbr) {
-                if (!abbr || !teams[abbr]) return '';
-                const logo = teams[abbr].logo.replace(/^(\.\.\/)+/, '');
-                return `<img src="../${logo}" alt="${abbr}" class="bracket-team-logo" onerror="this.style.display='none'">`;
-            }
-
-            const playoffMatches = matches
-                .filter(m => m.stage && m.stage.toLowerCase().includes('playoff'))
-                .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-
-            const usedIds = new Set();
-
-            function claimMatch(t1, t2) {
-                if (!t1 || !t2) return null;
-                const m = playoffMatches.find(m =>
-                    !usedIds.has(m.id) &&
-                    ((m.team1 === t1 && m.team2 === t2) ||
-                     (m.team1 === t2 && m.team2 === t1))
-                ) || null;
-                if (m) usedIds.add(m.id);
-                return m;
-            }
-            function getWinner(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team1 : m.team2;
-            }
-            function getLoser(m) {
-                if (!m || !m.completed) return null;
-                return m.score1 > m.score2 ? m.team2 : m.team1;
-            }
-
-            const o1 = claimMatch(seeds.opening1[0], seeds.opening1[1]);
-            const o2 = claimMatch(seeds.opening2[0], seeds.opening2[1]);
-            const w1 = getWinner(o1), w2 = getWinner(o2);
-            const l1 = getLoser(o1), l2 = getLoser(o2);
-            const wMatch = claimMatch(w1, w2);
-            const eMatch = claimMatch(l1, l2);
-            const wLoser = getLoser(wMatch);
-            const eWinner = getWinner(eMatch);
-            const dMatch = claimMatch(wLoser, eWinner);
-
-            const ubFinalist = getWinner(wMatch);
-            const lbFinalist = getWinner(dMatch);
-            const gfMatch = claimMatch(ubFinalist, lbFinalist);
-            const champion = getWinner(gfMatch);
-
-            function slot(label, m, fb1, fb2) {
-                const t1 = m ? m.team1 : fb1;
-                const t2 = m ? m.team2 : fb2;
-                const s1 = m && m.completed ? m.score1 : null;
-                const s2 = m && m.completed ? m.score2 : null;
-                const date = m ? m.date : null;
-                return { label, match: m, team1: t1 || 'TBD', team2: t2 || 'TBD', score1: s1, score2: s2, date };
-            }
-
-            const bracket = {
-                opening1: slot('Quarterfinal', o1, seeds.opening1[0], seeds.opening1[1]),
-                opening2: slot('Quarterfinal', o2, seeds.opening2[0], seeds.opening2[1]),
-                winners:  slot("Winner's", wMatch, w1 || 'Winner QF1', w2 || 'Winner QF2'),
-                elim:     slot('Elimination', eMatch, l1 || 'Loser QF1', l2 || 'Loser QF2'),
-                decider:  slot('Decider', dMatch, wLoser || 'Loser WF', eWinner || 'Winner Elim'),
-                grandFinal: slot('Grand Final', gfMatch, ubFinalist || 'UB Finalist', lbFinalist || 'LB Finalist')
-            };
-
-            area.innerHTML = renderPlayoffBracket(bracket, logoFor, champion);
-        }
-
-        function renderPlayoffBracket(bracket, logoFor, champion) {
-            function matchBox(s) {
-                const s1 = s.score1 !== null ? s.score1 : '-';
-                const s2 = s.score2 !== null ? s.score2 : '-';
-                const w1 = s.score1 !== null && s.score2 !== null && s.score1 > s.score2;
-                const w2 = s.score1 !== null && s.score2 !== null && s.score2 > s.score1;
-                const hasMatch = !!s.match;
-                const upcoming = s.match && !s.match.completed;
-                const href = hasMatch ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
-                const tag = href ? 'a' : 'div';
-                const hrefAttr = href ? ` href="${href}"` : '';
-                const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
-                const dateTag = s.date ? `<span class="bracket-date">${formatDate(s.date)}</span>` : '';
-
-                return `
-                    <div class="bracket-match">
-                        <div class="bracket-label">${s.label}${dateTag}</div>
-                        <${tag}${hrefAttr} class="${cls}">
-                            <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
-                                <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>
-                                <span class="bracket-team-score">${s1}</span>
-                            </div>
-                            <div class="bracket-team ${w2 ? 'bracket-winner' : ''}">
-                                <div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div>
-                                <span class="bracket-team-score">${s2}</span>
-                            </div>
-                        </${tag}>
-                    </div>`;
+                if (!team) return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
+                return `<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag">${logoFor(team)} ${team}</div></div>`;
             }
 
             function championBox(team) {
                 if (!team) return '';
-                return `<div class="bracket-qual bracket-qual-filled">
-                    <div class="bracket-qual-tag" style="background:linear-gradient(135deg, #d4a843, #f0c040); color:#111;">${logoFor(team)} ${team}</div>
-                </div>`;
+                return `<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag" style="background:linear-gradient(135deg, #d4a843, #f0c040); color:#111;">${logoFor(team)} ${team}</div></div>`;
             }
 
             function conn(type) {
-                if (type === 'merge' || type === 'mergeTall') {
-                    const cls = type === 'mergeTall' ? 'bracket-conn-upper bracket-conn-gf' : 'bracket-conn-upper';
-                    return `<div class="bracket-connector ${cls}">
-                    <svg viewBox="0 0 60 200" preserveAspectRatio="none">
-                        <line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                        <line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    </svg></div>`;
-                }
-                return `<div class="bracket-connector bracket-conn-single">
-                    <svg viewBox="0 0 60 20" preserveAspectRatio="none">
-                        <line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    </svg></div>`;
+                if (type === 'merge') return `<div class="bracket-connector bracket-conn-upper"><svg viewBox="0 0 60 200" preserveAspectRatio="none">
+                    <line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                    <line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                    <line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                    <line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                </svg></div>`;
+                return `<div class="bracket-connector bracket-conn-single"><svg viewBox="0 0 60 20" preserveAspectRatio="none">
+                    <line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
+                </svg></div>`;
             }
 
-            return `
-                <div class="bracket-container">
-                    <div class="bracket-playoff-wrapper">
-                        <div class="bracket-playoff-left">
-                            <div class="bracket-upper">
-                                <div class="bracket-col bracket-col-opening">
-                                    ${matchBox(bracket.opening1)}
-                                    ${matchBox(bracket.opening2)}
-                                </div>
-                                ${conn('merge')}
-                                <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
-                            </div>
-                            <div class="bracket-lower">
-                                <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
-                                ${conn('single')}
-                                <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
-                            </div>
-                        </div>
-                        ${conn('mergeTall')}
-                        <div class="bracket-col bracket-col-mid">${matchBox(bracket.grandFinal)}</div>
-                        ${champion ? conn('single') : ''}
-                        ${champion ? championBox(champion) : ''}
-                    </div>
+            // LCQ: show Qualified boxes. Playoffs: no end boxes, GF below.
+            const upperEnd = config.hasGrandFinal ? '' : `${conn('single')}<div class="bracket-col bracket-col-qual">${qualBox(upperQual)}</div>`;
+            const lowerEnd = config.hasGrandFinal ? '' : `${conn('single')}<div class="bracket-col bracket-col-qual">${qualBox(lowerQual)}</div>`;
+
+            let gfHtml = '';
+            if (config.hasGrandFinal && gfSlot) {
+                gfHtml = `<div class="bracket-gf-section">
+                    ${matchBox(gfSlot)}
+                    ${champion ? championBox(champion) : ''}
                 </div>`;
+            }
+
+            return `<div class="bracket-container">
+                <div class="bracket-upper">
+                    <div class="bracket-col bracket-col-opening">
+                        ${matchBox(bracket.opening1)}
+                        ${matchBox(bracket.opening2)}
+                    </div>
+                    ${conn('merge')}
+                    <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
+                    ${upperEnd}
+                </div>
+                <div class="bracket-lower">
+                    <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
+                    ${conn('single')}
+                    <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
+                    ${lowerEnd}
+                </div>
+                ${gfHtml}
+            </div>`;
         }
 
         switchSeason(2);
-
     </script>
     </div>
 </body>
