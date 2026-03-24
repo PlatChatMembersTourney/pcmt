@@ -1,0 +1,10 @@
+{
+  "id": "s3-na",
+  "name": "PCMT Season 3 -- NA",
+  "shortName": "S3 NA",
+  "season": 3,
+  "region": "na",
+  "stages": ["Group Stage", "Playoffs"],
+  "statsFormat": "json",
+  "standings": { "sheetId": "...", "gid": "..." }
+}

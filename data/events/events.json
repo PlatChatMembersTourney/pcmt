@@ -1,0 +1,34 @@
+[
+  {
+    "id": "s3-na",
+    "name": "PCMT Season 3 -- NA",
+    "shortName": "S3 NA",
+    "season": 3,
+    "region": "na",
+    "status": "upcoming"
+  },
+  {
+    "id": "s3-emea",
+    "name": "PCMT Season 3 -- EMEA",
+    "shortName": "S3 EMEA",
+    "season": 3,
+    "region": "emea",
+    "status": "ongoing"
+  },
+  {
+    "id": "s2-na",
+    "name": "PCMT Season 2",
+    "shortName": "S2",
+    "season": 2,
+    "region": "na",
+    "status": "ongoing"
+  },
+  {
+    "id": "s1-na",
+    "name": "PCMT Season 1",
+    "shortName": "S1",
+    "season": 1,
+    "region": "na",
+    "status": "completed"
+  }
+]

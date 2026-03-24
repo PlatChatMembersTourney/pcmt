@@ -1,0 +1,10 @@
+{
+  "id": "s3-emea",
+  "name": "PCMT Season 3 -- EMEA",
+  "shortName": "S3 EMEA",
+  "season": 3,
+  "region": "emea",
+  "stages": ["Group Stage", "Playoffs"],
+  "statsFormat": "json",
+  "standings": { "sheetId": "...", "gid": "..." }
+}
