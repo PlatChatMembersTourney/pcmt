@@ -11,9 +11,7 @@
     <div id="header-bar">
         <div class="header-inner">
         <div class="header-content" id="link-title">
-            <a href="../">
-                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
-            </a>
+            <a href="../"><img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo"></a>
             <p>Plat Chat Members Tournament</p>
         </div>
         <nav class="header-content">
@@ -28,20 +26,15 @@
     </div>
 
     <div class="page-container">
-        <div id="match-detail">
-            <div class="stats-loading">Loading match...</div>
-        </div>
+    <div id="match-detail"><div class="stats-loading">Loading match...</div></div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const matchId = params.get('id');
-        const season = parseInt(params.get('season')) || 2;
-        let match = null;
-        let teams = {};
-        let currentMapTab = 'all';
-
-        // --- Sort state for match tables ---
+        const eventId = params.get('event') || 's2-na';
+        let eventPath = '';
+        let match = null, teams = {}, currentMapTab = 'all';
         const matchSortState = {};
 
         function logoFor(abbr, cls) {
@@ -50,92 +43,59 @@
             return `<img src="../${logo}" alt="${abbr}" class="${cls || 'md-team-logo'}" onerror="this.style.display='none'">`;
         }
 
+        async function init() {
+            try {
+                const res = await fetch('../data/events/events.json');
+                const events = await res.json();
+                const ev = events.find(e => e.id === eventId);
+                eventPath = ev ? ev.path : eventId.replace('-', '/');
+            } catch(e) { eventPath = eventId.replace('-', '/'); }
+            loadMatch();
+        }
+
+        function dataPath() { return `../data/events/${eventPath}/`; }
+
         async function loadMatch() {
             const container = document.getElementById('match-detail');
-            if (!matchId) {
-                container.innerHTML = '<p class="stats-error">No match specified.</p>';
-                return;
-            }
-
+            if (!matchId) { container.innerHTML = '<p class="stats-error">No match specified.</p>'; return; }
             try {
                 const [matchRes, teamsRes] = await Promise.all([
-                    fetch(`../data/s${season}/matches/matches.json`),
-                    fetch(`../data/s${season}/teams.json`)
+                    fetch(dataPath() + 'matches/matches.json'),
+                    fetch(dataPath() + 'teams.json')
                 ]);
                 if (!matchRes.ok) throw new Error();
                 const matches = await matchRes.json();
                 if (teamsRes.ok) teams = await teamsRes.json();
                 match = matches.find(m => m.id === matchId);
-
-                if (!match) {
-                    container.innerHTML = '<p class="stats-error">Match not found.</p>';
-                    return;
-                }
-
+                if (!match) { container.innerHTML = '<p class="stats-error">Match not found.</p>'; return; }
                 document.title = `PCMT - ${match.team1} vs ${match.team2}`;
                 renderMatch(container);
-            } catch (err) {
-                container.innerHTML = '<p class="stats-error">Failed to load match.</p>';
-            }
+            } catch(e) { container.innerHTML = '<p class="stats-error">Failed to load match.</p>'; }
         }
 
         function renderMatch(container) {
             const winner = match.score1 > match.score2 ? 1 : match.score2 > match.score1 ? 2 : 0;
-
-            let html = '';
-
-            // --- Header ---
-            html += '<div class="md-header">';
-            html += `<div class="md-stage-tag">${match.stage || 'Match'}${match.date ? ' · ' + match.date : ''}</div>`;
+            let html = '<div class="md-header">';
+            html += `<div class="md-stage-tag">${match.stage||'Match'}${match.date?' \u00b7 '+match.date:''}</div>`;
             html += '<div class="md-teams-row">';
-
-            html += `<div class="md-team md-team-left ${winner === 1 ? 'md-winner' : ''}">`;
-            html += `<a href="../teams/team/?team=${match.team1}&season=${season}" class="md-team-info">`;
-            html += `<span class="md-team-name">${match.team1Name}</span>`;
-            html += `<span class="md-team-abbr">${match.team1}</span>`;
-            html += `</a>`;
-            html += logoFor(match.team1, 'md-team-logo');
-            html += `</div>`;
-
-            html += '<div class="md-score-box">';
-            html += `<span class="md-score ${winner === 1 ? 'md-score-win' : 'md-score-loss'}">${match.score1}</span>`;
-            html += '<span class="md-score-sep">:</span>';
-            html += `<span class="md-score ${winner === 2 ? 'md-score-win' : 'md-score-loss'}">${match.score2}</span>`;
+            html += `<div class="md-team md-team-left ${winner===1?'md-winner':''}"><a href="../teams/team/?team=${match.team1}&event=${eventId}" class="md-team-info"><span class="md-team-name">${match.team1Name}</span><span class="md-team-abbr">${match.team1}</span></a>${logoFor(match.team1,'md-team-logo')}</div>`;
+            html += `<div class="md-score-box"><span class="md-score ${winner===1?'md-score-win':'md-score-loss'}">${match.score1}</span><span class="md-score-sep">:</span><span class="md-score ${winner===2?'md-score-win':'md-score-loss'}">${match.score2}</span></div>`;
+            html += `<div class="md-team md-team-right ${winner===2?'md-winner':''}">${logoFor(match.team2,'md-team-logo')}<a href="../teams/team/?team=${match.team2}&event=${eventId}" class="md-team-info"><span class="md-team-name">${match.team2Name}</span><span class="md-team-abbr">${match.team2}</span></a></div>`;
             html += '</div>';
 
-            html += `<div class="md-team md-team-right ${winner === 2 ? 'md-winner' : ''}">`;
-            html += logoFor(match.team2, 'md-team-logo');
-            html += `<a href="../teams/team/?team=${match.team2}&season=${season}" class="md-team-info">`;
-            html += `<span class="md-team-name">${match.team2Name}</span>`;
-            html += `<span class="md-team-abbr">${match.team2}</span>`;
-            html += `</a></div>`;
-
-            html += '</div>';
-
-            // Map score pills
-            if (match.maps && match.maps.length > 0) {
+            if (match.maps && match.maps.length) {
                 html += '<div class="md-map-scores">';
                 match.maps.forEach(map => {
                     const mw = map.score1 > map.score2 ? 1 : 2;
-                    html += '<div class="md-map-pill">';
-                    html += `<span class="md-map-pill-name">${map.name}</span>`;
-                    html += `<span class="md-map-pill-score">`;
-                    html += `<span class="${mw === 1 ? 'md-pill-win' : 'md-pill-loss'}">${map.score1}</span>`;
-                    html += `<span class="md-pill-sep">-</span>`;
-                    html += `<span class="${mw === 2 ? 'md-pill-win' : 'md-pill-loss'}">${map.score2}</span>`;
-                    html += `</span>`;
-                    html += '</div>';
+                    html += `<div class="md-map-pill"><span class="md-map-pill-name">${map.name}</span><span class="md-map-pill-score"><span class="${mw===1?'md-pill-win':'md-pill-loss'}">${map.score1}</span><span class="md-pill-sep">-</span><span class="${mw===2?'md-pill-win':'md-pill-loss'}">${map.score2}</span></span></div>`;
                 });
                 html += '</div>';
             }
-
             html += '</div>';
 
-            // --- Veto ---
             if (match.veto) {
                 html += '<div class="md-veto">';
-                const parts = match.veto.split(',').map(s => s.trim());
-                parts.forEach(part => {
+                match.veto.split(',').map(s => s.trim()).forEach(part => {
                     let cls = 'md-veto-item';
                     if (part.includes('bans')) cls += ' md-veto-ban';
                     else if (part.includes('picks')) cls += ' md-veto-pick';
@@ -145,298 +105,127 @@
                 html += '</div>';
             }
 
-            // --- Map tabs ---
-            html += '<div class="md-map-tabs" id="md-map-tabs">';
-            html += '<button class="md-map-tab active" onclick="switchMap(\'all\')">All Maps</button>';
-            if (match.mapDetails) {
-                match.mapDetails.forEach((md, i) => {
-                    html += `<button class="md-map-tab" onclick="switchMap(${i})">${md.name}</button>`;
-                });
-            }
-            html += '</div>';
-
-            // --- Stats area ---
-            html += '<div id="md-stats-area"></div>';
-
+            html += '<div class="md-map-tabs" id="md-map-tabs"><button class="md-map-tab active" onclick="switchMap(\'all\')">All Maps</button>';
+            if (match.mapDetails) match.mapDetails.forEach((md, i) => { html += `<button class="md-map-tab" onclick="switchMap(${i})">${md.name}</button>`; });
+            html += '</div><div id="md-stats-area"></div>';
             container.innerHTML = html;
             renderStats('all');
         }
 
         function switchMap(mapIndex) {
             currentMapTab = mapIndex;
-            const btns = document.querySelectorAll('#md-map-tabs .md-map-tab');
-            btns.forEach((btn, i) => {
-                btn.classList.toggle('active', i === 0 ? mapIndex === 'all' : i - 1 === mapIndex);
-            });
+            document.querySelectorAll('#md-map-tabs .md-map-tab').forEach((btn, i) => btn.classList.toggle('active', i === 0 ? mapIndex === 'all' : i - 1 === mapIndex));
             renderStats(mapIndex);
         }
 
         function renderStats(mapIndex) {
             const area = document.getElementById('md-stats-area');
-            if (mapIndex === 'all') {
-                renderAllMaps(area);
-            } else {
-                renderSingleMap(area, match.mapDetails[mapIndex]);
-            }
+            if (mapIndex === 'all') renderAllMaps(area);
+            else renderSingleMap(area, match.mapDetails[mapIndex]);
         }
 
         function renderStreamEmbed(link) {
-            const vidMatch = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-            if (!vidMatch) return '';
-            return `<div class="md-stream-embed">
-                <iframe src="https://www.youtube.com/embed/${vidMatch[1]}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            </div>`;
+            const m = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (!m) return '';
+            return `<div class="md-stream-embed"><iframe src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
 
-        // --- Sortable match tables ---
-
+        // ── Sort / highlight for match tables ──
         const mdLowerIsBetter = ['d', 'fd'];
 
         function sortMatchTable(tableId, colIndex) {
-            const state = matchSortState[tableId];
-            if (!state) return;
-
-            if (state.currentCol === colIndex) {
-                state.clicks++;
-            } else {
-                state.currentCol = colIndex;
-                state.clicks = 1;
-            }
-
+            const state = matchSortState[tableId]; if (!state) return;
+            if (state.currentCol === colIndex) state.clicks++; else { state.currentCol = colIndex; state.clicks = 1; }
             let sorted;
-            if (state.clicks % 3 === 0) {
-                sorted = [...state.originalRows];
-                state.currentCol = -1;
-                state.clicks = 0;
-            } else {
+            if (state.clicks % 3 === 0) { sorted = [...state.originalRows]; state.currentCol = -1; state.clicks = 0; }
+            else {
                 const asc = state.clicks % 3 === 2;
                 sorted = [...state.rows].sort((a, b) => {
-                    let valA = a[colIndex];
-                    let valB = b[colIndex];
-                    // strip HTML from player cell for sorting
-                    const stripHtml = v => typeof v === 'string' ? v.replace(/<[^>]*>/g, '') : v;
-                    valA = stripHtml(valA);
-                    valB = stripHtml(valB);
-                    if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
-                    if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
-                    const numA = parseFloat(valA);
-                    const numB = parseFloat(valB);
-                    if (!isNaN(numA) && !isNaN(numB)) {
-                        return asc ? numA - numB : numB - numA;
-                    }
-                    const strA = String(valA || '').toLowerCase();
-                    const strB = String(valB || '').toLowerCase();
-                    return asc ? strA.localeCompare(strB) : strB.localeCompare(strA);
+                    let va = a[colIndex], vb = b[colIndex];
+                    const strip = v => typeof v === 'string' ? v.replace(/<[^>]*>/g, '') : v;
+                    va = strip(va); vb = strip(vb);
+                    if (typeof va === 'string' && va.endsWith('%')) va = parseFloat(va);
+                    if (typeof vb === 'string' && vb.endsWith('%')) vb = parseFloat(vb);
+                    const na = parseFloat(va), nb = parseFloat(vb);
+                    if (!isNaN(na) && !isNaN(nb)) return asc ? na - nb : nb - na;
+                    return asc ? String(va||'').toLowerCase().localeCompare(String(vb||'').toLowerCase()) : String(vb||'').toLowerCase().localeCompare(String(va||'').toLowerCase());
                 });
             }
-
             state.rows = sorted;
-
             const table = document.getElementById(`table-${tableId}`);
-            const tbody = table.querySelector('tbody');
-            tbody.innerHTML = sorted.map(row =>
-                '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
-            ).join('');
-
-            // Restore CSS classes on cells
+            table.querySelector('tbody').innerHTML = sorted.map(r => '<tr>' + r.map(c => `<td>${c ?? ''}</td>`).join('') + '</tr>').join('');
             applyMatchCellClasses(tableId);
-
-            // Update sort arrows
             const ths = table.querySelectorAll('thead th');
-            ths.forEach((th, i) => {
-                const arrow = th.querySelector('.sort-arrow');
-                if (!arrow) return;
-                if (i === colIndex && state.currentCol !== -1) {
-                    arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
-                } else {
-                    arrow.textContent = '';
-                }
-            });
-
+            ths.forEach((th, i) => { const a = th.querySelector('.sort-arrow'); if (!a) return; a.textContent = (i === colIndex && state.currentCol !== -1) ? (state.clicks % 3 === 1 ? ' \u25bc' : ' \u25b2') : ''; });
             highlightMatchTable(tableId);
         }
 
         function applyMatchCellClasses(tableId) {
-            const state = matchSortState[tableId];
-            if (!state) return;
-            const table = document.getElementById(`table-${tableId}`);
-            if (!table) return;
-            const tbody = table.querySelector('tbody');
-            const trs = tbody.querySelectorAll('tr');
-
-            trs.forEach(tr => {
-                const tds = tr.querySelectorAll('td');
-                tds.forEach((td, i) => {
-                    // Player column
-                    if (i === state.playerColIdx) {
-                        td.classList.add('md-col-player');
-                    }
-                    // Agent column
-                    if (state.agentColIdx !== undefined && i === state.agentColIdx) {
-                        td.classList.add('md-col-agent');
-                    }
-                    // Rating column
-                    if (i === state.ratingColIdx) {
-                        td.classList.add('md-col-rating');
-                    }
-                    // +/- columns
-                    const raw = td.textContent.trim();
+            const state = matchSortState[tableId]; if (!state) return;
+            const table = document.getElementById(`table-${tableId}`); if (!table) return;
+            table.querySelector('tbody').querySelectorAll('tr').forEach(tr => {
+                tr.querySelectorAll('td').forEach((td, i) => {
+                    if (i === state.playerColIdx) td.classList.add('md-col-player');
+                    if (state.agentColIdx !== undefined && i === state.agentColIdx) td.classList.add('md-col-agent');
+                    if (i === state.ratingColIdx) td.classList.add('md-col-rating');
                     if (state.plusMinusCols && state.plusMinusCols.has(i)) {
-                        const num = parseInt(raw);
-                        if (!isNaN(num)) {
-                            td.className = '';
-                            if (num > 0) td.classList.add('md-stat-pos');
-                            else if (num < 0) td.classList.add('md-stat-neg');
-                        }
+                        const n = parseInt(td.textContent.trim());
+                        if (!isNaN(n)) { td.className = ''; if (n > 0) td.classList.add('md-stat-pos'); else if (n < 0) td.classList.add('md-stat-neg'); }
                     }
                 });
             });
         }
 
         function highlightMatchTable(tableId) {
-            const state = matchSortState[tableId];
-            if (!state) return;
-            const table = document.getElementById(`table-${tableId}`);
-            if (!table) return;
-            const tbody = table.querySelector('tbody');
-            const trs = tbody.querySelectorAll('tr');
-            if (trs.length < 2) return;
-
+            const state = matchSortState[tableId]; if (!state) return;
+            const table = document.getElementById(`table-${tableId}`); if (!table) return;
+            const trs = table.querySelector('tbody').querySelectorAll('tr'); if (trs.length < 2) return;
             const headers = state.headers;
-            const skipCols = new Set();
-            headers.forEach((h, i) => {
-                const lower = (h || '').trim().toLowerCase();
-                if (['player', 'agent'].includes(lower)) skipCols.add(i);
-            });
-
+            const skip = new Set(); headers.forEach((h, i) => { const l = (h||'').trim().toLowerCase(); if (['player','agent'].includes(l)) skip.add(i); });
             for (let col = 0; col < headers.length; col++) {
-                if (skipCols.has(col)) continue;
-
-                const hLower = (headers[col] || '').trim().toLowerCase();
-                const invert = mdLowerIsBetter.includes(hLower);
-
-                let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
-
-                trs.forEach((tr, rowIdx) => {
-                    const td = tr.children[col];
-                    if (!td) return;
-                    let raw = td.textContent.trim();
-                    if (raw === '' || raw === '-') return;
-                    if (raw.endsWith('%')) raw = raw.slice(0, -1);
-                    const num = parseFloat(raw);
-                    if (isNaN(num)) return;
-
-                    if (bestVal === null) {
-                        bestVal = num; worstVal = num;
-                        bestIdx = rowIdx; worstIdx = rowIdx;
-                    } else {
-                        if (invert) {
-                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        } else {
-                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        }
-                    }
-                });
-
-                if (bestIdx !== -1 && bestVal !== worstVal) {
-                    const bestTd = trs[bestIdx].children[col];
-                    if (bestTd) bestTd.classList.add('stat-best');
-                }
+                if (skip.has(col)) continue;
+                const inv = mdLowerIsBetter.includes((headers[col]||'').trim().toLowerCase());
+                let bv = null, wv = null, bi = -1, wi = -1;
+                trs.forEach((tr, ri) => { const td = tr.children[col]; if (!td) return; let raw = td.textContent.trim(); if (raw === '' || raw === '-') return; if (raw.endsWith('%')) raw = raw.slice(0, -1); const n = parseFloat(raw); if (isNaN(n)) return; if (bv === null) { bv = n; wv = n; bi = ri; wi = ri; } else { if (inv) { if (n < bv) { bv = n; bi = ri; } if (n > wv) { wv = n; wi = ri; } } else { if (n > bv) { bv = n; bi = ri; } if (n < wv) { wv = n; wi = ri; } } } });
+                if (bi !== -1 && bv !== wv) { const td = trs[bi].children[col]; if (td) td.classList.add('stat-best'); }
             }
         }
 
         function buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, hasAgent) {
             const headers = hasAgent ? ['Player', 'Agent', ...displayHeaders] : ['Player', ...displayHeaders];
-            const playerColIdx = 0;
-            const agentColIdx = hasAgent ? 1 : undefined;
-            const ratingIdx = hasAgent ? 2 : 1;
+            const playerColIdx = 0, agentColIdx = hasAgent ? 1 : undefined, ratingIdx = hasAgent ? 2 : 1;
             const plusMinusCols = new Set();
+            displayHeaders.forEach((h, i) => { if (h === '+/-' || h === 'FK\u00b1') plusMinusCols.add(hasAgent ? i + 2 : i + 1); });
 
-            displayHeaders.forEach((h, i) => {
-                if (h === '+/-' || h === 'FK±') {
-                    plusMinusCols.add(hasAgent ? i + 2 : i + 1);
-                }
-            });
-
-            // Build row data
-            const sorted = [...teamStats.players].sort((a, b) =>
-                (parseFloat(b['R1.0']) || 0) - (parseFloat(a['R1.0']) || 0)
-            );
-
+            const sorted = [...teamStats.players].sort((a, b) => (parseFloat(b['R1.0']) || 0) - (parseFloat(a['R1.0']) || 0));
             const rows = sorted.map(player => {
-                const row = [];
-                // Player
-                row.push(player.Player || '');
-                // Agent (if applicable)
+                const row = [player.Player || ''];
                 if (hasAgent) {
                     const agent = player.Agent;
-                    if (agent && agent !== '-') {
-                        row.push(`<img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'">`);
-                    } else {
-                        row.push('-');
-                    }
+                    row.push(agent && agent !== '-' ? `<img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'">` : '-');
                 }
-                // Stats
                 statCols.forEach(col => {
                     let val = player[col];
-                    if (val == null || val === '') {
-                        row.push('-');
-                    } else if (col === 'R1.0') {
-                        row.push(parseFloat(val).toFixed(2));
-                    } else if (col === 'KAST' || col === 'HS%') {
-                        row.push((parseFloat(val) * 100).toFixed(0) + '%');
-                    } else if (col === 'ACS' || col === 'ADR') {
-                        row.push(String(Math.round(parseFloat(val))));
-                    } else if (col === 'PlusMinus' || col === 'PlusMinus2') {
-                        const num = parseInt(val);
-                        const prefix = num > 0 ? '+' : '';
-                        row.push(`${prefix}${num}`);
-                    } else {
-                        row.push(String(val));
-                    }
+                    if (val == null || val === '') row.push('-');
+                    else if (col === 'R1.0') row.push(parseFloat(val).toFixed(2));
+                    else if (col === 'KAST' || col === 'HS%') row.push((parseFloat(val) * 100).toFixed(0) + '%');
+                    else if (col === 'ACS' || col === 'ADR') row.push(String(Math.round(parseFloat(val))));
+                    else if (col === 'PlusMinus' || col === 'PlusMinus2') { const n = parseInt(val); row.push((n > 0 ? '+' : '') + n); }
+                    else row.push(String(val));
                 });
                 return row;
             });
 
-            // Store sort state
-            matchSortState[tableId] = {
-                headers,
-                rows: [...rows],
-                originalRows: [...rows],
-                currentCol: ratingIdx,
-                clicks: 1,
-                playerColIdx,
-                agentColIdx,
-                ratingColIdx: ratingIdx,
-                plusMinusCols
-            };
+            matchSortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: ratingIdx, clicks: 1, playerColIdx, agentColIdx, ratingColIdx: ratingIdx, plusMinusCols };
 
-            // Build HTML
-            let html = '';
-            html += `<div class="md-team-stats ${isWinner ? 'md-team-stats-win' : 'md-team-stats-loss'}">`;
-            html += `<div class="md-team-stats-header">`;
-            html += `<span class="md-team-stats-name">${teamStats.teamName}</span>`;
-            html += `<span class="md-team-stats-abbr">${teamStats.team}</span>`;
-            html += `</div>`;
-
-            html += `<div class="md-stats-scroll"><table class="md-stats-table" id="table-${tableId}">`;
-            html += '<thead><tr>';
+            let html = `<div class="md-team-stats ${isWinner ? 'md-team-stats-win' : 'md-team-stats-loss'}">`;
+            html += `<div class="md-team-stats-header"><span class="md-team-stats-name">${teamStats.teamName}</span><span class="md-team-stats-abbr">${teamStats.team}</span></div>`;
+            html += `<div class="md-stats-scroll"><table class="md-stats-table" id="table-${tableId}"><thead><tr>`;
             headers.forEach((h, i) => {
-                let cls = '';
-                if (h === 'Player') cls = ' class="md-col-player sortable"';
-                else if (h === 'Agent') cls = ' class="md-col-agent sortable"';
-                else cls = ' class="sortable"';
-                const arrow = (i === ratingIdx) ? ' ▼' : '';
-                html += `<th${cls} onclick="sortMatchTable('${tableId}', ${i})">${h} <span class="sort-arrow">${arrow}</span></th>`;
+                let cls = h === 'Player' ? ' class="md-col-player sortable"' : h === 'Agent' ? ' class="md-col-agent sortable"' : ' class="sortable"';
+                html += `<th${cls} onclick="sortMatchTable('${tableId}',${i})">${h} <span class="sort-arrow">${i === ratingIdx ? ' \u25bc' : ''}</span></th>`;
             });
             html += '</tr></thead><tbody>';
-
             rows.forEach(row => {
                 html += '<tr>';
                 row.forEach((cell, i) => {
@@ -444,190 +233,88 @@
                     if (i === playerColIdx) cls = ' class="md-col-player"';
                     else if (hasAgent && i === agentColIdx) cls = ' class="md-col-agent"';
                     else if (i === ratingIdx) cls = ' class="md-col-rating"';
-                    else if (plusMinusCols.has(i)) {
-                        const num = parseInt(String(cell).replace('+', ''));
-                        if (!isNaN(num)) {
-                            if (num > 0) cls = ' class="md-stat-pos"';
-                            else if (num < 0) cls = ' class="md-stat-neg"';
-                        }
-                    }
+                    else if (plusMinusCols.has(i)) { const n = parseInt(String(cell).replace('+', '')); if (!isNaN(n)) { if (n > 0) cls = ' class="md-stat-pos"'; else if (n < 0) cls = ' class="md-stat-neg"'; } }
                     html += `<td${cls}>${cell ?? ''}</td>`;
                 });
                 html += '</tr>';
             });
-
             html += '</tbody></table></div></div>';
             return html;
         }
 
         function renderAllMaps(area) {
-            if (!match.combinedStats || match.combinedStats.length === 0) {
-                area.innerHTML = '<p class="stats-error">No stats available.</p>';
-                return;
-            }
-
+            if (!match.combinedStats || !match.combinedStats.length) { area.innerHTML = '<p class="stats-error">No stats available.</p>'; return; }
             const winner = match.score1 > match.score2 ? 1 : 2;
-            const statCols = ['R1.0', 'ACS', 'K', 'D', 'A', 'PlusMinus', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'PlusMinus2'];
-            const displayHeaders = ['R', 'ACS', 'K', 'D', 'A', '+/-', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'FK±'];
-
+            const statCols = ['R1.0','ACS','K','D','A','PlusMinus','KAST','ADR','HS%','FK','FD','PlusMinus2'];
+            const displayHeaders = ['R','ACS','K','D','A','+/-','KAST','ADR','HS%','FK','FD','FK\u00b1'];
             let html = '<div class="md-map-section">';
-
-            match.combinedStats.forEach((teamStats, teamIdx) => {
-                const isWinner = (teamIdx === 0 && winner === 1) || (teamIdx === 1 && winner === 2);
-                const tableId = `md-all-team${teamIdx}`;
-                html += buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, false);
-            });
-
+            match.combinedStats.forEach((ts, ti) => { html += buildMatchStatsTable(ts, (ti===0&&winner===1)||(ti===1&&winner===2), `md-all-team${ti}`, statCols, displayHeaders, false); });
             html += '</div>';
-
-            // VOD embed
             const link = match.streamLink;
-            if (link) {
-                html += `<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>`;
-                html += renderStreamEmbed(link);
-            }
-
+            if (link) { html += '<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>' + renderStreamEmbed(link); }
             area.innerHTML = html;
-
-            // Apply highlights after DOM is ready
-            match.combinedStats.forEach((_, teamIdx) => {
-                highlightMatchTable(`md-all-team${teamIdx}`);
-            });
+            match.combinedStats.forEach((_, ti) => highlightMatchTable(`md-all-team${ti}`));
         }
 
         function renderSingleMap(area, md) {
-            if (!md) {
-                area.innerHTML = '<p class="stats-error">No data for this map.</p>';
-                return;
-            }
-
+            if (!md) { area.innerHTML = '<p class="stats-error">No data for this map.</p>'; return; }
             const mw = md.score1 > md.score2 ? 1 : 2;
-            let html = '';
-
-            // Map score header
-            html += '<div class="md-single-map-header">';
-            html += `<span class="md-single-map-name">${md.name}</span>`;
-            html += '<div class="md-single-map-score">';
-            html += `<span class="md-sms-team">${match.team1}</span>`;
-            html += `<span class="md-sms-num ${mw === 1 ? 'md-pill-win' : 'md-pill-loss'}">${md.score1}</span>`;
-            html += `<span class="md-sms-sep">-</span>`;
-            html += `<span class="md-sms-num ${mw === 2 ? 'md-pill-win' : 'md-pill-loss'}">${md.score2}</span>`;
-            html += `<span class="md-sms-team">${match.team2}</span>`;
-            html += '</div>';
-            html += '</div>';
-
-            // Round timeline
-            if (md.rounds && md.rounds.length > 0) {
-                html += renderTimeline(md);
-            }
-
-            // Per-map stats table
-            if (md.stats && md.stats.length > 0) {
+            let html = `<div class="md-single-map-header"><span class="md-single-map-name">${md.name}</span><div class="md-single-map-score"><span class="md-sms-team">${match.team1}</span><span class="md-sms-num ${mw===1?'md-pill-win':'md-pill-loss'}">${md.score1}</span><span class="md-sms-sep">-</span><span class="md-sms-num ${mw===2?'md-pill-win':'md-pill-loss'}">${md.score2}</span><span class="md-sms-team">${match.team2}</span></div></div>`;
+            if (md.rounds && md.rounds.length) html += renderTimeline(md);
+            if (md.stats && md.stats.length) {
                 const winner = md.score1 > md.score2 ? 1 : 2;
-                const statCols = ['R1.0', 'ACS', 'K', 'D', 'A', 'PlusMinus', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'PlusMinus2'];
-                const displayHeaders = ['R', 'ACS', 'K', 'D', 'A', '+/-', 'KAST', 'ADR', 'HS%', 'FK', 'FD', 'FK±'];
-
+                const statCols = ['R1.0','ACS','K','D','A','PlusMinus','KAST','ADR','HS%','FK','FD','PlusMinus2'];
+                const displayHeaders = ['R','ACS','K','D','A','+/-','KAST','ADR','HS%','FK','FD','FK\u00b1'];
                 html += '<div class="md-map-section">';
-                md.stats.forEach((teamStats, teamIdx) => {
-                    const isWinner = (teamIdx === 0 && winner === 1) || (teamIdx === 1 && winner === 2);
-                    const mapSlug = md.name.replace(/\s+/g, '').toLowerCase();
-                    const tableId = `md-map-${mapSlug}-team${teamIdx}`;
-                    html += buildMatchStatsTable(teamStats, isWinner, tableId, statCols, displayHeaders, true);
-                });
+                md.stats.forEach((ts, ti) => { const slug = md.name.replace(/\s+/g,'').toLowerCase(); html += buildMatchStatsTable(ts, (ti===0&&winner===1)||(ti===1&&winner===2), `md-map-${slug}-team${ti}`, statCols, displayHeaders, true); });
                 html += '</div>';
             }
-
-            // VOD embed
             const link = md.streamLink || match.streamLink;
-            if (link) {
-                html += `<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>`;
-                html += renderStreamEmbed(link);
-            }
-
+            if (link) { html += '<div class="md-stream-link"><span class="md-stream-label">VOD:</span></div>' + renderStreamEmbed(link); }
             area.innerHTML = html;
-
-            // Apply highlights after DOM is ready
-            if (md.stats) {
-                md.stats.forEach((_, teamIdx) => {
-                    const mapSlug = md.name.replace(/\s+/g, '').toLowerCase();
-                    highlightMatchTable(`md-map-${mapSlug}-team${teamIdx}`);
-                });
-            }
+            if (md.stats) md.stats.forEach((_, ti) => { const slug = md.name.replace(/\s+/g,'').toLowerCase(); highlightMatchTable(`md-map-${slug}-team${ti}`); });
         }
 
         function renderTimeline(md) {
             const rounds = md.rounds;
             const firstHalf = rounds.filter(r => r.round <= 12);
             const secondHalf = rounds.filter(r => r.round > 12);
-
             let t1First = firstHalf.filter(r => r.winner === 1).length;
             let t2First = firstHalf.filter(r => r.winner === 2).length;
-
             const maxRound = Math.max(...rounds.map(x => x.round));
-            const totalFromScore = md.score1 + md.score2;
-            const hasOT = maxRound > 24 || totalFromScore > 24;
-
+            const hasOT = maxRound > 24 || (md.score1 + md.score2) > 24;
             const t1Reg2 = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 1).length;
             const t2Reg2 = rounds.filter(r => r.round >= 13 && r.round <= 24 && r.winner === 2).length;
             const t1OT = hasOT ? md.score1 - t1First - t1Reg2 : 0;
             const t2OT = hasOT ? md.score2 - t2First - t2Reg2 : 0;
 
             let html = '<div class="md-timeline">';
-
             if (hasOT) {
-                html += '<div class="md-timeline-row md-timeline-labels">';
-                html += '<span class="md-timeline-team"></span>';
-                html += '<div class="md-timeline-rounds">';
-                for (let r = 1; r <= 12; r++) html += '<div class="md-round" style="visibility:hidden"></div>';
-                html += '<div class="md-timeline-halfscore"></div>';
-                for (let r = 13; r <= 24; r++) html += '<div class="md-round" style="visibility:hidden"></div>';
-                html += '<div class="md-timeline-halfscore"></div>';
-                html += '<div class="md-timeline-halfscore md-ot-label">OT</div>';
-                for (let r = 25; r <= maxRound; r++) html += '<div class="md-round" style="visibility:hidden"></div>';
-                html += '<div class="md-timeline-halfscore"></div>';
-                html += '</div></div>';
+                html += '<div class="md-timeline-row md-timeline-labels"><span class="md-timeline-team"></span><div class="md-timeline-rounds">';
+                for (let r=1;r<=12;r++) html+='<div class="md-round" style="visibility:hidden"></div>';
+                html+='<div class="md-timeline-halfscore"></div>';
+                for (let r=13;r<=24;r++) html+='<div class="md-round" style="visibility:hidden"></div>';
+                html+='<div class="md-timeline-halfscore"></div><div class="md-timeline-halfscore md-ot-label">OT</div>';
+                for (let r=25;r<=maxRound;r++) html+='<div class="md-round" style="visibility:hidden"></div>';
+                html+='<div class="md-timeline-halfscore"></div></div></div>';
             }
-
-            html += renderTimelineRow(match.team1, 1, rounds, maxRound, hasOT, t1First, hasOT ? t1Reg2 : rounds.filter(r => r.round > 12 && r.winner === 1).length, t1OT);
-            html += renderTimelineRow(match.team2, 2, rounds, maxRound, hasOT, t2First, hasOT ? t2Reg2 : rounds.filter(r => r.round > 12 && r.winner === 2).length, t2OT);
-
+            html += renderTimelineRow(match.team1, 1, rounds, maxRound, hasOT, t1First, hasOT ? t1Reg2 : rounds.filter(r=>r.round>12&&r.winner===1).length, t1OT);
+            html += renderTimelineRow(match.team2, 2, rounds, maxRound, hasOT, t2First, hasOT ? t2Reg2 : rounds.filter(r=>r.round>12&&r.winner===2).length, t2OT);
             html += '</div>';
             return html;
         }
 
-        function renderTimelineRow(teamName, teamNum, rounds, maxRound, hasOT, firstHalfScore, secondHalfScore, otScore) {
-            let html = '<div class="md-timeline-row">';
-            html += `<span class="md-timeline-team">${teamName}</span>`;
-            html += '<div class="md-timeline-rounds">';
-            for (let r = 1; r <= 12; r++) {
-                const rd = rounds.find(x => x.round === r);
-                html += (rd && rd.winner === teamNum)
-                    ? `<div class="md-round md-round-${rd.side}" title="R${r}"></div>`
-                    : '<div class="md-round md-round-empty"></div>';
-            }
-            html += `<div class="md-timeline-halfscore">${firstHalfScore}</div>`;
-            for (let r = 13; r <= 24; r++) {
-                const rd = rounds.find(x => x.round === r);
-                html += (rd && rd.winner === teamNum)
-                    ? `<div class="md-round md-round-${rd.side}" title="R${r}"></div>`
-                    : '<div class="md-round md-round-empty"></div>';
-            }
-            html += `<div class="md-timeline-halfscore">${secondHalfScore}</div>`;
-            if (hasOT) {
-                html += '<div class="md-timeline-halfscore"></div>';
-                for (let r = 25; r <= maxRound; r++) {
-                    const rd = rounds.find(x => x.round === r);
-                    html += (rd && rd.winner === teamNum)
-                        ? `<div class="md-round md-round-${rd.side}" title="R${r}"></div>`
-                        : '<div class="md-round md-round-empty"></div>';
-                }
-                html += `<div class="md-timeline-halfscore">${otScore}</div>`;
-            }
-            html += '</div></div>';
-            return html;
+        function renderTimelineRow(teamName, teamNum, rounds, maxRound, hasOT, fs, ss, ot) {
+            let html = `<div class="md-timeline-row"><span class="md-timeline-team">${teamName}</span><div class="md-timeline-rounds">`;
+            for (let r=1;r<=12;r++){const rd=rounds.find(x=>x.round===r);html+=(rd&&rd.winner===teamNum)?`<div class="md-round md-round-${rd.side}" title="R${r}"></div>`:'<div class="md-round md-round-empty"></div>';}
+            html+=`<div class="md-timeline-halfscore">${fs}</div>`;
+            for (let r=13;r<=24;r++){const rd=rounds.find(x=>x.round===r);html+=(rd&&rd.winner===teamNum)?`<div class="md-round md-round-${rd.side}" title="R${r}"></div>`:'<div class="md-round md-round-empty"></div>';}
+            html+=`<div class="md-timeline-halfscore">${ss}</div>`;
+            if(hasOT){html+='<div class="md-timeline-halfscore"></div>';for(let r=25;r<=maxRound;r++){const rd=rounds.find(x=>x.round===r);html+=(rd&&rd.winner===teamNum)?`<div class="md-round md-round-${rd.side}" title="R${r}"></div>`:'<div class="md-round md-round-empty"></div>';}html+=`<div class="md-timeline-halfscore">${ot}</div>`;}
+            html+='</div></div>';return html;
         }
 
-        loadMatch();
+        init();
     </script>
 </body>
 </html>

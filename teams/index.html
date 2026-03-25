@@ -11,9 +11,7 @@
     <div id="header-bar">
         <div class="header-inner">
         <div class="header-content" id="link-title">
-            <a href="../">
-                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
-            </a>
+            <a href="../"><img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo"></a>
             <p>Plat Chat Members Tournament</p>
         </div>
         <nav class="header-content">
@@ -28,156 +26,125 @@
     </div>
 
     <div class="page-container">
-    <div class="page-title-bar">
-        <h1 class="page-title">Teams</h1>
-    </div>
-
-    <div class="season-container">
-        <button class="season-toggle" onclick="toggleSeason('season1')">
-            <span class="season-label">Season 1</span>
-            <span class="toggle-icon" id="season1-icon">▸</span>
-        </button>
-        <div class="season-content" id="season1">
-            <div class="teams-grid" id="grid-s1"></div>
-        </div>
-    </div>
-
-    <div class="season-container">
-        <button class="season-toggle" onclick="toggleSeason('season2')">
-            <span class="season-label">Season 2 <span class="ongoing-tag">(Ongoing)</span></span>
-            <span class="toggle-icon" id="season2-icon">▸</span>
-        </button>
-        <div class="season-content" id="season2">
-            <div class="teams-grid" id="grid-s2"></div>
-        </div>
-    </div>
+    <div class="page-title-bar"><h1 class="page-title">Teams</h1></div>
+    <div id="teams-container"></div>
 
     <script>
+        let events = [];
         const teamData = {};
 
-        const s1Cards = [
-            { abbr: 'CIN', name: 'Absolute Cinema', logo: '../icons/s1_teams/Absolute Cinema.png' },
-            { abbr: 'KAT', name: "Kurt's Kittens", logo: "../icons/s1_teams/Kurt's Kittens.png" },
-            { abbr: 'WALL', name: 'The Brick Wall', logo: '../icons/s1_teams/The Brick Wall.png' },
-            { abbr: 'YGSYD', name: 'You Get Shot You Die', logo: '../icons/s1_teams/You Get Shot You Die.png' }
-        ];
+        async function init() {
+            try { events = await (await fetch('../data/events/events.json')).json(); } catch(e) { events = []; }
+            buildSections();
+            await loadAllRosters();
+        }
 
-        const s2Cards = [
-            { abbr: 'EMEA', name: 'Tech Pause Esports', logo: '../icons/s2_teams/TechPauseEsports.png' },
-            { abbr: 'WING', name: 'Wingman Warriors', logo: '../icons/s2_teams/WingmanWarriors.png' },
-            { abbr: 'JDG', name: 'Just Dudes Gaming', logo: '../icons/s2_teams/JustDudesGaming.png' },
-            { abbr: 'ZIRC', name: 'Zirconians', logo: '../icons/s2_teams/Zirconians.png' },
-            { abbr: 'DRG', name: 'DeRank Gamers', logo: '../icons/s2_teams/DeRankGamers.png' },
-            { abbr: 'MIBR', name: 'Made in Bronze', logo: '../icons/s2_teams/MadeInBronze.png' },
-            { abbr: 'KOI', name: 'Keep On Inting', logo: '../icons/s2_teams/KeepOnInting.png' },
-            { abbr: 'SLLY', name: 'Silly Geese', logo: '../icons/s2_teams/SillyGeese.png' },
-            { abbr: 'DRX', name: 'Dementia Real Exists', logo: '../icons/s2_teams/DementiaRealExists.png' },
-            { abbr: 'WOOD', name: 'The Wooden Fence', logo: '../icons/s2_teams/TheWoodenFence.png' },
-            { abbr: 'KRU', name: "Knives R' Us", logo: '../icons/s2_teams/KnivesRUs.png' },
-            { abbr: 'TS', name: 'Tequila Sunrise', logo: '../icons/s2_teams/TequilaSunrise.png' }
-        ];
+        function buildSections() {
+            const container = document.getElementById('teams-container');
+            const seasons = {};
+            events.forEach(e => { if (!seasons[e.season]) seasons[e.season] = []; seasons[e.season].push(e); });
+            const sorted = Object.keys(seasons).map(Number).sort((a, b) => a - b);
 
-        function buildGrid(gridId, cards, season) {
-            const grid = document.getElementById(gridId);
-            cards.forEach(card => {
-                const div = document.createElement('div');
-                div.className = 'team-card';
-                div.dataset.abbr = card.abbr;
-                div.dataset.season = season;
-                div.innerHTML = `<img src="${card.logo}" alt="${card.name}" class="team-logo"><h3 class="team-name">${card.name}</h3>`;
-                div.onclick = () => toggleExpand(div, card, season);
-                grid.appendChild(div);
+            sorted.forEach(sNum => {
+                const sEvents = seasons[sNum];
+                const ongoing = sEvents.some(e => e.status === 'ongoing');
+                const tag = ongoing ? ' <span class="ongoing-tag">(Ongoing)</span>' : '';
+                const id = `season${sNum}`;
+
+                let inner = '';
+                sEvents.forEach(ev => {
+                    if (sEvents.length > 1) inner += `<h3 class="region-grid-header">${ev.shortName}</h3>`;
+                    inner += `<div class="teams-grid" id="grid-${ev.id}"></div>`;
+                });
+
+                container.innerHTML += `
+                    <div class="season-container">
+                        <button class="season-toggle" onclick="toggleSeason('${id}')">
+                            <span class="season-label">Season ${sNum}${tag}</span>
+                            <span class="toggle-icon" id="${id}-icon">\u25b8</span>
+                        </button>
+                        <div class="season-content" id="${id}">${inner}</div>
+                    </div>`;
             });
         }
 
-        function toggleExpand(cardEl, card, season) {
+        async function loadAllRosters() {
+            for (const ev of events) {
+                try {
+                    const data = await (await fetch(`../data/events/${ev.path}/teams.json`)).json();
+                    teamData[ev.id] = data;
+                    const grid = document.getElementById(`grid-${ev.id}`);
+                    if (!grid) continue;
+                    const cards = Object.entries(data).map(([abbr, t]) => ({
+                        abbr, name: t.name,
+                        logo: t.logo ? ('../' + t.logo.replace(/^(\.\.\/)+/, '')) : '',
+                    }));
+                    cards.sort((a, b) => a.name.localeCompare(b.name));
+                    cards.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = 'team-card';
+                        div.dataset.abbr = card.abbr;
+                        div.innerHTML = `<img src="${card.logo}" alt="${card.name}" class="team-logo"><h3 class="team-name">${card.name}</h3>`;
+                        div.onclick = () => toggleExpand(div, card, ev);
+                        grid.appendChild(div);
+                    });
+                } catch(e) {}
+            }
+        }
+
+        function toggleExpand(cardEl, card, ev) {
             const grid = cardEl.parentElement;
-            const existingPanel = grid.querySelector(`.team-expand[data-abbr="${card.abbr}"]`);
-
-            // clicking same card — collapse
-            if (existingPanel && existingPanel.classList.contains('open')) {
-                existingPanel.classList.remove('open');
-                cardEl.classList.remove('expanded');
-                setTimeout(() => existingPanel.remove(), 10);
-                return;
+            const existing = grid.querySelector(`.team-expand[data-abbr="${card.abbr}"]`);
+            if (existing && existing.classList.contains('open')) {
+                existing.classList.remove('open'); cardEl.classList.remove('expanded');
+                setTimeout(() => existing.remove(), 10); return;
             }
-
-            // close any open panel
             const openPanel = grid.querySelector('.team-expand.open');
-            if (openPanel) {
-                openPanel.classList.remove('open');
-                const openCard = grid.querySelector('.team-card.expanded');
-                if (openCard) openCard.classList.remove('expanded');
-                openPanel.remove();
-            }
+            if (openPanel) { openPanel.classList.remove('open'); const oc = grid.querySelector('.team-card.expanded'); if (oc) oc.classList.remove('expanded'); openPanel.remove(); }
 
-            // find the last card in this visual row
             const cardRect = cardEl.getBoundingClientRect();
-            const allCards = [...grid.querySelectorAll('.team-card')];
             let lastInRow = cardEl;
-            for (const c of allCards) {
-                const r = c.getBoundingClientRect();
-                if (Math.abs(r.top - cardRect.top) < 10) lastInRow = c;
+            for (const c of grid.querySelectorAll('.team-card')) {
+                if (Math.abs(c.getBoundingClientRect().top - cardRect.top) < 10) lastInRow = c;
             }
 
-            // create expand panel
+            const data = teamData[ev.id];
+            const roster = data && data[card.abbr] ? data[card.abbr].players : null;
+            const sorted = roster ? [...roster].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : [];
+
             const panel = document.createElement('div');
-            panel.className = 'team-expand';
-            panel.dataset.abbr = card.abbr;
-
-            const key = `s${season}`;
-            const roster = teamData[key] && teamData[key][card.abbr] ? teamData[key][card.abbr].players : null;
-            const sortedRoster = roster ? [...roster].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : [];
-
+            panel.className = 'team-expand'; panel.dataset.abbr = card.abbr;
             panel.innerHTML = `
                 <div class="team-expand-header">
                     <img src="${card.logo}" class="team-expand-logo" onerror="this.style.display='none'">
                     <div>
                         <div class="team-expand-name">${card.name}</div>
-                        <div class="team-expand-abbr">${card.abbr} · Season ${season}</div>
+                        <div class="team-expand-abbr">${card.abbr} \u00b7 ${ev.shortName || 'S' + ev.season}</div>
                     </div>
                 </div>
                 <div class="team-expand-roster">
-                    ${sortedRoster.length > 0
-                        ? sortedRoster.map(p => `<span class="team-expand-player">${p}</span>`).join('')
-                        : '<span style="color:#777">Roster not available</span>'}
+                    ${sorted.length ? sorted.map(p => `<span class="team-expand-player">${p}</span>`).join('') : '<span style="color:#777">Roster not available</span>'}
                 </div>
-                <a href="team/?team=${card.abbr}&season=${season}" class="team-expand-link">View full page →</a>
+                <a href="team/?team=${card.abbr}&event=${ev.id}" class="team-expand-link">View full page \u2192</a>
             `;
-
             lastInRow.after(panel);
             requestAnimationFrame(() => panel.classList.add('open'));
             cardEl.classList.add('expanded');
-        }
-
-        async function loadRosters() {
-            try {
-                const [s1, s2] = await Promise.all([
-                    fetch('../data/s1/teams.json').then(r => r.json()),
-                    fetch('../data/s2/teams.json').then(r => r.json())
-                ]);
-                teamData.s1 = s1;
-                teamData.s2 = s2;
-            } catch (err) {}
         }
 
         function toggleSeason(id) {
             const content = document.getElementById(id);
             const icon = document.getElementById(id + '-icon');
             content.classList.toggle('open');
-            icon.textContent = content.classList.contains('open') ? '▾' : '▸';
+            icon.textContent = content.classList.contains('open') ? '\u25be' : '\u25b8';
         }
 
         window.addEventListener('pageshow', () => {
-            document.getElementById('season1').classList.remove('open');
-            document.getElementById('season1-icon').textContent = '▸';
-            document.getElementById('season2').classList.remove('open');
-            document.getElementById('season2-icon').textContent = '▸';
+            document.querySelectorAll('.season-content').forEach(el => el.classList.remove('open'));
+            document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '\u25b8');
         });
 
-        buildGrid('grid-s1', s1Cards, 1);
-        buildGrid('grid-s2', s2Cards, 2);
-        loadRosters();
+        init();
     </script>
     </div>
 </body>

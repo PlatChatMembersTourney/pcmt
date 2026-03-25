@@ -1844,3 +1844,15 @@ a.md-team-info:hover .md-team-name {
     align-items: center;
     gap: 8px;
 }
+
+.region-grid-header {
+    color: #6dc5c7;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    margin: 10px 0 6px;
+    background: #2a2a2a;
+    border-radius: 6px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}

@@ -9,47 +9,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div id="stats-disclaimer-overlay" onclick="if(event.target===this)closeDisclaimer()" style="
-    position:fixed; top:0; left:0; width:100%; height:100%; 
-    background:rgba(0,0,0,0.7); z-index:999; 
-    display:flex; align-items:center; justify-content:center;
-">
-    <div style="
-        background:#2a2a2a; border:1px solid #444; border-radius:12px; 
-        padding:40px; max-width:500px; width:90%; text-align:center;
-    ">
-        <h2 style="color:#cc4444; margin:0 0 16px; font-size:22px;">⚠️ Heads Up</h2>
-        <p style="color:#ccc; line-height:1.6; margin:0 0 24px; font-size:15px;">
-            There are errors and potentially inconsistent statistics in match data. I am currently working on it. In the meantime I will redirect you to Angus' stats as a more accurate source of information.
-            <br><br>
-            Sorry for the inconvenience<br>— toxic
-        </p>
-        <div style="display:flex; gap:12px; justify-content:center;">
-            <a href="https://docs.google.com/spreadsheets/d/1ea1gKWPE1kBkK9d0O6Mky0r5iBkBX9qkTA3OBS0LKMY" 
-               target="_blank" 
-               style="background:#5cb85c; color:#111; padding:10px 24px; border-radius:6px; 
-                      font-weight:700; text-decoration:none; font-size:14px;">
-                Go to Angus' Stats
-            </a>
-            <button onclick="closeDisclaimer()" 
-                    style="background:#444; color:#ccc; padding:10px 24px; border-radius:6px; 
-                           border:none; font-weight:700; cursor:pointer; font-size:14px;">
-                Continue Anyway
-            </button>
-        </div>
-    </div>
-</div>
-<script>
-function closeDisclaimer() {
-    document.getElementById('stats-disclaimer-overlay').style.display = 'none';
-}
-</script>
     <div id="header-bar">
         <div class="header-inner">
         <div class="header-content" id="link-title">
-            <a href="../">
-                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
-            </a>
+            <a href="../"><img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo"></a>
             <p>Plat Chat Members Tournament</p>
         </div>
         <nav class="header-content">
@@ -64,14 +27,10 @@ function closeDisclaimer() {
     </div>
 
     <div class="page-container">
-    <div class="page-title-bar">
-        <h1 class="page-title">Stats</h1>
-    </div>
+    <div class="page-title-bar"><h1 class="page-title">Stats</h1></div>
 
-    <div class="season-selector-bar">
-        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1</button>
-        <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
-    </div>
+    <div class="season-selector-bar" id="season-selector"></div>
+    <div class="stats-sub-tabs" id="region-selector" style="display:none;"></div>
 
     <div class="stats-toggle-bar">
         <button class="stats-toggle-btn active" onclick="switchMainTab('player')">Player Stats</button>
@@ -81,835 +40,247 @@ function closeDisclaimer() {
     <div class="stats-content" id="player-stats">
         <div class="stats-sub-tabs" id="player-sub-tabs"></div>
         <div class="stats-sub-tabs" id="player-stage-tabs" style="display:none;"></div>
-        <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
-        <div id="player-table-area">
-            <div class="stats-table-container">
-                <div class="stats-loading">Loading stats...</div>
-            </div>
-        </div>
+        <div id="player-table-area"><div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div></div>
     </div>
-
     <div class="stats-content hidden" id="team-stats">
         <div class="stats-sub-tabs" id="team-sub-tabs"></div>
-        <p class="stats-disclaimer">*Stats may contain minor inaccuracies</p>
-        <div id="team-table-area">
-            <div class="stats-table-container">
-                <div class="stats-loading">Loading stats...</div>
-            </div>
-        </div>
+        <div id="team-table-area"><div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div></div>
     </div>
 
     <script>
-        const sortState = {};
-        let currentSeason = 2;
-        let currentMainTab = 'player';
-        let currentToxicStage = 'Overall';
-        let currentAngusStage = 'Group Stage';
-        const teamsLookup = {};
+        let events=[],currentEvent=null,currentSeason=2,eventConfig={};
+        let currentMainTab='player',currentPlayerTab=null,currentStage='Overall';
+        let currentToxicStage='Overall',currentAngusStage='Group Stage';
+        const seasons={},sortState={},teamsLookup={},toxicTeamWB={};
+        let jsonPlayerData=null,jsonTeamData=null;
 
-        const toxicStages = ['Overall', 'Group Stage', 'Playoffs'];
-        const angusStages = ['Group Stage', 'Playoffs'];
+        const angusSheets={'Group Stage':{sheetId:'1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak',gid:'821526300'},'Playoffs':{sheetId:'1ea1gKWPE1kBkK9d0O6Mky0r5iBkBX9qkTA3OBS0LKMY',gid:'821526300'}};
+        const toxicStages=['Overall','Group Stage','Playoffs'];
+        const angusStages=['Group Stage','Playoffs'];
 
-        // Angus sheet config per stage
-        const angusSheets = {
-            'Group Stage': { sheetId: '1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak', gid: '821526300' },
-            'Playoffs':    { sheetId: '1ea1gKWPE1kBkK9d0O6Mky0r5iBkBX9qkTA3OBS0LKMY', gid: '821526300' }
-        };
+        function getEvent(id){return events.find(e=>e.id===id)}
+        function dataPath(){const ev=getEvent(currentEvent);return ev?`../data/events/${ev.path}/`:'../data/events/s2/na/';}
+        function cacheGet(k){try{return sessionStorage.getItem('pcmt-stats-'+k)}catch(e){return null}}
+        function cacheSet(k,v){try{sessionStorage.setItem('pcmt-stats-'+k,v)}catch(e){}}
+        function cacheGetJSON(k){const r=cacheGet(k);if(!r)return null;try{return JSON.parse(r)}catch(e){return null}}
+        function cacheSetJSON(k,v){try{cacheSet(k,JSON.stringify(v))}catch(e){}}
 
-        // --- sessionStorage cache ---
-        function cacheGet(key) {
-            try { return sessionStorage.getItem('pcmt-stats-' + key); } catch(e) { return null; }
-        }
-        function cacheSet(key, val) {
-            try { sessionStorage.setItem('pcmt-stats-' + key, val); } catch(e) {}
-        }
-        function cacheGetJSON(key) {
-            const raw = cacheGet(key);
-            if (!raw) return null;
-            try { return JSON.parse(raw); } catch(e) { return null; }
-        }
-        function cacheSetJSON(key, val) {
-            try { cacheSet(key, JSON.stringify(val)); } catch(e) {}
+        async function init(){
+            try{events=await(await fetch('../data/events/events.json')).json()}catch(e){events=[]}
+            events.forEach(e=>{if(!seasons[e.season])seasons[e.season]=[];seasons[e.season].push(e)});
+            const fromUrl=new URLSearchParams(window.location.search).get('event');
+            if(fromUrl&&events.some(e=>e.id===fromUrl)){currentEvent=fromUrl;currentSeason=getEvent(fromUrl).season}
+            else{const o=events.find(e=>e.status==='ongoing');if(o){currentEvent=o.id;currentSeason=o.season}else if(events.length){currentEvent=events[0].id;currentSeason=events[0].season}}
+            renderSelectors();await loadEventConfig();await loadTeamsLookup();buildTabs();
         }
 
-        async function loadTeamsLookup() {
-            try {
-                for (const s of [1, 2]) {
-                    const res = await fetch('../data/s' + s + '/teams.json');
-                    const data = await res.json();
-                    teamsLookup['s' + s] = {};
-                    for (const [abbr, team] of Object.entries(data)) {
-                        teamsLookup['s' + s][abbr.toUpperCase()] = abbr;
-                        teamsLookup['s' + s][team.name.toUpperCase()] = abbr;
-                    }
-                }
-            } catch (err) {}
+        function renderSelectors(){
+            const sNums=Object.keys(seasons).map(Number).sort((a,b)=>a-b);
+            document.getElementById('season-selector').innerHTML=sNums.map(s=>`<button class="season-sel-btn ${s===currentSeason?'active':''}" onclick="switchSeason(${s})">Season ${s}</button>`).join('');
+            const bar=document.getElementById('region-selector'),sEvents=seasons[currentSeason]||[];
+            if(sEvents.length>1){bar.style.display='';bar.innerHTML=sEvents.map(e=>`<button class="stats-sub-btn ${e.id===currentEvent?'active':''}" onclick="switchRegion('${e.id}')">${e.shortName}</button>`).join('')}
+            else{bar.style.display='none';if(sEvents.length===1)currentEvent=sEvents[0].id}
         }
 
-        function teamLink(cellValue, season) {
-            if (!cellValue) return cellValue;
-            const lookup = teamsLookup['s' + season];
-            if (!lookup) return cellValue;
-            const abbr = lookup[String(cellValue).trim().toUpperCase()];
-            if (!abbr) return cellValue;
-            return '<a href="../teams/team/?team=' + abbr + '&season=' + season + '" class="team-link">' + cellValue + '</a>';
-        }
+        async function switchSeason(s){currentSeason=s;const sE=seasons[s]||[];currentEvent=sE[0]?sE[0].id:currentEvent;setUrl();renderSelectors();await loadEventConfig();await loadTeamsLookup();buildTabs()}
+        async function switchRegion(id){currentEvent=id;currentSeason=getEvent(id).season;setUrl();renderSelectors();await loadEventConfig();await loadTeamsLookup();buildTabs()}
+        function setUrl(){const u=new URL(window.location);u.searchParams.set('event',currentEvent);history.replaceState(null,'',u)}
 
-        loadTeamsLookup();
+        async function loadEventConfig(){try{eventConfig=await(await fetch(dataPath()+'event.json')).json()}catch(e){eventConfig={}}}
+        async function loadTeamsLookup(){if(teamsLookup[currentEvent])return;try{const d=await(await fetch(dataPath()+'teams.json')).json();teamsLookup[currentEvent]={};for(const[a,t]of Object.entries(d)){teamsLookup[currentEvent][a.toUpperCase()]=a;teamsLookup[currentEvent][t.name.toUpperCase()]=a}}catch(e){teamsLookup[currentEvent]={}}}
+        function teamLink(v){if(!v)return v;const l=teamsLookup[currentEvent];if(!l)return v;const a=l[String(v).trim().toUpperCase()];if(!a)return v;return`<a href="../teams/team/?team=${a}&event=${currentEvent}" class="team-link">${v}</a>`}
 
-        const seasonConfig = {
-            1: {
-                playerTabs: ['toxic'],
-                teamTabs: ['toxic'],
-            },
-            2: {
-                playerTabs: ['Angus', 'pi', 'toxic'],
-                teamTabs: ['pi', 'toxic'],
-            }
-        };
+        function switchMainTab(tab){currentMainTab=tab;document.getElementById('player-stats').classList.toggle('hidden',tab!=='player');document.getElementById('team-stats').classList.toggle('hidden',tab!=='team');document.querySelectorAll('.stats-toggle-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='player'?0:1)===i))}
 
-        function switchSeason(season) {
-            currentSeason = season;
-            const buttons = document.querySelectorAll('.season-sel-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', i === season - 1);
-            });
-            buildTabs();
-        }
+        function buildTabs(){
+            const fmt=eventConfig.statsFormat||'xlsx';
+            currentToxicStage='Overall';currentAngusStage='Group Stage';
+            const pBar=document.getElementById('player-sub-tabs'),tBar=document.getElementById('team-sub-tabs'),sBar=document.getElementById('player-stage-tabs');
+            sBar.style.display='none';jsonPlayerData=null;jsonTeamData=null;
 
-        function switchMainTab(tab) {
-            currentMainTab = tab;
-            const playerStats = document.getElementById('player-stats');
-            const teamStats = document.getElementById('team-stats');
-            const buttons = document.querySelectorAll('.stats-toggle-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            if (tab === 'player') {
-                playerStats.classList.remove('hidden');
-                teamStats.classList.add('hidden');
-                buttons[0].classList.add('active');
+            if(fmt==='json'){
+                pBar.innerHTML='';tBar.innerHTML='';
+                loadJsonPlayerStats();loadJsonTeamStats();
             } else {
-                teamStats.classList.remove('hidden');
-                playerStats.classList.add('hidden');
-                buttons[1].classList.add('active');
+                const pt=(eventConfig.statsTabs&&eventConfig.statsTabs.player)||['toxic'];
+                const tt=(eventConfig.statsTabs&&eventConfig.statsTabs.team)||['toxic'];
+                pBar.innerHTML=pt.map((n,i)=>`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchPlayerTab('${n}')">${n}</button>`).join('');
+                tBar.innerHTML=tt.map((n,i)=>`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchTeamTab('${n}')">${n}</button>`).join('');
+                currentPlayerTab=pt[0];loadLegacyPlayerTab(pt[0]);loadLegacyTeamTab(tt[0]);
             }
         }
 
-        function buildTabs() {
-            const config = seasonConfig[currentSeason];
-            currentToxicStage = 'Overall';
-            currentAngusStage = 'Group Stage';
-
-            const playerTabBar = document.getElementById('player-sub-tabs');
-            playerTabBar.innerHTML = config.playerTabs.map((name, i) =>
-                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchPlayerTab('${name}')">${name}</button>`
-            ).join('');
-
-            const teamTabBar = document.getElementById('team-sub-tabs');
-            teamTabBar.innerHTML = config.teamTabs.map((name, i) =>
-                `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchTeamTab('${name}')">${name}</button>`
-            ).join('');
-
-            loadPlayerTab(config.playerTabs[0]);
-            loadTeamTab(config.teamTabs[0]);
+        // ═══ JSON Stats (S3+) ════════════════════════════════════════════
+        async function loadJsonPlayerStats(){
+            const area=document.getElementById('player-table-area');
+            const ck=`${currentEvent}-pjson`;const cached=cacheGetJSON(ck);
+            if(cached){jsonPlayerData=cached;renderJsonPlayerStage('Overall');return}
+            area.innerHTML='<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            try{jsonPlayerData=await(await fetch(dataPath()+'player-stats.json')).json();cacheSetJSON(ck,jsonPlayerData);renderJsonPlayerStage('Overall')}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>'}
         }
 
-        function switchPlayerTab(name) {
-            const config = seasonConfig[currentSeason];
-            const buttons = document.querySelectorAll('#player-sub-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', config.playerTabs[i] === name);
-            });
-
-            const stageBar = document.getElementById('player-stage-tabs');
-
-            if (name === 'toxic' && currentSeason === 2) {
-                currentToxicStage = currentToxicStage || 'Overall';
-                stageBar.style.display = '';
-                stageBar.innerHTML = toxicStages.map((s) =>
-                    `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
-                ).join('');
-            } else if (name === 'Angus' && currentSeason === 2) {
-                currentAngusStage = currentAngusStage || 'Group Stage';
-                stageBar.style.display = '';
-                stageBar.innerHTML = angusStages.map((s) =>
-                    `<button class="stats-sub-btn ${s === currentAngusStage ? 'active' : ''}" onclick="switchAngusStage('${s}')">${s}</button>`
-                ).join('');
-            } else {
-                stageBar.style.display = 'none';
-                stageBar.innerHTML = '';
-            }
-
-            loadPlayerTab(name);
+        function renderJsonPlayerStage(stage){
+            currentStage=stage;const area=document.getElementById('player-table-area');
+            if(!jsonPlayerData){area.innerHTML='<div class="stats-table-container"><p class="stats-error">No data.</p></div>';return}
+            const sBar=document.getElementById('player-stage-tabs'),stages=Object.keys(jsonPlayerData);
+            if(stages.length>1){sBar.style.display='';sBar.innerHTML=stages.map(s=>`<button class="stats-sub-btn ${s===stage?'active':''}" onclick="renderJsonPlayerStage('${s}')">${s}</button>`).join('')}else sBar.style.display='none';
+            const rows=jsonPlayerData[stage];
+            if(!rows||!rows.length){area.innerHTML='<div class="stats-table-container"><p class="stats-error">No data for this stage.</p></div>';return}
+            const headers=['Player','Team','MP','Rounds','R1.0','ACS','K','D','A','+/-','KPR','DPR','KAST','ADR','HS%','FK','FD','FKPR','FDPR','FK+/-','KMAX'];
+            const tRows=rows.map(p=>[p.Player,p.Team,p.MP,p.Rounds,p['R1.0'],p.ACS,p.K,p.D,p.A,p.PlusMinus,p.KPR,p.DPR,(p.KAST*100).toFixed(0)+'%',typeof p.ADR==='number'?p.ADR.toFixed(1):p.ADR,(p['HS%']*100).toFixed(0)+'%',p.FK,p.FD,p.FKPR,p.FDPR,p.PlusMinus2,p.KMAX]);
+            const tid=`jpla-${currentEvent}-${stage}`;const merged=mergeTeamIntoPlayer(headers,tRows);
+            area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player');
         }
 
-        function switchToxicStage(stage) {
-            currentToxicStage = stage;
-            const buttons = document.querySelectorAll('#player-stage-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', toxicStages[i] === stage);
-            });
-            loadToxicPlayerStats(currentSeason, stage);
+        async function loadJsonTeamStats(){
+            const area=document.getElementById('team-table-area');
+            const ck=`${currentEvent}-tjson`;const cached=cacheGetJSON(ck);
+            if(cached){jsonTeamData=cached;renderJsonTeamPicker();return}
+            area.innerHTML='<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            try{jsonTeamData=await(await fetch(dataPath()+'team-map-stats.json')).json();cacheSetJSON(ck,jsonTeamData);renderJsonTeamPicker()}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load team stats.</p></div>'}
         }
 
-        function switchAngusStage(stage) {
-            currentAngusStage = stage;
-            const buttons = document.querySelectorAll('#player-stage-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', angusStages[i] === stage);
-            });
-            loadAngusStats(stage);
+        function renderJsonTeamPicker(){
+            const area=document.getElementById('team-table-area');if(!jsonTeamData)return;
+            const keys=Object.keys(jsonTeamData).sort();
+            let h='<div class="stats-table-container"><div class="stats-sub-tabs">';
+            keys.forEach((k,i)=>{const t=jsonTeamData[k];h+=`<button class="stats-sub-btn ${i===0?'active':''}" onclick="renderJsonTeamMap('${k}',this)">${t.teamName||k}</button>`});
+            h+='</div><div id="json-team-area"></div></div>';area.innerHTML=h;
+            if(keys.length)renderJsonTeamMap(keys[0]);
         }
 
-        function switchTeamTab(name) {
-            const config = seasonConfig[currentSeason];
-            const buttons = document.querySelectorAll('#team-sub-tabs .stats-sub-btn');
-            buttons.forEach((btn, i) => {
-                btn.classList.toggle('active', config.teamTabs[i] === name);
-            });
-            loadTeamTab(name);
+        function renderJsonTeamMap(k,btn){
+            if(btn){btn.parentElement.querySelectorAll('.stats-sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+            const t=jsonTeamData[k];if(!t)return;const c=document.getElementById('json-team-area');
+            let h=`<div class="team-overall-bar"><div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">${(t.overallAtkPct*100).toFixed(0)}%</span></div><div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">${(t.overallDefPct*100).toFixed(0)}%</span></div></div>`;
+            const hd=['Map','Pick','Ban','Played','Won','Win%','RND','RND Won','RND%','Atk%','Def%'];
+            const rows=t.maps.map(m=>[m.map,m.pick,m.ban,m.played,m.won,(m.winPct*100).toFixed(0)+'%',m.rounds,m.roundsWon,(m.roundPct*100).toFixed(0)+'%',(m.atkPct*100).toFixed(0)+'%',(m.defPct*100).toFixed(0)+'%']);
+            const tid=`jtm-${currentEvent}-${k}`;h+=renderTable(hd,rows,tid);c.innerHTML=h;highlightTable(tid,'team');
         }
 
-        // --- table rendering ---
-
-        function renderTable(headers, rows, tableId) {
-            let html = `<table class="stats-table" id="table-${tableId}">`;
-            html += '<thead><tr>';
-            headers.forEach((h, i) => {
-                html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
-            });
-            html += '</tr></thead><tbody>';
-            rows.forEach(row => {
-                html += '<tr>';
-                row.forEach(cell => html += `<td>${cell ?? ''}</td>`);
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
-            return html;
+        // ═══ Legacy XLSX/Sheets (S1/S2) ══════════════════════════════════
+        function switchPlayerTab(name){
+            currentPlayerTab=name;const pt=(eventConfig.statsTabs&&eventConfig.statsTabs.player)||['toxic'];
+            document.querySelectorAll('#player-sub-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',pt[i]===name));
+            loadLegacyPlayerTab(name);
+        }
+        function switchTeamTab(name){
+            const tt=(eventConfig.statsTabs&&eventConfig.statsTabs.team)||['toxic'];
+            document.querySelectorAll('#team-sub-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',tt[i]===name));
+            loadLegacyTeamTab(name);
         }
 
-        function mergeTeamIntoPlayer(headers, rows) {
-            const teamIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'team');
-            const playerIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'player');
-            if (teamIdx === -1 || playerIdx === -1) return { headers, rows };
+        function loadLegacyPlayerTab(name){
+            const sBar=document.getElementById('player-stage-tabs');
+            if(name==='toxic'){sBar.style.display='';sBar.innerHTML=toxicStages.map(s=>`<button class="stats-sub-btn ${s===currentToxicStage?'active':''}" onclick="switchToxicStage('${s}')">${s}</button>`).join('');loadToxicPlayer(currentToxicStage)}
+            else if(name==='Angus'){sBar.style.display='';sBar.innerHTML=angusStages.map(s=>`<button class="stats-sub-btn ${s===currentAngusStage?'active':''}" onclick="switchAngusStage('${s}')">${s}</button>`).join('');loadAngusStats(currentAngusStage)}
+            else if(name==='pi'){sBar.style.display='none';loadPiPlayer()}
+            else sBar.style.display='none';
+        }
+        function switchToxicStage(s){currentToxicStage=s;document.querySelectorAll('#player-stage-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',toxicStages[i]===s));loadToxicPlayer(s)}
+        function switchAngusStage(s){currentAngusStage=s;document.querySelectorAll('#player-stage-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',angusStages[i]===s));loadAngusStats(s)}
+        function loadLegacyTeamTab(name){if(name==='toxic')loadToxicTeam();else if(name==='pi')loadPiTeam()}
 
-            const newRows = rows.map(r => {
-                const newRow = [...r];
-                const name = newRow[playerIdx] || '';
-                const team = newRow[teamIdx] || '';
-                newRow[playerIdx] = `${name}<span class="player-team-tag">${team}</span>`;
-                return newRow;
-            });
-
-            const newHeaders = headers.filter((_, i) => i !== teamIdx);
-            const finalRows = newRows.map(r => r.filter((_, i) => i !== teamIdx));
-            return { headers: newHeaders, rows: finalRows };
+        async function loadToxicPlayer(sheet){
+            sheet=sheet||'Overall';const ck=`${currentEvent}-ptox-${sheet}`;const area=document.getElementById('player-table-area');
+            const cached=cacheGetJSON(ck);if(cached){const{headers:h,rows:r}=cached;const tid=`tp-${currentEvent}-${sheet}`;area.innerHTML=`<div class="stats-table-container">${renderTable(h,r,tid)}</div>`;sortByRating(tid,h);highlightTable(tid,'player');return}
+            area.innerHTML='<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            try{const ab=await(await fetch(dataPath()+'Player Stats.xlsx')).arrayBuffer();const wb=XLSX.read(ab,{type:'array'});const sh=wb.Sheets[sheet];if(!sh){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Sheet not found.</p></div>';return}
+            const sd=XLSX.utils.sheet_to_json(sh,{header:1});const rh=sd[0];const pr=sd.slice(1).filter(r=>r[0]);if(!pr.length){area.innerHTML='<div class="stats-table-container"><p class="stats-error">No data.</p></div>';return}
+            const rm=new Set();rh.forEach((h,i)=>{if(h==null||h===''||h==='Change')rm.add(i)});let headers=rh.filter((_,i)=>!rm.has(i));
+            const rows=pr.map(r=>{let f=r.filter((_,i)=>!rm.has(i));while(f.length>headers.length)f.pop();return f.map((c,i)=>formatCell(c,headers[i]))});
+            const tid=`tp-${currentEvent}-${sheet}`;const merged=mergeTeamIntoPlayer(headers,rows);cacheSetJSON(ck,{headers:merged.headers,rows:merged.rows});
+            area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player')}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>'}
         }
 
-        // 1st click = desc, 2nd = asc, 3rd = reset
-        function sortTable(tableId, colIndex) {
-            const state = sortState[tableId];
-            if (!state) return;
-
-            if (state.currentCol === colIndex) {
-                state.clicks++;
-            } else {
-                state.currentCol = colIndex;
-                state.clicks = 1;
-            }
-
-            let sorted;
-            if (state.clicks % 3 === 0) {
-                sorted = [...state.originalRows];
-                state.currentCol = -1;
-                state.clicks = 0;
-            } else {
-                const asc = state.clicks % 3 === 2;
-                sorted = [...state.rows].sort((a, b) => {
-                    let valA = a[colIndex];
-                    let valB = b[colIndex];
-                    if (typeof valA === 'string' && valA.endsWith('%')) valA = parseFloat(valA);
-                    if (typeof valB === 'string' && valB.endsWith('%')) valB = parseFloat(valB);
-                    const numA = parseFloat(valA);
-                    const numB = parseFloat(valB);
-                    if (!isNaN(numA) && !isNaN(numB)) {
-                        return asc ? numA - numB : numB - numA;
-                    }
-                    const strA = String(valA || '').toLowerCase();
-                    const strB = String(valB || '').toLowerCase();
-                    return asc ? strA.localeCompare(strB) : strB.localeCompare(strA);
-                });
-            }
-
-            const table = document.getElementById(`table-${tableId}`);
-            const tbody = table.querySelector('tbody');
-            tbody.innerHTML = sorted.map(row =>
-                '<tr>' + row.map(cell => `<td>${cell ?? ''}</td>`).join('') + '</tr>'
-            ).join('');
-
-            const theadRows = table.querySelectorAll('thead tr');
-            const lastHeaderRow = theadRows[theadRows.length - 1];
-            const ths = lastHeaderRow.querySelectorAll('th');
-            ths.forEach((th, i) => {
-                const arrow = th.querySelector('.sort-arrow');
-                if (i === colIndex && state.currentCol !== -1) {
-                    arrow.textContent = state.clicks % 3 === 1 ? ' ▼' : ' ▲';
-                } else {
-                    arrow.textContent = '';
-                }
-            });
-
-            if (state.highlightMode) highlightTable(tableId, state.highlightMode);
+        async function loadAngusStats(stage){
+            stage=stage||'Group Stage';const ck=`${currentEvent}-pangus-${stage}`;const area=document.getElementById('player-table-area');const tid=`ap-${currentEvent}-${stage.replace(/\s+/g,'')}`;
+            const cached=cacheGetJSON(ck);if(cached){const{headers:h,rows:r}=cached;area.innerHTML=`<div class="stats-table-container">${renderTable(h,r,tid)}</div>`;sortByRating(tid,h);highlightTable(tid,'player');return}
+            try{const cfg=angusSheets[stage];if(!cfg){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Unknown stage.</p></div>';return}
+            const csv=await(await fetch(`https://docs.google.com/spreadsheets/d/${cfg.sheetId}/export?format=csv&gid=${cfg.gid}`)).text();
+            const lines=parseCSV(csv);let headers=lines[0];let rows=lines.slice(1).filter(r=>r[0]||r[1]);
+            const rc=[];headers.forEach((h,i)=>{const l=h.toLowerCase().trim();if(l==='points'||l==='agents'||l==='+/-')rc.push(i)});rc.sort((a,b)=>b-a).forEach(i=>{headers.splice(i,1);rows.forEach(r=>r.splice(i,1))});
+            rows=rows.filter(r=>{const f=String(r[0]||'').trim().toUpperCase();return f!=='MEDIAN'&&f!=='MEAN'});
+            const merged=mergeTeamIntoPlayer(headers,rows);cacheSetJSON(ck,{headers:merged.headers,rows:merged.rows});
+            area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player')}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load Angus\' stats.</p></div>'}
         }
 
-        // auto-sort a table by rating column (desc)
-        function sortByRating(tableId, headers) {
-            const ratingNames = ['R1.0', 'R', 'Rating', 'rRating'];
-            const idx = headers.findIndex(h => ratingNames.includes((h || '').trim()));
-            if (idx !== -1) sortTable(tableId, idx);
+        async function loadPiPlayer(){
+            const ck=`${currentEvent}-ppi`;const area=document.getElementById('player-table-area');
+            const cached=cacheGetJSON(ck);if(cached){const{headers:h,rows:r}=cached;area.innerHTML=`<div class="stats-table-container">${renderTable(h,r,'pip')}</div>`;sortByRating('pip',h);highlightTable('pip','player');return}
+            try{const csv=await(await fetch('https://docs.google.com/spreadsheets/d/1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ/export?format=csv&gid=1023990137')).text();
+            const lines=parseCSV(csv);const ah=lines[1];const dr=lines.slice(2).filter(r=>r[0]||r[1]);
+            const acsIdx=ah.findIndex(h=>h.trim().toUpperCase()==='ACS');const rIdx=ah.findIndex(h=>h.trim().toUpperCase()==='R');
+            const ic=[1,2,3];if(rIdx!==-1&&rIdx<acsIdx)ic.push(rIdx);const ac=[];for(let i=acsIdx;i<ah.length;i++)ac.push(i);const kc=[...ic,...ac];
+            const headers=kc.map(i=>ah[i]);const rows=dr.map(r=>kc.map(i=>r[i]??''));
+            const merged=mergeTeamIntoPlayer(headers,rows);cacheSetJSON(ck,{headers:merged.headers,rows:merged.rows});
+            area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,'pip')}</div>`;sortByRating('pip',merged.headers);highlightTable('pip','player')}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>'}
         }
 
-        // highlight best (green) and optionally worst (red) in each numeric column
-        const lowerIsBetter = ['d', 'dpr', 'fdpr', 'fd', 'ban'];
-
-        function highlightTable(tableId, mode) {
-            const table = document.getElementById(`table-${tableId}`);
-            if (!table) return;
-            const state = sortState[tableId];
-            if (!state) return;
-            state.highlightMode = mode;
-
-            const headers = state.headers;
-            const tbody = table.querySelector('tbody');
-            const trs = tbody.querySelectorAll('tr');
-            if (trs.length < 2) return;
-
-            const skipCols = new Set();
-            headers.forEach((h, i) => {
-                const lower = (h || '').trim().toLowerCase();
-                if (['#', 'player', 'team', 'map', 'mp'].includes(lower)) skipCols.add(i);
-            });
-
-            for (let col = 0; col < headers.length; col++) {
-                if (skipCols.has(col)) continue;
-
-                const hLower = (headers[col] || '').trim().toLowerCase();
-                const invert = lowerIsBetter.includes(hLower);
-
-                let bestVal = null, worstVal = null, bestIdx = -1, worstIdx = -1;
-
-                trs.forEach((tr, rowIdx) => {
-                    const td = tr.children[col];
-                    if (!td) return;
-                    let raw = td.textContent.trim();
-                    if (raw === '' || raw === '-') return;
-                    if (raw.endsWith('%')) raw = raw.slice(0, -1);
-                    const num = parseFloat(raw);
-                    if (isNaN(num)) return;
-
-                    if (bestVal === null) {
-                        bestVal = num; worstVal = num;
-                        bestIdx = rowIdx; worstIdx = rowIdx;
-                    } else {
-                        if (invert) {
-                            if (num < bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num > worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        } else {
-                            if (num > bestVal) { bestVal = num; bestIdx = rowIdx; }
-                            if (num < worstVal) { worstVal = num; worstIdx = rowIdx; }
-                        }
-                    }
-                });
-
-                if (bestIdx !== -1 && bestVal !== worstVal) {
-                    const bestTd = trs[bestIdx].children[col];
-                    if (bestTd) bestTd.classList.add('stat-best');
-                }
-                if (mode === 'team' && worstIdx !== -1 && bestVal !== worstVal) {
-                    const worstTd = trs[worstIdx].children[col];
-                    if (worstTd) worstTd.classList.add('stat-worst');
-                }
-            }
+        async function loadToxicTeam(){
+            const area=document.getElementById('team-table-area');const ck=`${currentEvent}-ttox`;const cached=cacheGetJSON(ck);
+            try{let sdm,tn;
+            if(cached){sdm=cached.sheets;tn=cached.teamNames}
+            else{const ab=await(await fetch(dataPath()+'Team Map Stats.xlsx')).arrayBuffer();const wb=XLSX.read(ab,{type:'array'});tn=wb.SheetNames.filter(s=>!s.includes('Comps')&&!s.includes('Data')).sort();sdm={};for(const n of tn)sdm[n]=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1});cacheSetJSON(ck,{teamNames:tn,sheets:sdm})}
+            toxicTeamWB[currentEvent]=sdm;
+            let html='<div class="stats-table-container"><div class="stats-sub-tabs">';tn.forEach((t,i)=>{html+=`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchTeamMap('${t.replace(/'/g,"\\'")}',this)">${t}</button>`});
+            html+='</div><div id="toxic-team-area"></div></div>';area.innerHTML=html;renderToxicTeamMap(tn[0])}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load team stats.</p></div>'}
         }
 
-        // --- helpers ---
+        function switchTeamMap(name,btn){btn.parentElement.querySelectorAll('.stats-sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderToxicTeamMap(name)}
 
-        function parseCSV(csvText) {
-            return csvText.split('\n').map(line => {
-                const cells = [];
-                let current = '';
-                let inQuotes = false;
-                for (let i = 0; i < line.length; i++) {
-                    const char = line[i];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        cells.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
-                }
-                cells.push(current.trim());
-                return cells;
-            }).filter(row => row.some(cell => cell !== ''));
+        function renderToxicTeamMap(name){
+            const sdm=toxicTeamWB[currentEvent];if(!sdm)return;const data=sdm[name];if(!data)return;
+            const hr=data[1]||[];const hasPick=hr.some(h=>h&&String(h).trim()==='Pick');
+            const lc=hasPick?10:9,rs=hasPick?11:10,re=hasPick?21:19,ovc=hasPick?2:1;
+            const mh=hasPick?['Map','Pick','Ban','Played','Won','Win%','RND','RND Won','RND%','Atk%','Def%']:['Map','Ban','Played','Won','Win%','RND','RND Won','RND%','Atk%','Def%'];
+            const mr=[];let oa=null,od=null;
+            for(let i=0;i<data.length;i++){if(data[i][0]==='Atk%')oa=data[i][ovc];if(data[i][0]==='Def%')od=data[i][ovc]}
+            for(let sr=0;sr<data.length;sr+=4){if(sr+2>=data.length)break;const nr=data[sr],dr=data[sr+2];if(nr[0]==='Atk%'||nr[0]==='Def%')continue;
+            if(nr[0]){const d=dr.slice(0,lc);const rb=[nr[0]];for(let i=0;i<d.length;i++){const h=mh[i+1];rb.push(h&&h.includes('%')?fmtPct(d[i]):fmtNum(d[i]))}mr.push(rb)}
+            if(nr[rs]){const d=dr.slice(rs,re);const rb=[nr[rs]];for(let i=0;i<d.length;i++){const h=mh[i+1];rb.push(h&&h.includes('%')?fmtPct(d[i]):fmtNum(d[i]))}mr.push(rb)}}
+            const fr=mr.filter(r=>r.slice(1).some(c=>c!=='-')).sort((a,b)=>String(a[0]).localeCompare(String(b[0])));
+            const c=document.getElementById('toxic-team-area');let html='';
+            if(oa!=null||od!=null)html+=`<div class="team-overall-bar"><div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">${fmtPct(oa)}</span></div><div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">${fmtPct(od)}</span></div></div>`;
+            const tid=`ttm-${currentEvent}`;html+=renderTable(mh,fr,tid);c.innerHTML=html;highlightTable(tid,'team');
         }
 
-        function formatCell(value, header) {
-            if (value == null || value === '') return '-';
-            if (typeof value === 'number') {
-                if (['KAST', 'HS%', 'CL%'].includes(header)) return (value * 100).toFixed(0) + '%';
-                if (header === 'ACS') return Math.round(value);
-                if (header === 'ADR') return value.toFixed(1);
-                if (Number.isInteger(value)) return value;
-                return value.toFixed(2);
-            }
-            return value;
+        async function loadPiTeam(){
+            const ck=`${currentEvent}-tpi`;const area=document.getElementById('team-table-area');
+            const cached=cacheGetJSON(ck);if(cached){const{headers:h,rows:r,html}=cached;const tid='pit';area.innerHTML=`<div class="stats-table-container">${html}</div>`;sortState[tid]={headers:h,rows:[...r],originalRows:[...r],currentCol:-1,clicks:0,highlightMode:null};highlightTable(tid,'team');return}
+            try{const csv=await(await fetch('https://docs.google.com/spreadsheets/d/1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ/export?format=csv&gid=1030932262')).text();
+            const lines=parseCSV(csv);const cr=lines[0],headers=lines[1],rows=lines.slice(2).filter(r=>r[0]||r[1]);
+            const cs=[];for(let i=0;i<cr.length;i++){if(cr[i]&&cr[i].trim()!==''){let sp=1;for(let j=i+1;j<cr.length;j++){if(cr[j]&&cr[j].trim()!=='')break;sp++}cs.push({text:cr[i].trim(),start:i,span:sp})}}
+            const tid='pit';let html=`<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tid}"><thead><tr class="category-row">`;
+            let cc=0;cs.forEach(c=>{if(c.start>cc)html+=`<th colspan="${c.start-cc}"></th>`;html+=`<th colspan="${c.span}" class="category-header">${c.text}</th>`;cc=c.start+c.span});
+            if(cc<headers.length)html+=`<th colspan="${headers.length-cc}"></th>`;html+='</tr><tr>';
+            headers.forEach((h,i)=>{html+=`<th class="sortable" onclick="sortTable('${tid}',${i})">${h} <span class="sort-arrow"></span></th>`});html+='</tr></thead><tbody>';
+            const tci=headers.findIndex(h=>h&&h.trim().toLowerCase()==='team');
+            rows.forEach(r=>{html+='<tr>';r.forEach((c,i)=>{html+=i===tci?`<td>${teamLink(c)}</td>`:`<td>${c??''}</td>`});html+='</tr>'});html+='</tbody></table></div>';
+            sortState[tid]={headers,rows:[...rows],originalRows:[...rows],currentCol:-1,clicks:0,highlightMode:null};
+            cacheSetJSON(ck,{headers,rows,html});area.innerHTML=`<div class="stats-table-container">${html}</div>`;highlightTable(tid,'team')}
+            catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s team stats.</p></div>'}
         }
 
-        function fmtPct(val) {
-            if (val == null || val === '') return '-';
-            if (typeof val === 'number') return (val * 100).toFixed(0) + '%';
-            return val;
-        }
-
-        function fmtNum(val) {
-            if (val == null || val === '') return '-';
-            return val;
-        }
-
-        // --- player stats loaders ---
-
-        function loadPlayerTab(name) {
-            const area = document.getElementById('player-table-area');
-            const season = currentSeason;
-            const stageBar = document.getElementById('player-stage-tabs');
-
-            if (name === 'toxic' && season === 2) {
-                stageBar.style.display = '';
-                stageBar.innerHTML = toxicStages.map((s) =>
-                    `<button class="stats-sub-btn ${s === currentToxicStage ? 'active' : ''}" onclick="switchToxicStage('${s}')">${s}</button>`
-                ).join('');
-            } else if (name === 'Angus' && season === 2) {
-                stageBar.style.display = '';
-                stageBar.innerHTML = angusStages.map((s) =>
-                    `<button class="stats-sub-btn ${s === currentAngusStage ? 'active' : ''}" onclick="switchAngusStage('${s}')">${s}</button>`
-                ).join('');
-            } else {
-                stageBar.style.display = 'none';
-                stageBar.innerHTML = '';
-            }
-
-            let cacheKey;
-            if (season === 1) cacheKey = `s1-player-toxic`;
-            else if (name === 'toxic') cacheKey = `s2-player-toxic-${currentToxicStage}`;
-            else if (name === 'Angus') cacheKey = `s2-player-angus-${currentAngusStage}`;
-            else cacheKey = `s2-player-${name}`;
-
-            if (!cacheGet(cacheKey)) {
-                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
-            }
-
-            if (season === 1) loadToxicPlayerStats(1, 'Overall');
-            else if (name === 'toxic') loadToxicPlayerStats(2, currentToxicStage);
-            else if (name === 'Angus') loadAngusStats(currentAngusStage);
-            else if (name === 'pi') loadPiPlayerStats();
-        }
-
-        async function loadToxicPlayerStats(season, sheetName) {
-            sheetName = sheetName || 'Overall';
-            const cacheKey = `s${season}-player-toxic-${sheetName}`;
-            const area = document.getElementById('player-table-area');
-
-            const cached = cacheGetJSON(cacheKey);
-            if (cached) {
-                const { headers, rows } = cached;
-                const tableId = `toxic-player-s${season}-${sheetName}`;
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
-                sortByRating(tableId, headers);
-                highlightTable(tableId, 'player');
-                return;
-            }
-
-            try {
-                const path = `../data/s${season}/Player Stats.xlsx`;
-                const response = await fetch(path);
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-
-                const sheet = workbook.Sheets[sheetName];
-                if (!sheet) {
-                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Sheet not found.</p></div>';
-                    return;
-                }
-                const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                const rawHeaders = sheetData[0];
-                const playerRows = sheetData.slice(1).filter(r => r[0]);
-
-                if (playerRows.length === 0) {
-                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">No data available yet.</p></div>';
-                    return;
-                }
-
-                const removeCols = [];
-                rawHeaders.forEach((h, i) => {
-                    if (h == null || h === '' || h === 'Change') removeCols.push(i);
-                });
-                const removeSet = new Set(removeCols);
-                let headers = rawHeaders.filter((_, i) => !removeSet.has(i));
-
-                const formattedRows = playerRows.map(row => {
-                    let r = row.filter((_, i) => !removeSet.has(i));
-                    while (r.length > headers.length) r.pop();
-                    return r.map((cell, i) => formatCell(cell, headers[i]));
-                });
-
-                const tableId = `toxic-player-s${season}-${sheetName}`;
-                const merged = mergeTeamIntoPlayer(headers, formattedRows);
-                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
-                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
-                sortByRating(tableId, merged.headers);
-                highlightTable(tableId, 'player');
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load player stats.</p></div>';
-                console.error('toxic player stats:', err);
-            }
-        }
-
-        async function loadAngusStats(stage) {
-            stage = stage || 'Group Stage';
-            const cacheKey = `s2-player-angus-${stage}`;
-            const area = document.getElementById('player-table-area');
-            const tableId = `angus-player-s2-${stage.replace(/\s+/g, '')}`;
-
-            const cached = cacheGetJSON(cacheKey);
-            if (cached) {
-                const { headers, rows } = cached;
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, tableId)}</div>`;
-                sortByRating(tableId, headers);
-                highlightTable(tableId, 'player');
-                return;
-            }
-
-            try {
-                const config = angusSheets[stage];
-                if (!config) {
-                    area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Unknown stage.</p></div>';
-                    return;
-                }
-
-                const url = `https://docs.google.com/spreadsheets/d/${config.sheetId}/export?format=csv&gid=${config.gid}`;
-
-                const response = await fetch(url);
-                const csvText = await response.text();
-                const lines = parseCSV(csvText);
-
-                let headers = lines[0];
-                let rows = lines.slice(1).filter(r => r[0] || r[1]);
-
-                const removeCols = [];
-                headers.forEach((h, i) => {
-                    const lower = h.toLowerCase().trim();
-                    if (lower === 'points' || lower === 'agents' || lower === '+/-') removeCols.push(i);
-                });
-                removeCols.sort((a, b) => b - a).forEach(idx => {
-                    headers.splice(idx, 1);
-                    rows.forEach(r => r.splice(idx, 1));
-                });
-
-                // Filter out MEDIAN/MEAN rows
-                rows = rows.filter(r => {
-                    const first = String(r[0] || '').trim().toUpperCase();
-                    return first !== 'MEDIAN' && first !== 'MEAN';
-                });
-
-                const merged = mergeTeamIntoPlayer(headers, rows);
-                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
-                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, tableId)}</div>`;
-                sortByRating(tableId, merged.headers);
-                highlightTable(tableId, 'player');
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load Angus\'s stats.</p></div>';
-                console.error('angus stats:', err);
-            }
-        }
-
-        async function loadPiPlayerStats() {
-            const cacheKey = 's2-player-pi';
-            const area = document.getElementById('player-table-area');
-
-            const cached = cacheGetJSON(cacheKey);
-            if (cached) {
-                const { headers, rows } = cached;
-                area.innerHTML = `<div class="stats-table-container">${renderTable(headers, rows, 'pi-player-s2')}</div>`;
-                sortByRating('pi-player-s2', headers);
-                highlightTable('pi-player-s2', 'player');
-                return;
-            }
-
-            try {
-                const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
-                const gid = '1023990137';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-
-                const response = await fetch(url);
-                const csvText = await response.text();
-                const lines = parseCSV(csvText);
-
-                const allHeaders = lines[1];
-                const dataRows = lines.slice(2).filter(r => r[0] || r[1]);
-
-                const acsIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'ACS');
-                const rIdx = allHeaders.findIndex(h => h.trim().toUpperCase() === 'R');
-
-                const identCols = [1, 2, 3];
-                if (rIdx !== -1 && rIdx < acsIdx) identCols.push(rIdx);
-                const acsCols = [];
-                for (let i = acsIdx; i < allHeaders.length; i++) acsCols.push(i);
-                const keepCols = [...identCols, ...acsCols];
-
-                const headers = keepCols.map(i => allHeaders[i]);
-                const rows = dataRows.map(row => keepCols.map(i => row[i] ?? ''));
-
-                const merged = mergeTeamIntoPlayer(headers, rows);
-                cacheSetJSON(cacheKey, { headers: merged.headers, rows: merged.rows });
-                area.innerHTML = `<div class="stats-table-container">${renderTable(merged.headers, merged.rows, 'pi-player-s2')}</div>`;
-                sortByRating('pi-player-s2', merged.headers);
-                highlightTable('pi-player-s2', 'player');
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s stats.</p></div>';
-                console.error('pi stats:', err);
-            }
-        }
-
-        // --- team stats loaders ---
-
-        function loadTeamTab(name) {
-            const area = document.getElementById('team-table-area');
-            const season = currentSeason;
-
-            let cacheKey;
-            if (season === 1) cacheKey = 's1-team-toxic';
-            else cacheKey = `s2-team-${name}`;
-
-            if (!cacheGet(cacheKey)) {
-                area.innerHTML = '<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
-            }
-
-            if (season === 1) loadToxicTeamStats(1);
-            else if (name === 'toxic') loadToxicTeamStats(2);
-            else if (name === 'pi') loadPiTeamStats();
-        }
-
-        async function loadPiTeamStats() {
-            const cacheKey = 's2-team-pi';
-            const area = document.getElementById('team-table-area');
-
-            const cached = cacheGetJSON(cacheKey);
-            if (cached) {
-                const { headers, rows, html } = cached;
-                const tableId = 'piTeam-s2';
-                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
-                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
-                highlightTable(tableId, 'team');
-                return;
-            }
-
-            try {
-                const sheetId = '1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ';
-                const gid = '1030932262';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-
-                const response = await fetch(url);
-                const csvText = await response.text();
-                const lines = parseCSV(csvText);
-
-                const categoryRow = lines[0];
-                const headers = lines[1];
-                const rows = lines.slice(2).filter(r => r[0] || r[1]);
-
-                const categorySpans = [];
-                for (let i = 0; i < categoryRow.length; i++) {
-                    if (categoryRow[i] && categoryRow[i].trim() !== '') {
-                        let span = 1;
-                        for (let j = i + 1; j < categoryRow.length; j++) {
-                            if (categoryRow[j] && categoryRow[j].trim() !== '') break;
-                            span++;
-                        }
-                        categorySpans.push({ text: categoryRow[i].trim(), start: i, span: span });
-                    }
-                }
-
-                const tableId = 'piTeam-s2';
-                let html = `<div class="stats-table-scroll"><table class="stats-table stats-table-sticky" id="table-${tableId}">`;
-
-                html += '<thead><tr class="category-row">';
-                let colCovered = 0;
-                categorySpans.forEach(cat => {
-                    if (cat.start > colCovered) html += `<th colspan="${cat.start - colCovered}"></th>`;
-                    html += `<th colspan="${cat.span}" class="category-header">${cat.text}</th>`;
-                    colCovered = cat.start + cat.span;
-                });
-                if (colCovered < headers.length) html += `<th colspan="${headers.length - colCovered}"></th>`;
-                html += '</tr><tr>';
-                headers.forEach((h, i) => {
-                    html += `<th class="sortable" onclick="sortTable('${tableId}', ${i})">${h} <span class="sort-arrow"></span></th>`;
-                });
-                html += '</tr></thead><tbody>';
-                const teamColIdx = headers.findIndex(h => h && h.trim().toLowerCase() === 'team');
-                rows.forEach(row => {
-                    html += '<tr>';
-                    row.forEach((cell, i) => {
-                        if (i === teamColIdx) {
-                            html += `<td>${teamLink(cell, 2)}</td>`;
-                        } else {
-                            html += `<td>${cell ?? ''}</td>`;
-                        }
-                    });
-                    html += '</tr>';
-                });
-                html += '</tbody></table></div>';
-
-                sortState[tableId] = { headers, rows: [...rows], originalRows: [...rows], currentCol: -1, clicks: 0, highlightMode: null };
-                cacheSetJSON(cacheKey, { headers, rows, html });
-                area.innerHTML = `<div class="stats-table-container">${html}</div>`;
-                highlightTable(tableId, 'team');
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load pi\'s team stats.</p></div>';
-                console.error('pi team stats:', err);
-            }
-        }
-
-        const toxicTeamWorkbooks = {};
-
-        async function loadToxicTeamStats(season) {
-            const area = document.getElementById('team-table-area');
-            const cacheKey = `s${season}-team-toxic`;
-
-            const cachedSheets = cacheGetJSON(cacheKey);
-
-            try {
-                let sheetDataMap;
-                let teamNames;
-
-                if (cachedSheets) {
-                    sheetDataMap = cachedSheets.sheets;
-                    teamNames = cachedSheets.teamNames;
-                } else {
-                    const path = `../data/s${season}/Team Map Stats.xlsx`;
-                    const response = await fetch(path);
-                    if (!response.ok) {
-                        area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Team map stats not available for this season.</p></div>';
-                        return;
-                    }
-                    const arrayBuffer = await response.arrayBuffer();
-                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-
-                    teamNames = workbook.SheetNames.filter(s => !s.includes('Comps') && !s.includes('Data')).sort();
-                    sheetDataMap = {};
-                    for (const name of teamNames) {
-                        const ws = workbook.Sheets[name];
-                        sheetDataMap[name] = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                    }
-                    cacheSetJSON(cacheKey, { teamNames, sheets: sheetDataMap });
-                }
-
-                toxicTeamWorkbooks[season] = sheetDataMap;
-
-                let html = '<div class="stats-table-container">';
-                html += '<div class="stats-sub-tabs">';
-                teamNames.forEach((t, i) => {
-                    html += `<button class="stats-sub-btn ${i === 0 ? 'active' : ''}" onclick="switchTeamMap(${season}, '${t.replace(/'/g, "\\'")}', this)">${t}</button>`;
-                });
-                html += '</div>';
-                html += `<div id="toxic-team-map-table-s${season}"></div></div>`;
-
-                area.innerHTML = html;
-                renderToxicTeamMap(season, teamNames[0]);
-            } catch (err) {
-                area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load team map stats.</p></div>';
-                console.error('toxic team stats:', err);
-            }
-        }
-
-        function switchTeamMap(season, teamName, btn) {
-            const tabs = btn.parentElement.querySelectorAll('.stats-sub-btn');
-            tabs.forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            renderToxicTeamMap(season, teamName);
-        }
-
-        function renderToxicTeamMap(season, teamName) {
-            const sheetDataMap = toxicTeamWorkbooks[season];
-            if (!sheetDataMap) return;
-            const data = sheetDataMap[teamName];
-            if (!data) return;
-
-            const headerRow = data[1] || [];
-            const hasPick = headerRow.some(h => h && String(h).trim() === 'Pick');
-
-            const leftCols = hasPick ? 10 : 9;
-            const rightStart = hasPick ? 11 : 10;
-            const rightEnd = hasPick ? 21 : 19;
-            const overallValCol = hasPick ? 2 : 1;
-
-            const mapHeaders = hasPick
-                ? ['Map', 'Pick', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%']
-                : ['Map', 'Ban', 'Played', 'Won', 'Win%', 'RND', 'RND Won', 'RND%', 'Atk%', 'Def%'];
-
-            const mapRows = [];
-            let overallAtk = null;
-            let overallDef = null;
-
-            for (let i = 0; i < data.length; i++) {
-                if (data[i][0] === 'Atk%') overallAtk = data[i][overallValCol];
-                if (data[i][0] === 'Def%') overallDef = data[i][overallValCol];
-            }
-
-            for (let startRow = 0; startRow < data.length; startRow += 4) {
-                if (startRow + 2 >= data.length) break;
-                const nameRow = data[startRow];
-                const dataRow = data[startRow + 2];
-                if (nameRow[0] === 'Atk%' || nameRow[0] === 'Def%') continue;
-
-                if (nameRow[0]) {
-                    const d = dataRow.slice(0, leftCols);
-                    const rebuilt = [nameRow[0]];
-                    for (let i = 0; i < d.length; i++) {
-                        const hdr = mapHeaders[i + 1];
-                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
-                    }
-                    mapRows.push(rebuilt);
-                }
-
-                if (nameRow[rightStart]) {
-                    const d = dataRow.slice(rightStart, rightEnd);
-                    const rebuilt = [nameRow[rightStart]];
-                    for (let i = 0; i < d.length; i++) {
-                        const hdr = mapHeaders[i + 1];
-                        rebuilt.push(hdr && hdr.includes('%') ? fmtPct(d[i]) : fmtNum(d[i]));
-                    }
-                    mapRows.push(rebuilt);
-                }
-            }
-
-            const filteredRows = mapRows.filter(row => row.slice(1).some(cell => cell !== '-'));
-            filteredRows.sort((a, b) => String(a[0]).localeCompare(String(b[0])));
-
-            const container = document.getElementById(`toxic-team-map-table-s${season}`);
-            let html = '';
-            if (overallAtk != null || overallDef != null) {
-                html += '<div class="team-overall-bar">';
-                html += '<div class="overall-stat"><span class="overall-label">Overall Atk%</span><span class="overall-value">' + fmtPct(overallAtk) + '</span></div>';
-                html += '<div class="overall-stat"><span class="overall-label">Overall Def%</span><span class="overall-value">' + fmtPct(overallDef) + '</span></div>';
-                html += '</div>';
-            }
-            html += renderTable(mapHeaders, filteredRows, `toxicTeamMap-s${season}`);
-            container.innerHTML = html;
-            highlightTable(`toxicTeamMap-s${season}`, 'team');
-        }
-
-        switchSeason(2);
+        // ═══ Shared table utils ══════════════════════════════════════════
+        function renderTable(headers,rows,tableId){let h=`<table class="stats-table" id="table-${tableId}"><thead><tr>`;headers.forEach((hd,i)=>{h+=`<th class="sortable" onclick="sortTable('${tableId}',${i})">${hd} <span class="sort-arrow"></span></th>`});h+='</tr></thead><tbody>';rows.forEach(r=>{h+='<tr>';r.forEach(c=>h+=`<td>${c??''}</td>`);h+='</tr>'});h+='</tbody></table>';sortState[tableId]={headers,rows:[...rows],originalRows:[...rows],currentCol:-1,clicks:0,highlightMode:null};return h}
+        function mergeTeamIntoPlayer(headers,rows){const ti=headers.findIndex(h=>h&&h.trim().toLowerCase()==='team');const pi=headers.findIndex(h=>h&&h.trim().toLowerCase()==='player');if(ti===-1||pi===-1)return{headers,rows};const nr=rows.map(r=>{const n=[...r];n[pi]=`${n[pi]||''}<span class="player-team-tag">${n[ti]||''}</span>`;return n});return{headers:headers.filter((_,i)=>i!==ti),rows:nr.map(r=>r.filter((_,i)=>i!==ti))}}
+        function sortTable(tableId,colIndex){const state=sortState[tableId];if(!state)return;if(state.currentCol===colIndex)state.clicks++;else{state.currentCol=colIndex;state.clicks=1}let sorted;if(state.clicks%3===0){sorted=[...state.originalRows];state.currentCol=-1;state.clicks=0}else{const asc=state.clicks%3===2;sorted=[...state.rows].sort((a,b)=>{let va=a[colIndex],vb=b[colIndex];if(typeof va==='string'&&va.endsWith('%'))va=parseFloat(va);if(typeof vb==='string'&&vb.endsWith('%'))vb=parseFloat(vb);const na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return asc?na-nb:nb-na;return asc?String(va||'').toLowerCase().localeCompare(String(vb||'').toLowerCase()):String(vb||'').toLowerCase().localeCompare(String(va||'').toLowerCase())})}const table=document.getElementById(`table-${tableId}`);table.querySelector('tbody').innerHTML=sorted.map(r=>'<tr>'+r.map(c=>`<td>${c??''}</td>`).join('')+'</tr>').join('');const ths=table.querySelectorAll('thead tr:last-child th');ths.forEach((th,i)=>{const a=th.querySelector('.sort-arrow');if(i===colIndex&&state.currentCol!==-1)a.textContent=state.clicks%3===1?' \u25bc':' \u25b2';else a.textContent=''});if(state.highlightMode)highlightTable(tableId,state.highlightMode)}
+        function sortByRating(tid,headers){const idx=headers.findIndex(h=>['R1.0','R','Rating','rRating'].includes((h||'').trim()));if(idx!==-1)sortTable(tid,idx)}
+        const lowerIsBetter=['d','dpr','fdpr','fd','ban'];
+        function highlightTable(tableId,mode){const table=document.getElementById(`table-${tableId}`);if(!table)return;const state=sortState[tableId];if(!state)return;state.highlightMode=mode;const headers=state.headers;const trs=table.querySelector('tbody').querySelectorAll('tr');if(trs.length<2)return;const skip=new Set();headers.forEach((h,i)=>{const l=(h||'').trim().toLowerCase();if(['#','player','team','map','mp'].includes(l))skip.add(i)});for(let col=0;col<headers.length;col++){if(skip.has(col))continue;const inv=lowerIsBetter.includes((headers[col]||'').trim().toLowerCase());let bv=null,wv=null,bi=-1,wi=-1;trs.forEach((tr,ri)=>{const td=tr.children[col];if(!td)return;let raw=td.textContent.trim();if(raw===''||raw==='-')return;if(raw.endsWith('%'))raw=raw.slice(0,-1);const n=parseFloat(raw);if(isNaN(n))return;if(bv===null){bv=n;wv=n;bi=ri;wi=ri}else{if(inv){if(n<bv){bv=n;bi=ri}if(n>wv){wv=n;wi=ri}}else{if(n>bv){bv=n;bi=ri}if(n<wv){wv=n;wi=ri}}}});if(bi!==-1&&bv!==wv){const td=trs[bi].children[col];if(td)td.classList.add('stat-best')}if(mode==='team'&&wi!==-1&&bv!==wv){const td=trs[wi].children[col];if(td)td.classList.add('stat-worst')}}}
+        function parseCSV(t){return t.split('\n').map(l=>{const c=[];let cur='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"')q=!q;else if(ch===','&&!q){c.push(cur.trim());cur=''}else cur+=ch}c.push(cur.trim());return c}).filter(r=>r.some(c=>c!==''))}
+        function formatCell(v,h){if(v==null||v==='')return'-';if(typeof v==='number'){if(['KAST','HS%','CL%'].includes(h))return(v*100).toFixed(0)+'%';if(h==='ACS')return Math.round(v);if(h==='ADR')return v.toFixed(1);if(Number.isInteger(v))return v;return v.toFixed(2)}return v}
+        function fmtPct(v){if(v==null||v==='')return'-';if(typeof v==='number')return(v*100).toFixed(0)+'%';return v}
+        function fmtNum(v){if(v==null||v==='')return'-';return v}
+
+        init();
     </script>
     </div>
 </body>

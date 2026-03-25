@@ -7,44 +7,18 @@
     <link rel="icon" href="../icons/PCMT Logo.png">
     <title>PCMT - Standings</title>
     <style>
-        .bracket-date {
-            font-size: 0.7em;
-            color: #888;
-            font-weight: 400;
-            margin-left: 6px;
-            vertical-align: middle;
-        }
-        .bracket-qual-tag {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .bracket-qual-tag .bracket-team-logo {
-            width: 20px;
-            height: 20px;
-            object-fit: contain;
-        }
-        .bracket-gf-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 30px;
-            padding-top: 24px;
-            border-top: 1px solid #444;
-        }
-        .bracket-gf-section .bracket-match {
-            width: 240px;
-        }
+        .bracket-date{font-size:0.7em;color:#888;font-weight:400;margin-left:6px;vertical-align:middle}
+        .bracket-qual-tag{display:flex;align-items:center;gap:8px}
+        .bracket-qual-tag .bracket-team-logo{width:20px;height:20px;object-fit:contain}
+        .bracket-gf-section{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:30px;padding-top:24px;border-top:1px solid #444}
+        .bracket-gf-section .bracket-match{width:240px}
     </style>
 </head>
 <body>
     <div id="header-bar">
         <div class="header-inner">
         <div class="header-content" id="link-title">
-            <a href="../">
-                <img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo">
-            </a>
+            <a href="../"><img src="../icons/PCMT Logo.png" alt="PCMT Logo" id="pcmt-logo"></a>
             <p>Plat Chat Members Tournament</p>
         </div>
         <nav class="header-content">
@@ -59,299 +33,125 @@
     </div>
 
     <div class="page-container">
-    <div class="page-title-bar">
-        <h1 class="page-title">Standings</h1>
-    </div>
+    <div class="page-title-bar"><h1 class="page-title">Standings</h1></div>
 
-    <div class="season-selector-bar">
-        <button class="season-sel-btn" onclick="switchSeason(1)">Season 1 <span class="under-review-tag">(Under Review)</span></button>
-        <button class="season-sel-btn" onclick="switchSeason(2)">Season 2</button>
-    </div>
+    <div class="season-selector-bar" id="season-selector"></div>
+    <div class="stats-sub-tabs" id="region-selector" style="display:none;"></div>
+    <div class="stats-sub-tabs" id="stage-tabs" style="display:none;"></div>
 
-    <div class="stats-sub-tabs" id="stage-tabs" style="display:none;">
-        <button class="stats-sub-btn active" onclick="switchStage('groups')">Group Stage</button>
-        <button class="stats-sub-btn" onclick="switchStage('lcq')">LCQ</button>
-        <button class="stats-sub-btn" onclick="switchStage('playoffs')">Playoffs</button>
-    </div>
-
-    <div class="standings-content" id="standings-area">
-        <div class="stats-loading">Loading standings...</div>
-    </div>
+    <div class="standings-content" id="standings-area"><div class="stats-loading">Loading standings...</div></div>
 
     <script>
-        let currentSeason = 2;
-        let currentStage = 'groups';
+        let events=[], currentEvent=null, currentSeason=2, currentStage='groups', eventConfig={};
+        const seasons={}, cacheMap={};
 
-        // ── Bracket configs ────────────────────────────────────────────────
-        const bracketConfigs = {
-            lcq: {
-                stageFilter: 'lcq',
-                openingLabel: 'Opening',
-                seeds: { opening1: ['JDG', 'MIBR'], opening2: ['ZIRC', 'DRG'] },
-                hasGrandFinal: false
-            },
-            playoffs: {
-                stageFilter: 'playoff',
-                openingLabel: 'Quarterfinal',
-                seeds: { opening1: ['EMEA', 'JDG'], opening2: ['WING', 'DRG'] },
-                hasGrandFinal: true
-            }
-        };
+        function getEvent(id){return events.find(e=>e.id===id)}
+        function dataPath(){const ev=getEvent(currentEvent);return ev?`../data/events/${ev.path}/`:'../data/events/s2/na/';}
+        function cacheGet(k){try{return sessionStorage.getItem('pcmt-stand-'+k)}catch(e){return null}}
+        function cacheSet(k,v){try{sessionStorage.setItem('pcmt-stand-'+k,v)}catch(e){}}
 
-        // ── Cache ──────────────────────────────────────────────────────────
-        function cacheGet(key) { try { return sessionStorage.getItem('pcmt-rank-' + key); } catch(e) { return null; } }
-        function cacheSet(key, val) { try { sessionStorage.setItem('pcmt-rank-' + key, val); } catch(e) {} }
+        async function init(){
+            try{events=await(await fetch('../data/events/events.json')).json()}catch(e){events=[]}
+            events.forEach(e=>{if(!seasons[e.season])seasons[e.season]=[];seasons[e.season].push(e)});
+            const fromUrl=new URLSearchParams(window.location.search).get('event');
+            if(fromUrl&&events.some(e=>e.id===fromUrl)){currentEvent=fromUrl;currentSeason=getEvent(fromUrl).season}
+            else{const o=events.find(e=>e.status==='ongoing');if(o){currentEvent=o.id;currentSeason=o.season}else if(events.length){currentEvent=events[0].id;currentSeason=events[0].season}}
+            renderSelectors();await loadEventConfig();renderStageTabs();loadStandings();
+        }
 
-        // ── Navigation ─────────────────────────────────────────────────────
-        function switchSeason(season) {
-            currentSeason = season;
-            document.querySelectorAll('.season-sel-btn').forEach((btn, i) => btn.classList.toggle('active', i === season - 1));
-            document.getElementById('stage-tabs').style.display = (season === 2) ? '' : 'none';
+        function renderSelectors(){
+            const sNums=Object.keys(seasons).map(Number).sort((a,b)=>a-b);
+            document.getElementById('season-selector').innerHTML=sNums.map(s=>`<button class="season-sel-btn ${s===currentSeason?'active':''}" onclick="switchSeason(${s})">Season ${s}</button>`).join('');
+            const bar=document.getElementById('region-selector'),sEvents=seasons[currentSeason]||[];
+            if(sEvents.length>1){bar.style.display='';bar.innerHTML=sEvents.map(e=>`<button class="stats-sub-btn ${e.id===currentEvent?'active':''}" onclick="switchRegion('${e.id}')">${e.shortName}</button>`).join('')}
+            else{bar.style.display='none';if(sEvents.length===1)currentEvent=sEvents[0].id}
+        }
+
+        async function switchSeason(s){currentSeason=s;const sE=seasons[s]||[];currentEvent=sE[0]?sE[0].id:currentEvent;currentStage='groups';setUrl();renderSelectors();await loadEventConfig();renderStageTabs();loadStandings()}
+        async function switchRegion(id){currentEvent=id;currentSeason=getEvent(id).season;currentStage='groups';setUrl();renderSelectors();await loadEventConfig();renderStageTabs();loadStandings()}
+        function setUrl(){const u=new URL(window.location);u.searchParams.set('event',currentEvent);history.replaceState(null,'',u)}
+
+        async function loadEventConfig(){try{eventConfig=await(await fetch(dataPath()+'event.json')).json()}catch(e){eventConfig={}}}
+
+        function renderStageTabs(){
+            const tabs=document.getElementById('stage-tabs'),stages=eventConfig.stages||[];
+            if(!stages.length){tabs.style.display='none';return}
+            tabs.style.display='';
+            const map={'Group Stage':'groups','LCQ':'lcq','Playoffs':'playoffs'};
+            tabs.innerHTML=stages.map((s,i)=>{const k=map[s]||s.toLowerCase();return`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchStage('${k}')">${s}</button>`}).join('');
+        }
+
+        function switchStage(s){
+            currentStage=s;
+            const stages=(eventConfig.stages||[]).map(s=>({'Group Stage':'groups','LCQ':'lcq','Playoffs':'playoffs'}[s]||s.toLowerCase()));
+            document.querySelectorAll('#stage-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',stages[i]===s));
             loadStandings();
         }
 
-        function switchStage(stage) {
-            currentStage = stage;
-            const stages = ['groups', 'lcq', 'playoffs'];
-            document.querySelectorAll('#stage-tabs .stats-sub-btn').forEach((btn, i) => btn.classList.toggle('active', stages[i] === stage));
-            loadStandings();
+        function loadStandings(){
+            const area=document.getElementById('standings-area');
+            const brackets=eventConfig.brackets||{};
+            if(brackets[currentStage]){area.innerHTML='<div class="stats-loading">Loading bracket...</div>';loadBracket(brackets[currentStage]);return}
+            if(currentStage==='groups'&&eventConfig.standings){const ck=`${currentEvent}-groups`;if(cacheGet(ck)){area.innerHTML=cacheGet(ck);return}area.innerHTML='<div class="stats-loading">Loading standings...</div>';loadGroups();return}
+            area.innerHTML='<div class="standings-empty"><p>Standings not available for this stage.</p></div>';
         }
 
-        function loadStandings() {
-            const area = document.getElementById('standings-area');
-            if (currentSeason === 1) { area.innerHTML = '<div class="standings-empty"><p>Season 1 standings are currently under review.</p></div>'; return; }
-            if (bracketConfigs[currentStage]) { area.innerHTML = '<div class="stats-loading">Loading bracket...</div>'; loadBracket(bracketConfigs[currentStage]); return; }
-            if (cacheGet('s2-groups')) { area.innerHTML = cacheGet('s2-groups'); return; }
-            area.innerHTML = '<div class="stats-loading">Loading standings...</div>';
-            loadS2Groups();
+        function parseCSV(t){return t.split('\n').map(l=>{const c=[];let cur='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"')q=!q;else if(ch===','&&!q){c.push(cur.trim());cur=''}else cur+=ch}c.push(cur.trim());return c})}
+        function formatDate(d){if(!d)return'';const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const p=d.split('-');return p.length<3?d:`${m[parseInt(p[1],10)-1]||''} ${parseInt(p[2],10)}`}
+        function teamUrl(abbr){return`../teams/team/?team=${abbr}&event=${currentEvent}`}
+
+        async function loadGroups(){
+            const area=document.getElementById('standings-area'),cfg=eventConfig.standings;
+            if(!cfg||!cfg.sheetId){area.innerHTML='<div class="standings-empty"><p>Standings not configured.</p></div>';return}
+            try{
+                const res=await fetch(`https://docs.google.com/spreadsheets/d/${cfg.sheetId}/export?format=csv&gid=${cfg.gid}`);
+                if(!res.ok)throw new Error();const lines=parseCSV(await res.text());
+                const teamRows=[];let lastIdx=0;
+                for(let i=0;i<lines.length;i++){const rc=(lines[i][1]||'').trim();if(/^\d+\)$/.test(rc)){const r=lines[i];teamRows.push({rank:parseInt(rc),abbr:(r[3]||'').trim(),name:(r[5]||'').trim(),matchW:r[9]||'',matchL:r[10]||'',mapW:r[11]||'',mapL:r[12]||'',mapDiff:r[13]||'',rndW:r[14]||'',rndL:r[15]||'',rndDiff:r[16]||''});lastIdx=i}}
+                let h2hRow=-1;for(let i=lines.length-1;i>=0;i--){if((lines[i][4]||'').trim()&&lines[i].slice(4,16).map(c=>(c||'').trim()).filter(Boolean).length>=10){h2hRow=i;break}}
+                const h2hTeams=h2hRow>=0?lines[h2hRow].slice(4,16).map(c=>(c||'').trim()):[];const h2hData=[];
+                if(h2hRow>=0){for(let i=lastIdx+1;i<h2hRow;i++){const tc=(lines[i][3]||'').trim();if(tc){const sc=lines[i].slice(4,16).map(c=>(c||'').trim());if(sc.some(s=>/^\d+-\d+$/.test(s)))h2hData.push({team:tc,scores:sc})}}}
+                const dc=v=>{const n=parseInt(v);return isNaN(n)?'':n>0?' class="diff-pos"':n<0?' class="diff-neg"':''};const fd=v=>{const n=parseInt(v);return isNaN(n)?v:n>0?`+${n}`:`${n}`};
+                let html='<div class="standings-section"><div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table"><thead><tr class="category-row"><th colspan="3"></th><th colspan="2" class="category-header">Matches</th><th colspan="3" class="category-header">Maps</th><th colspan="3" class="category-header">Rounds</th></tr><tr><th>#</th><th>ABBR.</th><th>TEAM</th><th>W</th><th>L</th><th>W</th><th>L</th><th>&Delta;</th><th>W</th><th>L</th><th>&Delta;</th></tr></thead><tbody>';
+                teamRows.forEach(t=>{const cls=t.rank<=2?'rank-playoffs':t.rank<=6?'rank-lcq':'rank-eliminated';const lnk=teamUrl(t.abbr);html+=`<tr class="${cls}"><td>${t.rank}</td><td class="team-abbr-cell"><a href="${lnk}" class="team-link">${t.abbr}</a></td><td><a href="${lnk}" class="team-link">${t.name}</a></td><td>${t.matchW}</td><td>${t.matchL}</td><td>${t.mapW}</td><td>${t.mapL}</td><td${dc(t.mapDiff)}>${fd(t.mapDiff)}</td><td>${t.rndW}</td><td>${t.rndL}</td><td${dc(t.rndDiff)}>${fd(t.rndDiff)}</td></tr>`});
+                html+='</tbody></table></div></div>';
+                if(h2hData.length&&h2hTeams.length){html+='<div class="standings-section"><h2 class="standings-subtitle">Head-to-Head</h2><div class="h2h-scroll"><table class="stats-table h2h-table"><thead><tr><th></th>';h2hTeams.forEach(t=>html+=`<th class="h2h-header">${t}</th>`);html+='</tr></thead><tbody>';h2hData.forEach(row=>{html+=`<tr><th class="h2h-row-label"><a href="${teamUrl(row.team)}" class="team-link">${row.team}</a></th>`;row.scores.forEach((s,i)=>{if(!s||row.team===h2hTeams[i])html+='<td class="h2h-self"></td>';else{const p=s.split('-').map(Number);let c='h2h-cell';if(p.length===2){if(p[0]>p[1])c+=' h2h-win';else if(p[0]<p[1])c+=' h2h-loss'}html+=`<td class="${c}">${s}</td>`}});html+='</tr>'});html+='</tbody></table></div></div>'}
+                cacheSet(`${currentEvent}-groups`,html);area.innerHTML=html;
+            }catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load standings.</p></div>'}
         }
 
-        // ── Helpers ────────────────────────────────────────────────────────
-        function parseCSV(csvText) {
-            return csvText.split('\n').map(line => {
-                const cells = []; let current = ''; let inQuotes = false;
-                for (let i = 0; i < line.length; i++) {
-                    const c = line[i];
-                    if (c === '"') inQuotes = !inQuotes;
-                    else if (c === ',' && !inQuotes) { cells.push(current.trim()); current = ''; }
-                    else current += c;
-                }
-                cells.push(current.trim()); return cells;
-            });
+        async function loadBracket(config){
+            const area=document.getElementById('standings-area');let matches=[],teams={};
+            try{matches=await(await fetch(dataPath()+'matches/matches.json')).json()}catch(e){}
+            try{teams=await(await fetch(dataPath()+'teams.json')).json()}catch(e){}
+            function logoFor(a){if(!a||!teams[a])return'';return`<img src="../${teams[a].logo.replace(/^(\.\.\/)+/,'')}" alt="${a}" class="bracket-team-logo" onerror="this.style.display='none'">`}
+            const sm=matches.filter(m=>m.stage&&m.stage.toLowerCase().includes(config.stageFilter)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+            const used=new Set();
+            function claim(t1,t2){if(!t1||!t2)return null;const m=sm.find(m=>!used.has(m.id)&&((m.team1===t1&&m.team2===t2)||(m.team1===t2&&m.team2===t1)))||null;if(m)used.add(m.id);return m}
+            function win(m){return m&&m.completed?(m.score1>m.score2?m.team1:m.team2):null}
+            function lose(m){return m&&m.completed?(m.score1>m.score2?m.team2:m.team1):null}
+            const o1=claim(config.seeds.opening1[0],config.seeds.opening1[1]),o2=claim(config.seeds.opening2[0],config.seeds.opening2[1]);
+            const w1=win(o1),w2=win(o2),l1=lose(o1),l2=lose(o2);
+            const wM=claim(w1,w2),eM=claim(l1,l2),wL=lose(wM),eW=win(eM),dM=claim(wL,eW);
+            function slot(label,m,fb1,fb2){return{label,match:m,team1:m?m.team1:(fb1||'TBD'),team2:m?m.team2:(fb2||'TBD'),score1:m&&m.completed?m.score1:null,score2:m&&m.completed?m.score2:null,date:m?m.date:null}}
+            const bracket={opening1:slot(config.openingLabel,o1,config.seeds.opening1[0],config.seeds.opening1[1]),opening2:slot(config.openingLabel,o2,config.seeds.opening2[0],config.seeds.opening2[1]),winners:slot("Winner's",wM,w1||'Winner M1',w2||'Winner M2'),elim:slot('Elimination',eM,l1||'Loser M1',l2||'Loser M2'),decider:slot('Decider',dM,wL||'Loser M3',eW||'Winner M4')};
+            let gfSlot=null,champion=null;
+            if(config.hasGrandFinal){const ubF=win(wM),lbF=win(dM),gfM=claim(ubF,lbF);champion=win(gfM);gfSlot=slot('Grand Final',gfM,ubF||'UB Winner',lbF||'LB Winner')}
+            area.innerHTML=renderBracket(bracket,logoFor,config,win(wM),win(dM),gfSlot,champion);
         }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const p = dateStr.split('-');
-            return p.length < 3 ? dateStr : `${months[parseInt(p[1], 10) - 1] || ''} ${parseInt(p[2], 10)}`;
+        function renderBracket(bracket,logoFor,config,uq,lq,gfSlot,champion){
+            function mb(s){const s1=s.score1!==null?s.score1:'-',s2=s.score2!==null?s.score2:'-';const w1=s.score1!==null&&s.score2!==null&&s.score1>s.score2,w2=s.score1!==null&&s.score2!==null&&s.score2>s.score1;const up=s.match&&!s.match.completed;const href=s.match?`../matches/match.html?id=${s.match.id}&event=${currentEvent}`:null;const tag=href?'a':'div',ha=href?` href="${href}"`:'';const cls='bracket-box'+(up?' bracket-upcoming':'')+(href?' bracket-clickable':'');const dt=s.date?`<span class="bracket-date">${formatDate(s.date)}</span>`:'';return`<div class="bracket-match"><div class="bracket-label">${s.label}${dt}</div><${tag}${ha} class="${cls}"><div class="bracket-team ${w1?'bracket-winner':''}"><div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div><span class="bracket-team-score">${s1}</span></div><div class="bracket-team ${w2?'bracket-winner':''}"><div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div><span class="bracket-team-score">${s2}</span></div></${tag}></div>`}
+            function qb(t){if(!t)return'<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>';return`<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag">${logoFor(t)} ${t}</div></div>`}
+            function cb(t){if(!t)return'';return`<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag" style="background:linear-gradient(135deg,#d4a843,#f0c040);color:#111;">${logoFor(t)} ${t}</div></div>`}
+            function conn(type){if(type==='merge')return'<div class="bracket-connector bracket-conn-upper"><svg viewBox="0 0 60 200" preserveAspectRatio="none"><line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/><line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/><line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/><line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/></svg></div>';return'<div class="bracket-connector bracket-conn-single"><svg viewBox="0 0 60 20" preserveAspectRatio="none"><line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/></svg></div>'}
+            const ue=config.hasGrandFinal?'':`${conn('single')}<div class="bracket-col bracket-col-qual">${qb(uq)}</div>`;
+            const le=config.hasGrandFinal?'':`${conn('single')}<div class="bracket-col bracket-col-qual">${qb(lq)}</div>`;
+            let gf='';if(config.hasGrandFinal&&gfSlot)gf=`<div class="bracket-gf-section">${mb(gfSlot)}${champion?cb(champion):''}</div>`;
+            return`<div class="bracket-container"><div class="bracket-upper"><div class="bracket-col bracket-col-opening">${mb(bracket.opening1)}${mb(bracket.opening2)}</div>${conn('merge')}<div class="bracket-col bracket-col-mid">${mb(bracket.winners)}</div>${ue}</div><div class="bracket-lower"><div class="bracket-col bracket-col-opening">${mb(bracket.elim)}</div>${conn('single')}<div class="bracket-col bracket-col-mid">${mb(bracket.decider)}</div>${le}</div>${gf}</div>`;
         }
 
-        // ── Group Stage ────────────────────────────────────────────────────
-        async function loadS2Groups() {
-            const area = document.getElementById('standings-area');
-            try {
-                const res = await fetch('https://docs.google.com/spreadsheets/d/16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8/export?format=csv&gid=1622887646');
-                if (!res.ok) throw new Error();
-                const lines = parseCSV(await res.text());
-
-                const teamRows = []; let lastIdx = 0;
-                for (let i = 0; i < lines.length; i++) {
-                    const rc = (lines[i][1] || '').trim();
-                    if (/^\d+\)$/.test(rc)) {
-                        const r = lines[i];
-                        teamRows.push({ rank: parseInt(rc), abbr: (r[3]||'').trim(), name: (r[5]||'').trim(),
-                            matchW: r[9]||'', matchL: r[10]||'', mapW: r[11]||'', mapL: r[12]||'', mapDiff: r[13]||'',
-                            rndW: r[14]||'', rndL: r[15]||'', rndDiff: r[16]||'' });
-                        lastIdx = i;
-                    }
-                }
-
-                let h2hRow = -1;
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    if ((lines[i][4]||'').trim() && lines[i].slice(4, 16).map(c => (c||'').trim()).filter(Boolean).length >= 10) { h2hRow = i; break; }
-                }
-                const h2hTeams = h2hRow >= 0 ? lines[h2hRow].slice(4, 16).map(c => (c||'').trim()) : [];
-                const h2hData = [];
-                if (h2hRow >= 0) {
-                    for (let i = lastIdx + 1; i < h2hRow; i++) {
-                        const tc = (lines[i][3]||'').trim();
-                        if (tc) { const sc = lines[i].slice(4, 16).map(c => (c||'').trim()); if (sc.some(s => /^\d+-\d+$/.test(s))) h2hData.push({ team: tc, scores: sc }); }
-                    }
-                }
-
-                const dc = v => { const n = parseInt(v); return isNaN(n) ? '' : n > 0 ? ' class="diff-pos"' : n < 0 ? ' class="diff-neg"' : ''; };
-                const fd = v => { const n = parseInt(v); return isNaN(n) ? v : n > 0 ? `+${n}` : `${n}`; };
-
-                let html = '<div class="standings-section"><div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table">';
-                html += '<thead><tr class="category-row"><th colspan="3"></th><th colspan="2" class="category-header">Matches</th><th colspan="3" class="category-header">Maps</th><th colspan="3" class="category-header">Rounds</th></tr>';
-                html += '<tr><th>#</th><th>ABBR.</th><th>TEAM</th><th>W</th><th>L</th><th>W</th><th>L</th><th>&Delta;</th><th>W</th><th>L</th><th>&Delta;</th></tr></thead><tbody>';
-                teamRows.forEach(t => {
-                    const cls = t.rank <= 2 ? 'rank-playoffs' : t.rank <= 6 ? 'rank-lcq' : 'rank-eliminated';
-                    const link = `../teams/team/?team=${t.abbr}&season=${currentSeason}`;
-                    html += `<tr class="${cls}"><td>${t.rank}</td><td class="team-abbr-cell"><a href="${link}" class="team-link">${t.abbr}</a></td><td><a href="${link}" class="team-link">${t.name}</a></td>`;
-                    html += `<td>${t.matchW}</td><td>${t.matchL}</td><td>${t.mapW}</td><td>${t.mapL}</td><td${dc(t.mapDiff)}>${fd(t.mapDiff)}</td>`;
-                    html += `<td>${t.rndW}</td><td>${t.rndL}</td><td${dc(t.rndDiff)}>${fd(t.rndDiff)}</td></tr>`;
-                });
-                html += '</tbody></table></div></div>';
-
-                if (h2hData.length && h2hTeams.length) {
-                    html += '<div class="standings-section"><h2 class="standings-subtitle">Head-to-Head</h2><div class="h2h-scroll"><table class="stats-table h2h-table"><thead><tr><th></th>';
-                    h2hTeams.forEach(t => html += `<th class="h2h-header">${t}</th>`);
-                    html += '</tr></thead><tbody>';
-                    h2hData.forEach(row => {
-                        html += `<tr><th class="h2h-row-label"><a href="../teams/team/?team=${row.team}&season=${currentSeason}" class="team-link">${row.team}</a></th>`;
-                        row.scores.forEach((s, i) => {
-                            if (!s || row.team === h2hTeams[i]) { html += '<td class="h2h-self"></td>'; return; }
-                            const p = s.split('-').map(Number); let c = 'h2h-cell';
-                            if (p.length === 2) { if (p[0] > p[1]) c += ' h2h-win'; else if (p[0] < p[1]) c += ' h2h-loss'; }
-                            html += `<td class="${c}">${s}</td>`;
-                        });
-                        html += '</tr>';
-                    });
-                    html += '</tbody></table></div></div>';
-                }
-                cacheSet('s2-groups', html);
-                area.innerHTML = html;
-            } catch (err) { area.innerHTML = '<div class="stats-table-container"><p class="stats-error">Failed to load standings.</p></div>'; }
-        }
-
-        // ── Shared Bracket Loader ──────────────────────────────────────────
-        async function loadBracket(config) {
-            const area = document.getElementById('standings-area');
-            let matches = [], teams = {};
-            try { const r = await fetch(`../data/s${currentSeason}/matches/matches.json`); if (r.ok) matches = await r.json(); } catch(e) {}
-            try { const r = await fetch(`../data/s${currentSeason}/teams.json`); if (r.ok) teams = await r.json(); } catch(e) {}
-
-            function logoFor(a) {
-                if (!a || !teams[a]) return '';
-                return `<img src="../${teams[a].logo.replace(/^(\.\.\/)+/, '')}" alt="${a}" class="bracket-team-logo" onerror="this.style.display='none'">`;
-            }
-
-            const stageMatches = matches.filter(m => m.stage && m.stage.toLowerCase().includes(config.stageFilter)).sort((a, b) => (a.date||'').localeCompare(b.date||''));
-            const usedIds = new Set();
-            function claim(t1, t2) {
-                if (!t1 || !t2) return null;
-                const m = stageMatches.find(m => !usedIds.has(m.id) && ((m.team1===t1&&m.team2===t2)||(m.team1===t2&&m.team2===t1))) || null;
-                if (m) usedIds.add(m.id); return m;
-            }
-            function win(m) { return m && m.completed ? (m.score1 > m.score2 ? m.team1 : m.team2) : null; }
-            function lose(m) { return m && m.completed ? (m.score1 > m.score2 ? m.team2 : m.team1) : null; }
-
-            const o1 = claim(config.seeds.opening1[0], config.seeds.opening1[1]);
-            const o2 = claim(config.seeds.opening2[0], config.seeds.opening2[1]);
-            const w1 = win(o1), w2 = win(o2), l1 = lose(o1), l2 = lose(o2);
-            const wM = claim(w1, w2), eM = claim(l1, l2);
-            const wL = lose(wM), eW = win(eM);
-            const dM = claim(wL, eW);
-
-            function slot(label, m, fb1, fb2) {
-                return { label, match: m, team1: m ? m.team1 : (fb1||'TBD'), team2: m ? m.team2 : (fb2||'TBD'),
-                    score1: m && m.completed ? m.score1 : null, score2: m && m.completed ? m.score2 : null, date: m ? m.date : null };
-            }
-
-            const bracket = {
-                opening1: slot(config.openingLabel, o1, config.seeds.opening1[0], config.seeds.opening1[1]),
-                opening2: slot(config.openingLabel, o2, config.seeds.opening2[0], config.seeds.opening2[1]),
-                winners:  slot("Winner's", wM, w1||'Winner M1', w2||'Winner M2'),
-                elim:     slot('Elimination', eM, l1||'Loser M1', l2||'Loser M2'),
-                decider:  slot('Decider', dM, wL||'Loser M3', eW||'Winner M4')
-            };
-
-            let gfSlot = null, champion = null;
-            if (config.hasGrandFinal) {
-                const ubF = win(wM), lbF = win(dM);
-                const gfM = claim(ubF, lbF);
-                champion = win(gfM);
-                gfSlot = slot('Grand Final', gfM, ubF||'UB Winner', lbF||'LB Winner');
-            }
-
-            area.innerHTML = renderBracket(bracket, logoFor, config, win(wM), win(dM), gfSlot, champion);
-        }
-
-        // ── Shared Bracket Renderer ────────────────────────────────────────
-        function renderBracket(bracket, logoFor, config, upperQual, lowerQual, gfSlot, champion) {
-            function matchBox(s) {
-                const s1 = s.score1 !== null ? s.score1 : '-';
-                const s2 = s.score2 !== null ? s.score2 : '-';
-                const w1 = s.score1 !== null && s.score2 !== null && s.score1 > s.score2;
-                const w2 = s.score1 !== null && s.score2 !== null && s.score2 > s.score1;
-                const upcoming = s.match && !s.match.completed;
-                const href = s.match ? `../matches/match.html?id=${s.match.id}&season=${currentSeason}` : null;
-                const tag = href ? 'a' : 'div';
-                const hrefAttr = href ? ` href="${href}"` : '';
-                const cls = 'bracket-box' + (upcoming ? ' bracket-upcoming' : '') + (href ? ' bracket-clickable' : '');
-                const dateTag = s.date ? `<span class="bracket-date">${formatDate(s.date)}</span>` : '';
-                return `<div class="bracket-match">
-                    <div class="bracket-label">${s.label}${dateTag}</div>
-                    <${tag}${hrefAttr} class="${cls}">
-                        <div class="bracket-team ${w1 ? 'bracket-winner' : ''}">
-                            <div class="bracket-team-info">${logoFor(s.team1)}<span class="bracket-team-name">${s.team1}</span></div>
-                            <span class="bracket-team-score">${s1}</span>
-                        </div>
-                        <div class="bracket-team ${w2 ? 'bracket-winner' : ''}">
-                            <div class="bracket-team-info">${logoFor(s.team2)}<span class="bracket-team-name">${s.team2}</span></div>
-                            <span class="bracket-team-score">${s2}</span>
-                        </div>
-                    </${tag}>
-                </div>`;
-            }
-
-            function qualBox(team) {
-                if (!team) return `<div class="bracket-qual"><div class="bracket-qual-tag">Qualified</div></div>`;
-                return `<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag">${logoFor(team)} ${team}</div></div>`;
-            }
-
-            function championBox(team) {
-                if (!team) return '';
-                return `<div class="bracket-qual bracket-qual-filled"><div class="bracket-qual-tag" style="background:linear-gradient(135deg, #d4a843, #f0c040); color:#111;">${logoFor(team)} ${team}</div></div>`;
-            }
-
-            function conn(type) {
-                if (type === 'merge') return `<div class="bracket-connector bracket-conn-upper"><svg viewBox="0 0 60 200" preserveAspectRatio="none">
-                    <line x1="0" y1="50" x2="30" y2="50" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    <line x1="30" y1="50" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    <line x1="0" y1="150" x2="30" y2="150" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                    <line x1="30" y1="100" x2="60" y2="100" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                </svg></div>`;
-                return `<div class="bracket-connector bracket-conn-single"><svg viewBox="0 0 60 20" preserveAspectRatio="none">
-                    <line x1="0" y1="10" x2="60" y2="10" stroke="#555" stroke-width="2" stroke-dasharray="6,4"/>
-                </svg></div>`;
-            }
-
-            // LCQ: show Qualified boxes. Playoffs: no end boxes, GF below.
-            const upperEnd = config.hasGrandFinal ? '' : `${conn('single')}<div class="bracket-col bracket-col-qual">${qualBox(upperQual)}</div>`;
-            const lowerEnd = config.hasGrandFinal ? '' : `${conn('single')}<div class="bracket-col bracket-col-qual">${qualBox(lowerQual)}</div>`;
-
-            let gfHtml = '';
-            if (config.hasGrandFinal && gfSlot) {
-                gfHtml = `<div class="bracket-gf-section">
-                    ${matchBox(gfSlot)}
-                    ${champion ? championBox(champion) : ''}
-                </div>`;
-            }
-
-            return `<div class="bracket-container">
-                <div class="bracket-upper">
-                    <div class="bracket-col bracket-col-opening">
-                        ${matchBox(bracket.opening1)}
-                        ${matchBox(bracket.opening2)}
-                    </div>
-                    ${conn('merge')}
-                    <div class="bracket-col bracket-col-mid">${matchBox(bracket.winners)}</div>
-                    ${upperEnd}
-                </div>
-                <div class="bracket-lower">
-                    <div class="bracket-col bracket-col-opening">${matchBox(bracket.elim)}</div>
-                    ${conn('single')}
-                    <div class="bracket-col bracket-col-mid">${matchBox(bracket.decider)}</div>
-                    ${lowerEnd}
-                </div>
-                ${gfHtml}
-            </div>`;
-        }
-
-        switchSeason(2);
+        init();
     </script>
     </div>
 </body>
