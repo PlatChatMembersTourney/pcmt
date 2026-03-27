@@ -18,8 +18,8 @@
         "players": ["Samstaff", "Snowfall", "Ani", "Yessi", "Pengu"]
     },
     "4K": {
-        "name": "FourK",
-        "abbr": "4K",
+        "name": "Team FourK",
+        "abbr": "T4K",
         "logo": "../../../icons/s3_teams/FourK.png",
         "players": ["night", "Kramvi", "Eva", "thehronyy", "Linus"]
     }
