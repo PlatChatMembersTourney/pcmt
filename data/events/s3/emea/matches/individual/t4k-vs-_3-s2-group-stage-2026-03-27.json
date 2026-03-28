@@ -130,7 +130,7 @@
           "PlusMinus2": -1
         },
         {
-          "Player": "Samstaff",
+          "Player": "Ride",
           "R1.0": 1.252,
           "ACS": 260,
           "K": 57,
@@ -397,7 +397,7 @@
               "PlusMinus2": 1
             },
             {
-              "Player": "Samstaff",
+              "Player": "Ride",
               "Agent": "Fade",
               "R1.0": 1.754,
               "ACS": 354,
@@ -698,7 +698,7 @@
               "PlusMinus2": 0
             },
             {
-              "Player": "Samstaff",
+              "Player": "Ride",
               "Agent": "Fade",
               "R1.0": 1.036,
               "ACS": 215,
@@ -979,7 +979,7 @@
               "PlusMinus2": 1
             },
             {
-              "Player": "Samstaff",
+              "Player": "Ride",
               "Agent": "Phoenix",
               "R1.0": 1.059,
               "ACS": 229,
