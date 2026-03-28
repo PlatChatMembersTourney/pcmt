@@ -4,7 +4,17 @@
   "shortName": "S3 EMEA",
   "season": 3,
   "region": "emea",
-  "stages": ["Group Stage", "Playoffs"],
+  "path": "s3/emea",
+  "stages": ["Group Stage"],
   "statsFormat": "json",
-  "standings": { "sheetId": "...", "gid": "..." }
+  "statsTabs": {
+    "player": ["Angus", "toxic"],
+    "team": ["toxic"]
+  },
+  "sheetStats": {
+    "Angus": {
+      "sheetId": "1HcMZipSQR5rltC8clF71cwYuY4Ce6QmToyzOuZvwjlw",
+      "gid": "821526300"
+    }
+  }
 }

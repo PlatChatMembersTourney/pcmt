@@ -98,16 +98,52 @@
             const pBar=document.getElementById('player-sub-tabs'),tBar=document.getElementById('team-sub-tabs'),sBar=document.getElementById('player-stage-tabs');
             sBar.style.display='none';jsonPlayerData=null;jsonTeamData=null;
 
-            if(fmt==='json'){
+            const hasTabs=eventConfig.statsTabs&&eventConfig.statsTabs.player;
+
+            if(fmt==='json'&&!hasTabs){
                 pBar.innerHTML='';tBar.innerHTML='';
                 loadJsonPlayerStats();loadJsonTeamStats();
             } else {
-                const pt=(eventConfig.statsTabs&&eventConfig.statsTabs.player)||['toxic'];
+                const pt=hasTabs?eventConfig.statsTabs.player:['toxic'];
                 const tt=(eventConfig.statsTabs&&eventConfig.statsTabs.team)||['toxic'];
                 pBar.innerHTML=pt.map((n,i)=>`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchPlayerTab('${n}')">${n}</button>`).join('');
                 tBar.innerHTML=tt.map((n,i)=>`<button class="stats-sub-btn ${i===0?'active':''}" onclick="switchTeamTab('${n}')">${n}</button>`).join('');
-                currentPlayerTab=pt[0];loadLegacyPlayerTab(pt[0]);loadLegacyTeamTab(tt[0]);
+                currentPlayerTab=pt[0];loadPlayerTabAny(pt[0]);loadTeamTabAny(tt[0]);
             }
+        }
+
+        function loadPlayerTabAny(name){
+            const fmt=eventConfig.statsFormat||'xlsx';
+            const sheets=eventConfig.sheetStats||{};
+            if(fmt==='json'&&name==='toxic'){loadJsonPlayerStats();document.getElementById('player-stage-tabs').style.display='none';return}
+            if(sheets[name]){loadSheetPlayerStats(name);return}
+            loadLegacyPlayerTab(name);
+        }
+
+        function loadTeamTabAny(name){
+            const fmt=eventConfig.statsFormat||'xlsx';
+            if(fmt==='json'&&name==='toxic'){loadJsonTeamStats();return}
+            loadLegacyTeamTab(name);
+        }
+
+        async function loadSheetPlayerStats(name){
+            const cfg=(eventConfig.sheetStats||{})[name];
+            if(!cfg){return}
+            const ck=`${currentEvent}-psheet-${name}`;const area=document.getElementById('player-table-area');
+            const sBar=document.getElementById('player-stage-tabs');sBar.style.display='none';
+            const tid=`sheet-p-${currentEvent}-${name}`;
+            const cached=cacheGetJSON(ck);
+            if(cached){const{headers:h,rows:r}=cached;area.innerHTML=`<div class="stats-table-container">${renderTable(h,r,tid)}</div>`;sortByRating(tid,h);highlightTable(tid,'player');return}
+            area.innerHTML='<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            try{
+                const csv=await(await fetch(`https://docs.google.com/spreadsheets/d/${cfg.sheetId}/export?format=csv&gid=${cfg.gid}`)).text();
+                const lines=parseCSV(csv);let headers=lines[0];let rows=lines.slice(1).filter(r=>r[0]||r[1]);
+                const rc=[];headers.forEach((h,i)=>{const l=h.toLowerCase().trim();if(l==='points'||l==='agents'||l==='+/-')rc.push(i)});
+                rc.sort((a,b)=>b-a).forEach(i=>{headers.splice(i,1);rows.forEach(r=>r.splice(i,1))});
+                rows=rows.filter(r=>{const f=String(r[0]||'').trim().toUpperCase();return f!=='MEDIAN'&&f!=='MEAN'});
+                const merged=mergeTeamIntoPlayer(headers,rows);cacheSetJSON(ck,{headers:merged.headers,rows:merged.rows});
+                area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player');
+            }catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load stats.</p></div>'}
         }
 
         // ═══ JSON Stats (S3+) ════════════════════════════════════════════
@@ -128,7 +164,7 @@
             const rows=jsonPlayerData[stage];
             if(!rows||!rows.length){area.innerHTML='<div class="stats-table-container"><p class="stats-error">No data for this stage.</p></div>';return}
             const headers=['Player','Team','MP','Rounds','R1.0','ACS','K','D','A','+/-','KPR','DPR','KAST','ADR','HS%','FK','FD','FKPR','FDPR','FK+/-','KMAX'];
-            const tRows=rows.map(p=>[p.Player,p.Team,p.MP,p.Rounds,p['R1.0'],p.ACS,p.K,p.D,p.A,p.PlusMinus,p.KPR,p.DPR,(p.KAST*100).toFixed(0)+'%',typeof p.ADR==='number'?p.ADR.toFixed(1):p.ADR,(p['HS%']*100).toFixed(0)+'%',p.FK,p.FD,p.FKPR,p.FDPR,p.PlusMinus2,p.KMAX]);
+            const tRows=rows.map(p=>[p.Player,p.Team,p.MP,p.Rounds,typeof p['R1.0']==='number'?p['R1.0'].toFixed(2):p['R1.0'],p.ACS,p.K,p.D,p.A,p.PlusMinus,typeof p.KPR==='number'?p.KPR.toFixed(2):p.KPR,typeof p.DPR==='number'?p.DPR.toFixed(2):p.DPR,(p.KAST*100).toFixed(0)+'%',typeof p.ADR==='number'?p.ADR.toFixed(1):p.ADR,(p['HS%']*100).toFixed(0)+'%',p.FK,p.FD,typeof p.FKPR==='number'?p.FKPR.toFixed(2):p.FKPR,typeof p.FDPR==='number'?p.FDPR.toFixed(2):p.FDPR,p.PlusMinus2,p.KMAX]);
             const tid=`jpla-${currentEvent}-${stage}`;const merged=mergeTeamIntoPlayer(headers,tRows);
             area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player');
         }
@@ -164,12 +200,12 @@
         function switchPlayerTab(name){
             currentPlayerTab=name;const pt=(eventConfig.statsTabs&&eventConfig.statsTabs.player)||['toxic'];
             document.querySelectorAll('#player-sub-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',pt[i]===name));
-            loadLegacyPlayerTab(name);
+            loadPlayerTabAny(name);
         }
         function switchTeamTab(name){
             const tt=(eventConfig.statsTabs&&eventConfig.statsTabs.team)||['toxic'];
             document.querySelectorAll('#team-sub-tabs .stats-sub-btn').forEach((b,i)=>b.classList.toggle('active',tt[i]===name));
-            loadLegacyTeamTab(name);
+            loadTeamTabAny(name);
         }
 
         function loadLegacyPlayerTab(name){
