@@ -6,10 +6,20 @@
   "region": "na",
   "path": "s2/na",
   "stages": ["Group Stage", "LCQ", "Playoffs"],
-  "statsFormat": "xlsx",
+  "statsFormat": "json",
   "statsTabs": {
     "player": ["Angus", "pi", "toxic"],
-    "team": ["pi", "toxic"]
+    "team": ["toxic"]
+  },
+  "sheetStats": {
+    "Angus": {
+      "sheetId": "1NZNABsU_XUlmcSgjhv94KVvbRtpYji6yPjs0g2Ro3Ak",
+      "gid": "821526300"
+    },
+    "pi": {
+      "sheetId": "1QkBIqtPC5jP1b1rKkn39U7z5DJJ-6SYdbWcgA6Wz7AQ",
+      "gid": "1023990137"
+    }
   },
   "standings": {
     "sheetId": "16ylGbnoG4kfrqp_N6MxE6tjDLM_Lo7adorzKHHBQTp8",

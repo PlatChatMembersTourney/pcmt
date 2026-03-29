@@ -80,7 +80,7 @@
             "PlusMinus2": 1
           },
           {
-            "Player": "thehronyy",
+            "Player": "thornyy",
             "R1.0": 0.999,
             "ACS": 193,
             "K": 39,
@@ -131,7 +131,7 @@
             "PlusMinus2": -1
           },
           {
-            "Player": "Samstaff",
+            "Player": "Ride",
             "R1.0": 1.252,
             "ACS": 260,
             "K": 57,
@@ -312,7 +312,7 @@
                 "PlusMinus2": 3
               },
               {
-                "Player": "thehronyy",
+                "Player": "thornyy",
                 "Agent": "Veto",
                 "R1.0": 0.785,
                 "ACS": 182,
@@ -398,7 +398,7 @@
                 "PlusMinus2": 1
               },
               {
-                "Player": "Samstaff",
+                "Player": "Ride",
                 "Agent": "Fade",
                 "R1.0": 1.754,
                 "ACS": 354,
@@ -629,7 +629,7 @@
                 "PlusMinus2": 1
               },
               {
-                "Player": "thehronyy",
+                "Player": "thornyy",
                 "Agent": "Skye",
                 "R1.0": 1.14,
                 "ACS": 217,
@@ -699,7 +699,7 @@
                 "PlusMinus2": 0
               },
               {
-                "Player": "Samstaff",
+                "Player": "Ride",
                 "Agent": "Fade",
                 "R1.0": 1.036,
                 "ACS": 215,
@@ -926,7 +926,7 @@
                 "PlusMinus2": 0
               },
               {
-                "Player": "thehronyy",
+                "Player": "thornyy",
                 "Agent": "Omen",
                 "R1.0": 1.023,
                 "ACS": 173,
@@ -980,7 +980,7 @@
                 "PlusMinus2": 1
               },
               {
-                "Player": "Samstaff",
+                "Player": "Ride",
                 "Agent": "Phoenix",
                 "R1.0": 1.059,
                 "ACS": 229,
