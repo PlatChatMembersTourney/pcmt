@@ -79,7 +79,7 @@
           "PlusMinus2": 1
         },
         {
-          "Player": "thehronyy",
+          "Player": "thornyy",
           "R1.0": 0.999,
           "ACS": 193,
           "K": 39,
@@ -311,7 +311,7 @@
               "PlusMinus2": 3
             },
             {
-              "Player": "thehronyy",
+              "Player": "thornyy",
               "Agent": "Veto",
               "R1.0": 0.785,
               "ACS": 182,
@@ -628,7 +628,7 @@
               "PlusMinus2": 1
             },
             {
-              "Player": "thehronyy",
+              "Player": "thornyy",
               "Agent": "Skye",
               "R1.0": 1.14,
               "ACS": 217,
@@ -925,7 +925,7 @@
               "PlusMinus2": 0
             },
             {
-              "Player": "thehronyy",
+              "Player": "thornyy",
               "Agent": "Omen",
               "R1.0": 1.023,
               "ACS": 173,
