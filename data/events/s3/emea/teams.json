@@ -5,11 +5,11 @@
         "logo": "../../../icons/s3_teams/WetherspoonsFC.png",
         "players": ["mide", "tonnoman", "King", "faye", "Charlotte"]
     },
-    "Team 2": {
-        "name": "Team 2",
-        "abbr": "",
+    "MISC": {
+        "name": "Mischifs",
+        "abbr": "MISC",
         "logo": "../../../icons/s3_teams/Team2.png",
-        "players": ["Gino", "Pandryo", "Ellie", "Otaka", "Taylor"]
+        "players": ["Gino", "Pandyro", "Ellie", "Otaka", "Taylor"]
     },
     "<3": {
         "name": "Less Than Three",
