@@ -8,7 +8,7 @@
     "MISC": {
         "name": "Mischifs",
         "abbr": "MISC",
-        "logo": "../../../icons/s3_teams/Team2.png",
+        "logo": "../../../icons/s3_teams/Mischifs.png",
         "players": ["Gino", "Pandyro", "Ellie", "Otaka", "Taylor"]
     },
     "<3": {
@@ -21,6 +21,6 @@
         "name": "Team FourK",
         "abbr": "T4K",
         "logo": "../../../icons/s3_teams/FourK.png",
-        "players": ["night", "Kramvi", "Eva", "thorny", "Linus"]
+        "players": ["night", "Kramvi", "Eva", "thornyy", "Linus"]
     }
 }

@@ -161,7 +161,7 @@
             "PlusMinus2": -9
           },
           {
-            "Player": "thorny",
+            "Player": "thornyy",
             "R1.0": 0.932,
             "ACS": 191,
             "K": 37,
@@ -430,7 +430,7 @@
                 "PlusMinus2": -3
               },
               {
-                "Player": "thorny",
+                "Player": "thornyy",
                 "Agent": "Killjoy",
                 "R1.0": 0.696,
                 "ACS": 172,
@@ -665,7 +665,7 @@
                 "PlusMinus2": 3
               },
               {
-                "Player": "thorny",
+                "Player": "thornyy",
                 "Agent": "Cypher",
                 "R1.0": 1.632,
                 "ACS": 276,
@@ -1008,7 +1008,7 @@
                 "PlusMinus2": -6
               },
               {
-                "Player": "thorny",
+                "Player": "thornyy",
                 "Agent": "Omen",
                 "R1.0": 0.719,
                 "ACS": 159,
