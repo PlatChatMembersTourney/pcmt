@@ -93,7 +93,32 @@
             const brackets=eventConfig.brackets||{};
             if(brackets[currentStage]){area.innerHTML='<div class="stats-loading">Loading bracket...</div>';loadBracket(brackets[currentStage]);return}
             if(currentStage==='groups'&&eventConfig.standings){const ck=`${currentEvent}-groups`;if(cacheGet(ck)){area.innerHTML=cacheGet(ck);return}area.innerHTML='<div class="stats-loading">Loading standings...</div>';loadGroups();return}
-            area.innerHTML='<div class="standings-empty"><p>Standings not available for this stage.</p></div>';
+            // Fall back to standings.json
+            area.innerHTML='<div class="stats-loading">Loading standings...</div>';loadJsonStandings();
+        }
+
+        async function loadJsonStandings(){
+            const area=document.getElementById('standings-area');
+            const stageMap={'groups':'Group Stage','lcq':'LCQ','playoffs':'Playoffs'};
+            const stageName=stageMap[currentStage]||currentStage;
+            try{
+                const res=await fetch(dataPath()+'standings.json');
+                if(!res.ok){area.innerHTML='<div class="standings-empty"><p>Standings not available.</p></div>';return}
+                const data=await res.json();
+                const rows=data[stageName]||data['Overall'];
+                if(!rows||!rows.length){area.innerHTML='<div class="standings-empty"><p>No standings data yet.</p></div>';return}
+
+                const dc=v=>{const n=parseInt(v);return isNaN(n)?'':n>0?' class="diff-pos"':n<0?' class="diff-neg"':''};
+                const fd=v=>{const n=parseInt(v);return isNaN(n)?v:n>0?`+${n}`:`${n}`};
+
+                let html='<div class="standings-section"><div class="stats-table-scroll"><table class="stats-table stats-table-sticky standings-table"><thead><tr class="category-row"><th colspan="3"></th><th colspan="2" class="category-header">Matches</th><th colspan="3" class="category-header">Maps</th><th colspan="3" class="category-header">Rounds</th></tr><tr><th>#</th><th>ABBR.</th><th>TEAM</th><th>W</th><th>L</th><th>W</th><th>L</th><th>&Delta;</th><th>W</th><th>L</th><th>&Delta;</th></tr></thead><tbody>';
+                rows.forEach(t=>{
+                    const lnk=teamUrl(t.abbr);
+                    html+=`<tr><td>${t.rank}</td><td class="team-abbr-cell"><a href="${lnk}" class="team-link">${t.abbr}</a></td><td><a href="${lnk}" class="team-link">${t.name}</a></td><td>${t.matchW}</td><td>${t.matchL}</td><td>${t.mapW}</td><td>${t.mapL}</td><td${dc(t.mapDiff)}>${fd(t.mapDiff)}</td><td>${t.rndW}</td><td>${t.rndL}</td><td${dc(t.rndDiff)}>${fd(t.rndDiff)}</td></tr>`;
+                });
+                html+='</tbody></table></div></div>';
+                area.innerHTML=html;
+            }catch(e){area.innerHTML='<div class="standings-empty"><p>Standings not available.</p></div>'}
         }
 
         function parseCSV(t){return t.split('\n').map(l=>{const c=[];let cur='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"')q=!q;else if(ch===','&&!q){c.push(cur.trim());cur=''}else cur+=ch}c.push(cur.trim());return c})}
@@ -154,5 +179,5 @@
         init();
     </script>
     </div>
-</body> 
+</body>
 </html>

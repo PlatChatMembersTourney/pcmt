@@ -761,7 +761,7 @@
     },
     {
       "Player": "dunkn*",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 48,
       "R1.0": 0.98,
@@ -784,7 +784,7 @@
     },
     {
       "Player": "sizeable",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 38,
       "R1.0": 0.969,
@@ -1359,7 +1359,7 @@
     },
     {
       "Player": "teklo",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 5,
       "Rounds": 115,
       "R1.0": 0.759,
@@ -1382,7 +1382,7 @@
     },
     {
       "Player": "linus",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 3,
       "Rounds": 71,
       "R1.0": 0.735,
@@ -1428,7 +1428,7 @@
     },
     {
       "Player": "teklologik*",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 46,
       "R1.0": 0.685,
@@ -2327,7 +2327,7 @@
     },
     {
       "Player": "dunkn*",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 48,
       "R1.0": 0.98,
@@ -2350,7 +2350,7 @@
     },
     {
       "Player": "sizeable",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 38,
       "R1.0": 0.969,
@@ -2879,7 +2879,7 @@
     },
     {
       "Player": "teklo",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 5,
       "Rounds": 115,
       "R1.0": 0.759,
@@ -2925,7 +2925,7 @@
     },
     {
       "Player": "teklologik*",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 2,
       "Rounds": 46,
       "R1.0": 0.685,
@@ -3964,7 +3964,7 @@
     },
     {
       "Player": "linus",
-      "Team": "(Sub)",
+      "Team": "(sub)",
       "MP": 3,
       "Rounds": 71,
       "R1.0": 0.735,
