@@ -1,4 +1,18 @@
 [
+    {
+      "id": "misc-vs-<3-group-stage-2026-04-13",
+      "team1": "MISC",
+      "team2": "<3",
+      "team1Name": "Mischifs",
+      "team2Name": "Less Than Three",
+      "score1": 0,
+      "score2": 0,
+      "completed": false,
+      "bestOf": 3,
+      "date": "2026-04-13",
+      "stage": "Group Stage",
+      "maps": []
+  },
   {
     "id": "wfc-vs-t4k-s2-group-stage-2026-03-30",
     "team1": "WFC",
