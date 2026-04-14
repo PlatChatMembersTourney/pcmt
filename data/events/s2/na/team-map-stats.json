@@ -2,8 +2,8 @@
   "DRG": {
     "team": "DRG",
     "teamName": "DeRank Gamers",
-    "overallAtkPct": 0.545,
-    "overallDefPct": 0.51,
+    "overallAtkPct": 0.56,
+    "overallDefPct": 0.503,
     "maps": [
       {
         "map": "Abyss",
@@ -46,7 +46,7 @@
       },
       {
         "map": "Breeze",
-        "pick": 0,
+        "pick": 1,
         "ban": 4,
         "played": 1,
         "won": 1,
@@ -87,14 +87,14 @@
         "map": "Haven",
         "pick": 1,
         "ban": 3,
-        "played": 4,
-        "won": 1,
-        "winPct": 0.25,
-        "rounds": 87,
-        "roundsWon": 36,
-        "roundPct": 0.414,
-        "atkPct": 0.388,
-        "defPct": 0.447
+        "played": 5,
+        "won": 2,
+        "winPct": 0.4,
+        "rounds": 109,
+        "roundsWon": 49,
+        "roundPct": 0.45,
+        "atkPct": 0.443,
+        "defPct": 0.458
       },
       {
         "map": "Icebox",
@@ -111,16 +111,16 @@
       },
       {
         "map": "Lotus",
-        "pick": 2,
+        "pick": 3,
         "ban": 0,
-        "played": 2,
-        "won": 2,
+        "played": 3,
+        "won": 3,
         "winPct": 1.0,
-        "rounds": 47,
-        "roundsWon": 26,
-        "roundPct": 0.553,
-        "atkPct": 0.5,
-        "defPct": 0.571
+        "rounds": 68,
+        "roundsWon": 39,
+        "roundPct": 0.574,
+        "atkPct": 0.583,
+        "defPct": 0.533
       },
       {
         "map": "Pearl",
@@ -138,15 +138,15 @@
       {
         "map": "Split",
         "pick": 5,
-        "ban": 0,
-        "played": 8,
-        "won": 5,
-        "winPct": 0.625,
-        "rounds": 157,
-        "roundsWon": 87,
-        "roundPct": 0.554,
-        "atkPct": 0.607,
-        "defPct": 0.493
+        "ban": 1,
+        "played": 9,
+        "won": 6,
+        "winPct": 0.667,
+        "rounds": 189,
+        "roundsWon": 104,
+        "roundPct": 0.55,
+        "atkPct": 0.62,
+        "defPct": 0.472
       },
       {
         "map": "Sunset",
@@ -343,8 +343,8 @@
   "EMEA": {
     "team": "EMEA",
     "teamName": "Tech Pause Esports",
-    "overallAtkPct": 0.552,
-    "overallDefPct": 0.488,
+    "overallAtkPct": 0.554,
+    "overallDefPct": 0.469,
     "maps": [
       {
         "map": "Abyss",
@@ -375,7 +375,7 @@
       {
         "map": "Bind",
         "pick": 0,
-        "ban": 6,
+        "ban": 7,
         "played": 3,
         "won": 0,
         "winPct": 0.0,
@@ -426,16 +426,16 @@
       },
       {
         "map": "Haven",
-        "pick": 5,
+        "pick": 6,
         "ban": 0,
-        "played": 6,
+        "played": 7,
         "won": 5,
-        "winPct": 0.833,
-        "rounds": 145,
-        "roundsWon": 80,
-        "roundPct": 0.552,
-        "atkPct": 0.648,
-        "defPct": 0.419
+        "winPct": 0.714,
+        "rounds": 167,
+        "roundsWon": 89,
+        "roundPct": 0.533,
+        "atkPct": 0.63,
+        "defPct": 0.405
       },
       {
         "map": "Icebox",
@@ -454,14 +454,14 @@
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 1,
-        "winPct": 1.0,
-        "rounds": 28,
-        "roundsWon": 15,
-        "roundPct": 0.536,
-        "atkPct": 0.429,
-        "defPct": 0.643
+        "winPct": 0.5,
+        "rounds": 49,
+        "roundsWon": 23,
+        "roundPct": 0.469,
+        "atkPct": 0.478,
+        "defPct": 0.462
       },
       {
         "map": "Pearl",
@@ -478,16 +478,16 @@
       },
       {
         "map": "Split",
-        "pick": 0,
+        "pick": 1,
         "ban": 2,
-        "played": 2,
+        "played": 3,
         "won": 2,
-        "winPct": 1.0,
-        "rounds": 48,
-        "roundsWon": 29,
-        "roundPct": 0.604,
-        "atkPct": 0.722,
-        "defPct": 0.5
+        "winPct": 0.667,
+        "rounds": 80,
+        "roundsWon": 44,
+        "roundPct": 0.55,
+        "atkPct": 0.676,
+        "defPct": 0.425
       },
       {
         "map": "Sunset",

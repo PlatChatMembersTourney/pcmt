@@ -14,30 +14,30 @@
       "rndDiff": 74
     },
     {
+      "abbr": "DRG",
+      "name": "DeRank Gamers",
+      "matchW": 10,
+      "matchL": 5,
+      "mapW": 23,
+      "mapL": 14,
+      "rndW": 430,
+      "rndL": 381,
+      "rank": 2,
+      "mapDiff": 9,
+      "rndDiff": 49
+    },
+    {
       "abbr": "EMEA",
       "name": "Tech Pause Esports",
       "matchW": 10,
-      "matchL": 3,
+      "matchL": 4,
       "mapW": 21,
-      "mapL": 10,
-      "rndW": 379,
-      "rndL": 341,
-      "rank": 2,
-      "mapDiff": 11,
-      "rndDiff": 38
-    },
-    {
-      "abbr": "DRG",
-      "name": "DeRank Gamers",
-      "matchW": 9,
-      "matchL": 5,
-      "mapW": 20,
-      "mapL": 14,
-      "rndW": 387,
-      "rndL": 349,
+      "mapL": 13,
+      "rndW": 411,
+      "rndL": 384,
       "rank": 3,
-      "mapDiff": 6,
-      "rndDiff": 38
+      "mapDiff": 8,
+      "rndDiff": 27
     },
     {
       "abbr": "ZIRC",
@@ -490,28 +490,28 @@
     {
       "abbr": "DRG",
       "name": "DeRank Gamers",
-      "matchW": 1,
+      "matchW": 2,
       "matchL": 1,
-      "mapW": 2,
+      "mapW": 5,
       "mapL": 2,
-      "rndW": 45,
-      "rndL": 45,
+      "rndW": 88,
+      "rndL": 77,
       "rank": 2,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": 3,
+      "rndDiff": 11
     },
     {
       "abbr": "EMEA",
       "name": "Tech Pause Esports",
       "matchW": 1,
-      "matchL": 1,
+      "matchL": 2,
       "mapW": 2,
-      "mapL": 3,
-      "rndW": 58,
-      "rndL": 65,
+      "mapL": 6,
+      "rndW": 90,
+      "rndL": 108,
       "rank": 3,
-      "mapDiff": -1,
-      "rndDiff": -7
+      "mapDiff": -4,
+      "rndDiff": -18
     },
     {
       "abbr": "DRX",
