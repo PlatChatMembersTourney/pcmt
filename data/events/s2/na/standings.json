@@ -3,28 +3,15 @@
     {
       "abbr": "JDG",
       "name": "Just Dudes Gaming",
-      "matchW": 10,
+      "matchW": 11,
       "matchL": 4,
-      "mapW": 23,
+      "mapW": 26,
       "mapL": 12,
-      "rndW": 412,
-      "rndL": 338,
+      "rndW": 451,
+      "rndL": 347,
       "rank": 1,
-      "mapDiff": 11,
-      "rndDiff": 74
-    },
-    {
-      "abbr": "DRG",
-      "name": "DeRank Gamers",
-      "matchW": 10,
-      "matchL": 5,
-      "mapW": 23,
-      "mapL": 14,
-      "rndW": 430,
-      "rndL": 381,
-      "rank": 2,
-      "mapDiff": 9,
-      "rndDiff": 49
+      "mapDiff": 14,
+      "rndDiff": 104
     },
     {
       "abbr": "EMEA",
@@ -35,9 +22,22 @@
       "mapL": 13,
       "rndW": 411,
       "rndL": 384,
-      "rank": 3,
+      "rank": 2,
       "mapDiff": 8,
       "rndDiff": 27
+    },
+    {
+      "abbr": "DRG",
+      "name": "DeRank Gamers",
+      "matchW": 10,
+      "matchL": 6,
+      "mapW": 23,
+      "mapL": 17,
+      "rndW": 439,
+      "rndL": 420,
+      "rank": 3,
+      "mapDiff": 6,
+      "rndDiff": 19
     },
     {
       "abbr": "ZIRC",
@@ -477,28 +477,28 @@
     {
       "abbr": "JDG",
       "name": "Just Dudes Gaming",
-      "matchW": 2,
+      "matchW": 3,
       "matchL": 0,
-      "mapW": 4,
+      "mapW": 7,
       "mapL": 0,
-      "rndW": 55,
-      "rndL": 42,
+      "rndW": 94,
+      "rndL": 51,
       "rank": 1,
-      "mapDiff": 4,
-      "rndDiff": 13
+      "mapDiff": 7,
+      "rndDiff": 43
     },
     {
       "abbr": "DRG",
       "name": "DeRank Gamers",
       "matchW": 2,
-      "matchL": 1,
+      "matchL": 2,
       "mapW": 5,
-      "mapL": 2,
-      "rndW": 88,
-      "rndL": 77,
+      "mapL": 5,
+      "rndW": 97,
+      "rndL": 116,
       "rank": 2,
-      "mapDiff": 3,
-      "rndDiff": 11
+      "mapDiff": 0,
+      "rndDiff": -19
     },
     {
       "abbr": "EMEA",

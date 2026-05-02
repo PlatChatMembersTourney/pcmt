@@ -2,8 +2,8 @@
   "DRG": {
     "team": "DRG",
     "teamName": "DeRank Gamers",
-    "overallAtkPct": 0.56,
-    "overallDefPct": 0.503,
+    "overallAtkPct": 0.529,
+    "overallDefPct": 0.495,
     "maps": [
       {
         "map": "Abyss",
@@ -35,27 +35,27 @@
         "map": "Bind",
         "pick": 1,
         "ban": 0,
-        "played": 8,
+        "played": 9,
         "won": 6,
-        "winPct": 0.75,
-        "rounds": 163,
-        "roundsWon": 91,
-        "roundPct": 0.558,
-        "atkPct": 0.624,
-        "defPct": 0.493
+        "winPct": 0.667,
+        "rounds": 179,
+        "roundsWon": 94,
+        "roundPct": 0.525,
+        "atkPct": 0.557,
+        "defPct": 0.494
       },
       {
         "map": "Breeze",
-        "pick": 1,
+        "pick": 2,
         "ban": 4,
-        "played": 1,
+        "played": 2,
         "won": 1,
-        "winPct": 1.0,
-        "rounds": 20,
-        "roundsWon": 13,
-        "roundPct": 0.65,
-        "atkPct": 0.375,
-        "defPct": 0.833
+        "winPct": 0.5,
+        "rounds": 37,
+        "roundsWon": 17,
+        "roundPct": 0.459,
+        "atkPct": 0.3,
+        "defPct": 0.647
       },
       {
         "map": "Corrode",
@@ -126,14 +126,14 @@
         "map": "Pearl",
         "pick": 0,
         "ban": 9,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 15,
+        "roundsWon": 2,
+        "roundPct": 0.133,
+        "atkPct": 0.167,
+        "defPct": 0.0
       },
       {
         "map": "Split",
@@ -507,8 +507,8 @@
   "JDG": {
     "team": "JDG",
     "teamName": "Just Dudes Gaming",
-    "overallAtkPct": 0.586,
-    "overallDefPct": 0.518,
+    "overallAtkPct": 0.591,
+    "overallDefPct": 0.546,
     "maps": [
       {
         "map": "Abyss",
@@ -538,29 +538,29 @@
       },
       {
         "map": "Bind",
-        "pick": 5,
+        "pick": 6,
         "ban": 0,
-        "played": 6,
-        "won": 4,
-        "winPct": 0.667,
-        "rounds": 127,
-        "roundsWon": 71,
-        "roundPct": 0.559,
-        "atkPct": 0.577,
-        "defPct": 0.519
+        "played": 7,
+        "won": 5,
+        "winPct": 0.714,
+        "rounds": 143,
+        "roundsWon": 84,
+        "roundPct": 0.587,
+        "atkPct": 0.573,
+        "defPct": 0.591
       },
       {
         "map": "Breeze",
         "pick": 1,
         "ban": 0,
-        "played": 3,
-        "won": 2,
-        "winPct": 0.667,
-        "rounds": 60,
-        "roundsWon": 38,
-        "roundPct": 0.633,
-        "atkPct": 0.645,
-        "defPct": 0.667
+        "played": 4,
+        "won": 3,
+        "winPct": 0.75,
+        "rounds": 77,
+        "roundsWon": 51,
+        "roundPct": 0.662,
+        "atkPct": 0.667,
+        "defPct": 0.692
       },
       {
         "map": "Corrode",
@@ -578,7 +578,7 @@
       {
         "map": "Fracture",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -590,7 +590,7 @@
       },
       {
         "map": "Haven",
-        "pick": 3,
+        "pick": 4,
         "ban": 5,
         "played": 6,
         "won": 4,
@@ -617,7 +617,7 @@
       {
         "map": "Lotus",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -629,16 +629,16 @@
       },
       {
         "map": "Pearl",
-        "pick": 3,
+        "pick": 4,
         "ban": 0,
-        "played": 7,
-        "won": 6,
-        "winPct": 0.857,
-        "rounds": 154,
-        "roundsWon": 97,
-        "roundPct": 0.63,
-        "atkPct": 0.711,
-        "defPct": 0.564
+        "played": 8,
+        "won": 7,
+        "winPct": 0.875,
+        "rounds": 169,
+        "roundsWon": 110,
+        "roundPct": 0.651,
+        "atkPct": 0.722,
+        "defPct": 0.6
       },
       {
         "map": "Split",

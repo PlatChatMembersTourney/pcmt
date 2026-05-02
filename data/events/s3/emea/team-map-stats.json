@@ -2,8 +2,8 @@
   "<3": {
     "team": "<3",
     "teamName": "Less Than Three",
-    "overallAtkPct": 0.477,
-    "overallDefPct": 0.433,
+    "overallAtkPct": 0.412,
+    "overallDefPct": 0.403,
     "maps": [
       {
         "map": "Abyss",
@@ -43,6 +43,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Breeze",
+        "pick": 0,
+        "ban": 0,
+        "played": 1,
+        "won": 0,
+        "winPct": 0.0,
+        "rounds": 18,
+        "roundsWon": 5,
+        "roundPct": 0.278,
+        "atkPct": 0.167,
+        "defPct": 0.5
       },
       {
         "map": "Fracture",
@@ -87,14 +100,14 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 1,
-        "winPct": 1.0,
-        "rounds": 18,
-        "roundsWon": 13,
-        "roundPct": 0.722,
-        "atkPct": 0.5,
-        "defPct": 0.833
+        "winPct": 0.5,
+        "rounds": 36,
+        "roundsWon": 18,
+        "roundPct": 0.5,
+        "atkPct": 0.444,
+        "defPct": 0.556
       },
       {
         "map": "Pearl",
@@ -442,8 +455,8 @@
   "WFC": {
     "team": "WFC",
     "teamName": "Wetherspoons FC",
-    "overallAtkPct": 0.55,
-    "overallDefPct": 0.533,
+    "overallAtkPct": 0.596,
+    "overallDefPct": 0.583,
     "maps": [
       {
         "map": "Abyss",
@@ -485,6 +498,19 @@
         "defPct": 0
       },
       {
+        "map": "Breeze",
+        "pick": 1,
+        "ban": 0,
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 18,
+        "roundsWon": 13,
+        "roundPct": 0.722,
+        "atkPct": 0.5,
+        "defPct": 0.833
+      },
+      {
         "map": "Fracture",
         "pick": 1,
         "ban": 0,
@@ -500,7 +526,7 @@
       {
         "map": "Haven",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -527,19 +553,19 @@
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
-        "played": 2,
-        "won": 1,
-        "winPct": 0.5,
-        "rounds": 32,
-        "roundsWon": 14,
-        "roundPct": 0.438,
-        "atkPct": 0.5,
-        "defPct": 0.417
+        "played": 3,
+        "won": 2,
+        "winPct": 0.667,
+        "rounds": 50,
+        "roundsWon": 27,
+        "roundPct": 0.54,
+        "atkPct": 0.714,
+        "defPct": 0.472
       },
       {
         "map": "Pearl",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 1,
         "won": 1,
         "winPct": 1.0,
