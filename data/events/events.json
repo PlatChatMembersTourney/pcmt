@@ -9,12 +9,12 @@
     "status": "upcoming"
   },
   {
-    "id": "s3-emea",
-    "name": "PCMT Season 3 -- EMEA",
-    "shortName": "S3 EMEA",
-    "season": 3,
+    "id": "s1-emea",
+    "name": "PCMT Season 1 -- EMEA",
+    "shortName": "S1 EMEA",
+    "season": 1,
     "region": "emea",
-    "path": "s3/emea",
+    "path": "s1/emea",
     "status": "ongoing"
   },
   {
