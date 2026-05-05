@@ -20,7 +20,7 @@
   {
     "id": "s2-na",
     "name": "PCMT Season 2",
-    "shortName": "S2",
+    "shortName": "S2 - NA",
     "season": 2,
     "region": "na",
     "path": "s2/na",
@@ -29,7 +29,7 @@
   {
     "id": "s1-na",
     "name": "PCMT Season 1",
-    "shortName": "S1",
+    "shortName": "S1 - NA",
     "season": 1,
     "region": "na",
     "path": "s1/na",
