@@ -170,7 +170,7 @@
           "PlusMinus2": -4
         },
         {
-          "Player": "Linus",
+          "Player": "linus",
           "R1.0": 0.538,
           "ACS": 109,
           "K": 12,
@@ -418,7 +418,7 @@
               "PlusMinus2": 0
             },
             {
-              "Player": "Linus",
+              "Player": "linus",
               "Agent": "Raze",
               "R1.0": 0.768,
               "ACS": 132,
@@ -716,7 +716,7 @@
               "PlusMinus2": -1
             },
             {
-              "Player": "Linus",
+              "Player": "linus",
               "Agent": "Neon",
               "R1.0": 0.269,
               "ACS": 81,
