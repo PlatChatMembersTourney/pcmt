@@ -122,8 +122,27 @@
 
         function loadTeamTabAny(name){
             const fmt=eventConfig.statsFormat||'xlsx';
+            const sheets=eventConfig.sheetStats||{};
             if(fmt==='json'&&name==='toxic'){loadJsonTeamStats();return}
+            if(sheets[name]&&sheets[name].teamGid){loadSheetTeamStats(name);return}
             loadLegacyTeamTab(name);
+        }
+
+        async function loadSheetTeamStats(name){
+            const cfg=(eventConfig.sheetStats||{})[name];
+            if(!cfg||!cfg.teamGid){return}
+            const ck=`${currentEvent}-tsheet-${name}`;const area=document.getElementById('team-table-area');
+            const tid=`sheet-t-${currentEvent}-${name}`;
+            const cached=cacheGetJSON(ck);
+            if(cached){const{headers:h,rows:r}=cached;area.innerHTML=`<div class="stats-table-container">${renderTable(h,r,tid)}</div>`;highlightTable(tid,'team');return}
+            area.innerHTML='<div class="stats-table-container"><div class="stats-loading">Loading stats...</div></div>';
+            try{
+                const csv=await(await fetch(`https://docs.google.com/spreadsheets/d/${cfg.sheetId}/export?format=csv&gid=${cfg.teamGid}`)).text();
+                const lines=parseCSV(csv);let headers=lines[0];let rows=lines.slice(1).filter(r=>r[0]||r[1]);
+                rows=rows.filter(r=>{const f=String(r[0]||'').trim().toUpperCase();return f!=='MEDIAN'&&f!=='MEAN'});
+                cacheSetJSON(ck,{headers,rows});
+                area.innerHTML=`<div class="stats-table-container">${renderTable(headers,rows,tid)}</div>`;highlightTable(tid,'team');
+            }catch(e){area.innerHTML='<div class="stats-table-container"><p class="stats-error">Failed to load team stats.</p></div>'}
         }
 
         async function loadSheetPlayerStats(name){

@@ -1,0 +1,98 @@
+{
+    "T1": {
+        "name": "Team 1",
+        "abbr": "T1",
+        "logo": "",
+        "players": ["MrCrocMan, Pi, Ceiliuir, radical, roro"]
+    },
+    "FNC": {
+        "name": "cow paulo FaN Club",
+        "abbr": "FNC",
+        "logo": "",
+        "players": ["james", "niboos", "li", "adeline", "xixi"]
+    },
+    "TL": {
+        "name": "Team Dyslexia",
+        "abbr": "TL",
+        "logo": "",
+        "players": ["haych", "caleb", "ender", "slow", "tans"]
+    },
+    "SSG": {
+        "name": "Squirtle Squad Gaming",
+        "abbr": "SSG",
+        "logo": "",
+        "players": ["colt", "aleks", "darshan", "nameless", "cardamom"]
+    },
+    "IHOP": {
+        "name": "I Hate Odin Party",
+        "abbr": "IHOP",
+        "logo": "",
+        "players": ["pavel", "eve", "platinum", "ethan", "maple"]
+    },
+    "RRQ": {
+        "name": "Rage Re-Queuers",
+        "abbr": "RRQ",
+        "logo": "",
+        "players": ["angus", "snowfall", "platy", "twon", "tery"]
+    },
+    "FSG": {
+        "name": "Furry Squirrels Gaming",
+        "abbr": "FSG",
+        "logo": "",
+        "players": ["amara", "nolan", "skye", "rudra", "corina"]
+    },
+    "C9": {
+        "name": "Clown9",
+        "abbr": "C9",
+        "logo": "",
+        "players": ["claps", "art", "igneous", "makya", "caesparz"]
+    },
+    "SRB": {
+        "name": "Sunshine and Rainbows",
+        "abbr": "SRB",
+        "logo": "",
+        "players": ["izz", "jaypee", "nova", "androobee", "timothy"]
+    },
+    "BAKA": {
+        "name": "Beautiful and Kinda Adorable",
+        "abbr": "BAKA",
+        "logo": "",
+        "players": ["lucas", "night", "asher", "devil", "tenyaku"]
+    },
+    "TS": {
+        "name": "Team Slugshow",
+        "abbr": "TS",
+        "logo": "",
+        "players": ["straight", "avi", "dino", "lore", "paul"]
+    },
+    "NAVI": {
+        "name": "No Actuall Valorant Intelligence",
+        "abbr": "NAVI",
+        "logo": "",
+        "players": ["stingray", "Lazy", "kaydeg", "cassie", "linus"]
+    },
+    "EPY": {
+        "name": "Team Entropy",
+        "abbr": "EPY",
+        "logo": "",
+        "players": ["blitz", "solar", "apple", "robohobo", "jolly"]
+    },
+    "100T": {
+        "name": "100 Tony's",
+        "abbr": "100T",
+        "logo": "",
+        "players": ["abstracq", "psyclone", "shadow", "xyn", "catsmeow"]
+    },
+    "DFM": {
+        "name": "Dementia Found Me",
+        "abbr": "DFM",
+        "logo": "",
+        "players": ["masao", "nik", "longclaw", "hascan", "teklo"]
+    },
+    "SPG": {
+        "name": "Spank Ptheory Gaming",
+        "abbr": "SPG",
+        "logo": "",
+        "players": ["thighs", "cooleo", "derpina", "phuzzy", "dunkn"]
+    }
+}
