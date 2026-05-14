@@ -29,28 +29,28 @@
     {
       "abbr": "<3",
       "name": "Less Than Three",
-      "matchW": 2,
+      "matchW": 1,
       "matchL": 3,
-      "mapW": 5,
+      "mapW": 3,
       "mapL": 6,
-      "rndW": 113,
-      "rndL": 129,
+      "rndW": 85,
+      "rndL": 106,
       "rank": 3,
-      "mapDiff": -1,
-      "rndDiff": -16
+      "mapDiff": -3,
+      "rndDiff": -21
     },
     {
       "abbr": "T4K",
       "name": "Team FourK",
       "matchW": 1,
-      "matchL": 4,
+      "matchL": 3,
       "mapW": 3,
-      "mapL": 9,
-      "rndW": 118,
-      "rndL": 141,
+      "mapL": 7,
+      "rndW": 95,
+      "rndL": 113,
       "rank": 4,
-      "mapDiff": -6,
-      "rndDiff": -23
+      "mapDiff": -4,
+      "rndDiff": -18
     }
   ],
   "Group Stage": [
@@ -81,30 +81,30 @@
       "rndDiff": 15
     },
     {
-      "abbr": "<3",
-      "name": "Less Than Three",
-      "matchW": 1,
-      "matchL": 3,
-      "mapW": 3,
-      "mapL": 6,
-      "rndW": 85,
-      "rndL": 106,
-      "rank": 3,
-      "mapDiff": -3,
-      "rndDiff": -21
-    },
-    {
       "abbr": "T4K",
       "name": "Team FourK",
       "matchW": 1,
-      "matchL": 3,
+      "matchL": 2,
       "mapW": 3,
-      "mapL": 7,
-      "rndW": 95,
-      "rndL": 113,
+      "mapL": 5,
+      "rndW": 72,
+      "rndL": 85,
+      "rank": 3,
+      "mapDiff": -2,
+      "rndDiff": -13
+    },
+    {
+      "abbr": "<3",
+      "name": "Less Than Three",
+      "matchW": 0,
+      "matchL": 3,
+      "mapW": 1,
+      "mapL": 6,
+      "rndW": 57,
+      "rndL": 83,
       "rank": 4,
-      "mapDiff": -4,
-      "rndDiff": -18
+      "mapDiff": -5,
+      "rndDiff": -26
     }
   ],
   "Playoffs": [

@@ -182,8 +182,8 @@
             if(stages.length>1){sBar.style.display='';sBar.innerHTML=stages.map(s=>`<button class="stats-sub-btn ${s===stage?'active':''}" onclick="renderJsonPlayerStage('${s}')">${s}</button>`).join('')}else sBar.style.display='none';
             const rows=jsonPlayerData[stage];
             if(!rows||!rows.length){area.innerHTML='<div class="stats-table-container"><p class="stats-error">No data for this stage.</p></div>';return}
-            const headers=['Player','Team','MP','Rounds','R1.0','ACS','K','D','A','+/-','KPR','DPR','KAST','ADR','HS%','FK','FD','FKPR','FDPR','FK+/-','KMAX'];
-            const tRows=rows.map(p=>[p.Player,p.Team,p.MP,p.Rounds,typeof p['R1.0']==='number'?p['R1.0'].toFixed(2):p['R1.0'],p.ACS,p.K,p.D,p.A,p.PlusMinus,typeof p.KPR==='number'?p.KPR.toFixed(2):p.KPR,typeof p.DPR==='number'?p.DPR.toFixed(2):p.DPR,(p.KAST*100).toFixed(0)+'%',typeof p.ADR==='number'?p.ADR.toFixed(1):p.ADR,(p['HS%']*100).toFixed(0)+'%',p.FK,p.FD,typeof p.FKPR==='number'?p.FKPR.toFixed(2):p.FKPR,typeof p.FDPR==='number'?p.FDPR.toFixed(2):p.FDPR,p.PlusMinus2,p.KMAX]);
+            const headers=['Player','Team','MP','Rounds','R1.0','ACS','K','D','A','K/D','+/-','KPR','DPR','KAST','ADR','HS%','FK','FD','FKPR','FDPR','FK+/-','KMAX'];
+            const tRows=rows.map(p=>[p.Player,p.Team,p.MP,p.Rounds,typeof p['R1.0']==='number'?p['R1.0'].toFixed(2):p['R1.0'],p.ACS,p.K,p.D,p.A,p.D===0?p.K.toFixed(2):(p.K/p.D).toFixed(2),p.PlusMinus,typeof p.KPR==='number'?p.KPR.toFixed(2):p.KPR,typeof p.DPR==='number'?p.DPR.toFixed(2):p.DPR,(p.KAST*100).toFixed(0)+'%',typeof p.ADR==='number'?p.ADR.toFixed(1):p.ADR,(p['HS%']*100).toFixed(0)+'%',p.FK,p.FD,typeof p.FKPR==='number'?p.FKPR.toFixed(2):p.FKPR,typeof p.FDPR==='number'?p.FDPR.toFixed(2):p.FDPR,p.PlusMinus2,p.KMAX]);
             const tid=`jpla-${currentEvent}-${stage}`;const merged=mergeTeamIntoPlayer(headers,tRows);
             area.innerHTML=`<div class="stats-table-container">${renderTable(merged.headers,merged.rows,tid)}</div>`;sortByRating(tid,merged.headers);highlightTable(tid,'player');
         }
