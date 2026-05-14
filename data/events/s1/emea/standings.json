@@ -29,28 +29,28 @@
     {
       "abbr": "<3",
       "name": "Less Than Three",
-      "matchW": 1,
+      "matchW": 2,
       "matchL": 3,
-      "mapW": 3,
+      "mapW": 5,
       "mapL": 6,
-      "rndW": 85,
-      "rndL": 106,
+      "rndW": 113,
+      "rndL": 129,
       "rank": 3,
-      "mapDiff": -3,
-      "rndDiff": -21
+      "mapDiff": -1,
+      "rndDiff": -16
     },
     {
       "abbr": "T4K",
       "name": "Team FourK",
       "matchW": 1,
-      "matchL": 3,
+      "matchL": 4,
       "mapW": 3,
-      "mapL": 7,
-      "rndW": 95,
-      "rndL": 113,
+      "mapL": 9,
+      "rndW": 118,
+      "rndL": 141,
       "rank": 4,
-      "mapDiff": -4,
-      "rndDiff": -18
+      "mapDiff": -6,
+      "rndDiff": -23
     }
   ],
   "Group Stage": [
@@ -105,6 +105,60 @@
       "rank": 4,
       "mapDiff": -4,
       "rndDiff": -18
+    }
+  ],
+  "Playoffs": [
+    {
+      "abbr": "<3",
+      "name": "Less Than Three",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 28,
+      "rndL": 23,
+      "rank": 1,
+      "mapDiff": 2,
+      "rndDiff": 5
+    },
+    {
+      "abbr": "WFC",
+      "name": "Wetherspoons FC",
+      "matchW": 0,
+      "matchL": 0,
+      "mapW": 0,
+      "mapL": 0,
+      "rndW": 0,
+      "rndL": 0,
+      "rank": 2,
+      "mapDiff": 0,
+      "rndDiff": 0
+    },
+    {
+      "abbr": "MISC",
+      "name": "Mischifs",
+      "matchW": 0,
+      "matchL": 0,
+      "mapW": 0,
+      "mapL": 0,
+      "rndW": 0,
+      "rndL": 0,
+      "rank": 3,
+      "mapDiff": 0,
+      "rndDiff": 0
+    },
+    {
+      "abbr": "T4K",
+      "name": "Team FourK",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 23,
+      "rndL": 28,
+      "rank": 4,
+      "mapDiff": -2,
+      "rndDiff": -5
     }
   ]
 }

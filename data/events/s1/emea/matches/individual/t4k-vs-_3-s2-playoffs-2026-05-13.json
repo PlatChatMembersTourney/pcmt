@@ -1,5 +1,5 @@
 {
-  "id": "t4k-vs-<3-s2-group-stage-2026-05-15",
+  "id": "t4k-vs-<3-s2-playoffs-2026-05-13",
   "team1": "T4K",
   "team2": "<3",
   "team1Name": "Team FourK",
@@ -8,8 +8,8 @@
   "score2": 2,
   "completed": true,
   "bestOf": 3,
-  "date": "2026-05-15T10:00:00Z",
-  "stage": "Group Stage",
+  "date": "2026-05-13T19:15:00Z",
+  "stage": "Playoffs",
   "veto": "<3 bans Haven, T4K bans Pearl, <3 picks Ascent, T4K picks Lotus, <3 bans Breeze, T4K bans Fracture, Split remains",
   "maps": [
     {
