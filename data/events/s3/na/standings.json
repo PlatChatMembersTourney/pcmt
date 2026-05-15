@@ -14,6 +14,19 @@
       "rndDiff": 16
     },
     {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 21,
+      "rank": 2,
+      "mapDiff": 2,
+      "rndDiff": 5
+    },
+    {
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 0,
@@ -22,7 +35,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -35,7 +48,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -48,7 +61,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -61,7 +74,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -74,7 +87,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -87,33 +100,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 7,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
       "rank": 8,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -126,7 +113,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 10,
+      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -139,7 +126,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 11,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -152,7 +139,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -165,7 +152,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 13,
+      "rank": 12,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -178,7 +165,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 14,
+      "rank": 13,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -191,9 +178,22 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": 0,
       "rndDiff": 0
+    },
+    {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 21,
+      "rndL": 26,
+      "rank": 15,
+      "mapDiff": -2,
+      "rndDiff": -5
     },
     {
       "abbr": "EPY",
@@ -224,6 +224,19 @@
       "rndDiff": 16
     },
     {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 21,
+      "rank": 2,
+      "mapDiff": 2,
+      "rndDiff": 5
+    },
+    {
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 0,
@@ -232,7 +245,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -245,7 +258,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -258,7 +271,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -271,7 +284,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -284,7 +297,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -297,33 +310,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 7,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
       "rank": 8,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -336,7 +323,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 10,
+      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -349,7 +336,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 11,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -362,7 +349,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -375,7 +362,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 13,
+      "rank": 12,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -388,7 +375,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 14,
+      "rank": 13,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -401,9 +388,22 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": 0,
       "rndDiff": 0
+    },
+    {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 21,
+      "rndL": 26,
+      "rank": 15,
+      "mapDiff": -2,
+      "rndDiff": -5
     },
     {
       "abbr": "EPY",
