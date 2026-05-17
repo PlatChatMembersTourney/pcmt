@@ -3,15 +3,15 @@
     {
       "abbr": "SPG",
       "name": "Spank Ptheory Gaming",
-      "matchW": 2,
+      "matchW": 1,
       "matchL": 0,
-      "mapW": 4,
+      "mapW": 2,
       "mapL": 0,
-      "rndW": 52,
-      "rndL": 20,
+      "rndW": 26,
+      "rndL": 10,
       "rank": 1,
-      "mapDiff": 4,
-      "rndDiff": 32
+      "mapDiff": 2,
+      "rndDiff": 16
     },
     {
       "abbr": "TS",
@@ -199,29 +199,29 @@
       "abbr": "EPY",
       "name": "Team Entropy",
       "matchW": 0,
-      "matchL": 2,
+      "matchL": 1,
       "mapW": 0,
-      "mapL": 4,
-      "rndW": 20,
-      "rndL": 52,
+      "mapL": 2,
+      "rndW": 10,
+      "rndL": 26,
       "rank": 16,
-      "mapDiff": -4,
-      "rndDiff": -32
+      "mapDiff": -2,
+      "rndDiff": -16
     }
   ],
   "Group Stage": [
     {
       "abbr": "SPG",
       "name": "Spank Ptheory Gaming",
-      "matchW": 2,
+      "matchW": 1,
       "matchL": 0,
-      "mapW": 4,
+      "mapW": 2,
       "mapL": 0,
-      "rndW": 52,
-      "rndL": 20,
+      "rndW": 26,
+      "rndL": 10,
       "rank": 1,
-      "mapDiff": 4,
-      "rndDiff": 32
+      "mapDiff": 2,
+      "rndDiff": 16
     },
     {
       "abbr": "TS",
@@ -409,14 +409,14 @@
       "abbr": "EPY",
       "name": "Team Entropy",
       "matchW": 0,
-      "matchL": 2,
+      "matchL": 1,
       "mapW": 0,
-      "mapL": 4,
-      "rndW": 20,
-      "rndL": 52,
+      "mapL": 2,
+      "rndW": 10,
+      "rndL": 26,
       "rank": 16,
-      "mapDiff": -4,
-      "rndDiff": -32
+      "mapDiff": -2,
+      "rndDiff": -16
     }
   ]
 }
