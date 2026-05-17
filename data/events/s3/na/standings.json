@@ -14,6 +14,19 @@
       "rndDiff": 32
     },
     {
+      "abbr": "TS",
+      "name": "Team Slugshow",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 15,
+      "rank": 2,
+      "mapDiff": 2,
+      "rndDiff": 11
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 1,
@@ -22,7 +35,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -35,7 +48,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -48,7 +61,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -61,7 +74,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -74,7 +87,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -87,7 +100,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 7,
+      "rank": 8,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -100,7 +113,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 8,
+      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -113,7 +126,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 9,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -126,26 +139,13 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 10,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "TS",
-      "name": "Team Slugshow",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
       "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
     {
       "abbr": "NAVI",
-      "name": "No Actuall Valorant Intelligence",
+      "name": "No Actual Valorant Intelligence",
       "matchW": 0,
       "matchL": 0,
       "mapW": 0,
@@ -170,19 +170,6 @@
       "rndDiff": 0
     },
     {
-      "abbr": "DFM",
-      "name": "Dementia Found Me",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 14,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "C9",
       "name": "Clown9",
       "matchW": 0,
@@ -191,9 +178,22 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 26,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": -2,
       "rndDiff": -5
+    },
+    {
+      "abbr": "DFM",
+      "name": "Dementia Found Me",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 15,
+      "rndL": 26,
+      "rank": 15,
+      "mapDiff": -2,
+      "rndDiff": -11
     },
     {
       "abbr": "EPY",
@@ -224,6 +224,19 @@
       "rndDiff": 32
     },
     {
+      "abbr": "TS",
+      "name": "Team Slugshow",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 15,
+      "rank": 2,
+      "mapDiff": 2,
+      "rndDiff": 11
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 1,
@@ -232,7 +245,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -245,7 +258,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -258,7 +271,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -271,7 +284,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -284,7 +297,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -297,7 +310,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 7,
+      "rank": 8,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -310,7 +323,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 8,
+      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -323,7 +336,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 9,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -336,26 +349,13 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 10,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "TS",
-      "name": "Team Slugshow",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
       "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
     {
       "abbr": "NAVI",
-      "name": "No Actuall Valorant Intelligence",
+      "name": "No Actual Valorant Intelligence",
       "matchW": 0,
       "matchL": 0,
       "mapW": 0,
@@ -380,19 +380,6 @@
       "rndDiff": 0
     },
     {
-      "abbr": "DFM",
-      "name": "Dementia Found Me",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 14,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "C9",
       "name": "Clown9",
       "matchW": 0,
@@ -401,9 +388,22 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 26,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": -2,
       "rndDiff": -5
+    },
+    {
+      "abbr": "DFM",
+      "name": "Dementia Found Me",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 15,
+      "rndL": 26,
+      "rank": 15,
+      "mapDiff": -2,
+      "rndDiff": -11
     },
     {
       "abbr": "EPY",

@@ -2,8 +2,8 @@
   "<3": {
     "team": "<3",
     "teamName": "Less Than Three",
-    "overallAtkPct": 0.452,
-    "overallDefPct": 0.439,
+    "overallAtkPct": 0.457,
+    "overallDefPct": 0.451,
     "maps": [
       {
         "map": "Abyss",
@@ -22,14 +22,14 @@
         "map": "Ascent",
         "pick": 0,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 1,
-        "winPct": 1.0,
-        "rounds": 28,
-        "roundsWon": 15,
-        "roundPct": 0.536,
-        "atkPct": 0.643,
-        "defPct": 0.429
+        "winPct": 0.5,
+        "rounds": 50,
+        "roundsWon": 24,
+        "roundPct": 0.48,
+        "atkPct": 0.5,
+        "defPct": 0.458
       },
       {
         "map": "Bind",
@@ -100,14 +100,14 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 3,
+        "played": 4,
         "won": 2,
-        "winPct": 0.667,
-        "rounds": 59,
-        "roundsWon": 31,
-        "roundPct": 0.525,
-        "atkPct": 0.448,
-        "defPct": 0.6
+        "winPct": 0.5,
+        "rounds": 79,
+        "roundsWon": 38,
+        "roundPct": 0.481,
+        "atkPct": 0.415,
+        "defPct": 0.553
       },
       {
         "map": "Pearl",
@@ -126,14 +126,14 @@
         "map": "Split",
         "pick": 0,
         "ban": 0,
-        "played": 2,
-        "won": 0,
-        "winPct": 0.0,
-        "rounds": 42,
-        "roundsWon": 16,
-        "roundPct": 0.381,
-        "atkPct": 0.333,
-        "defPct": 0.417
+        "played": 3,
+        "won": 1,
+        "winPct": 0.333,
+        "rounds": 60,
+        "roundsWon": 29,
+        "roundPct": 0.483,
+        "atkPct": 0.5,
+        "defPct": 0.467
       },
       {
         "map": "Sunset",
@@ -153,8 +153,8 @@
   "MISC": {
     "team": "MISC",
     "teamName": "Mischifs",
-    "overallAtkPct": 0.523,
-    "overallDefPct": 0.607,
+    "overallAtkPct": 0.517,
+    "overallDefPct": 0.576,
     "maps": [
       {
         "map": "Abyss",
@@ -173,14 +173,14 @@
         "map": "Ascent",
         "pick": 0,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 22,
+        "roundsWon": 13,
+        "roundPct": 0.591,
+        "atkPct": 0.5,
+        "defPct": 0.667
       },
       {
         "map": "Bind",
@@ -211,7 +211,7 @@
       {
         "map": "Fracture",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 2,
         "won": 1,
         "winPct": 0.5,
@@ -251,19 +251,19 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 1,
-        "won": 0,
-        "winPct": 0.0,
-        "rounds": 18,
-        "roundsWon": 5,
-        "roundPct": 0.278,
-        "atkPct": 0.25,
-        "defPct": 0.333
+        "played": 2,
+        "won": 1,
+        "winPct": 0.5,
+        "rounds": 38,
+        "roundsWon": 18,
+        "roundPct": 0.474,
+        "atkPct": 0.4,
+        "defPct": 0.556
       },
       {
         "map": "Pearl",
         "pick": 1,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -275,16 +275,16 @@
       },
       {
         "map": "Split",
-        "pick": 2,
+        "pick": 3,
         "ban": 0,
-        "played": 2,
+        "played": 3,
         "won": 2,
-        "winPct": 1.0,
-        "rounds": 38,
-        "roundsWon": 26,
-        "roundPct": 0.684,
-        "atkPct": 0.583,
-        "defPct": 0.857
+        "winPct": 0.667,
+        "rounds": 56,
+        "roundsWon": 31,
+        "roundPct": 0.554,
+        "atkPct": 0.533,
+        "defPct": 0.577
       },
       {
         "map": "Sunset",

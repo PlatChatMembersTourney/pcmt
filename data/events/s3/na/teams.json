@@ -63,10 +63,10 @@
         "name": "Team Slugshow",
         "abbr": "TS",
         "logo": "",
-        "players": ["straight", "avi", "dino", "lore", "paul"]
+        "players": ["straight", "avi", "dino", "lore", "pants"]
     },
     "NAVI": {
-        "name": "No Actuall Valorant Intelligence",
+        "name": "No Actual Valorant Intelligence",
         "abbr": "NAVI",
         "logo": "",
         "players": ["stingray", "Lazy", "kaydeg", "cassie", "linus"]

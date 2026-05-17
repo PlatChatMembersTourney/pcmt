@@ -429,8 +429,8 @@
   "DFM": {
     "team": "DFM",
     "teamName": "Dementia Found Me",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.375,
+    "overallDefPct": 0.353,
     "maps": [
       {
         "map": "Abyss",
@@ -448,7 +448,7 @@
       {
         "map": "Ascent",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -472,9 +472,22 @@
         "defPct": 0
       },
       {
-        "map": "Fracture",
+        "map": "Breeze",
         "pick": 0,
         "ban": 0,
+        "played": 1,
+        "won": 0,
+        "winPct": 0.0,
+        "rounds": 17,
+        "roundsWon": 4,
+        "roundPct": 0.235,
+        "atkPct": 0.25,
+        "defPct": 0.2
+      },
+      {
+        "map": "Fracture",
+        "pick": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -525,16 +538,16 @@
       },
       {
         "map": "Pearl",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 24,
+        "roundsWon": 11,
+        "roundPct": 0.458,
+        "atkPct": 0.5,
+        "defPct": 0.417
       },
       {
         "map": "Split",
@@ -1131,7 +1144,7 @@
   },
   "NAVI": {
     "team": "NAVI",
-    "teamName": "No Actuall Valorant Intelligence",
+    "teamName": "No Actual Valorant Intelligence",
     "overallAtkPct": 0,
     "overallDefPct": 0,
     "maps": [
@@ -2098,8 +2111,8 @@
   "TS": {
     "team": "TS",
     "teamName": "Team Slugshow",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.647,
+    "overallDefPct": 0.625,
     "maps": [
       {
         "map": "Abyss",
@@ -2141,6 +2154,19 @@
         "defPct": 0
       },
       {
+        "map": "Breeze",
+        "pick": 1,
+        "ban": 0,
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 17,
+        "roundsWon": 13,
+        "roundPct": 0.765,
+        "atkPct": 0.8,
+        "defPct": 0.75
+      },
+      {
         "map": "Fracture",
         "pick": 0,
         "ban": 0,
@@ -2156,7 +2182,7 @@
       {
         "map": "Haven",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -2196,19 +2222,19 @@
         "map": "Pearl",
         "pick": 0,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 24,
+        "roundsWon": 13,
+        "roundPct": 0.542,
+        "atkPct": 0.583,
+        "defPct": 0.5
       },
       {
         "map": "Split",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
