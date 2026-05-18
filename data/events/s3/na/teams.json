@@ -2,96 +2,112 @@
     "T1": {
         "name": "Team 1",
         "abbr": "T1",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["MrCrocMan", "Pi", "Ceiliuir", "radical", "roro"]
     },
     "FNC": {
         "name": "cow paulo FaN Club",
         "abbr": "FNC",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["james", "niboos", "li", "adeline", "xixi"]
     },
     "TL": {
         "name": "Team Dyslexia",
         "abbr": "TL",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["haych", "caleb", "ender", "slow", "tans"]
     },
     "SSG": {
         "name": "Squirtle Squad Gaming",
         "abbr": "SSG",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["colt", "aleks", "darshan", "nameless", "cardamom"]
     },
     "IHOP": {
         "name": "I Hate Odin Party",
         "abbr": "IHOP",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["pavel", "eve", "platinum", "ethan", "maple"]
     },
     "RRQ": {
         "name": "Rage Re-Queuers",
         "abbr": "RRQ",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["angus", "snowfall", "platy", "twon", "tery"]
     },
     "FSG": {
         "name": "Furry Squirrels Gaming",
         "abbr": "FSG",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["amara", "nolan", "skye", "rudra", "corina"]
     },
     "C9": {
         "name": "Clown9",
         "abbr": "C9",
+        "group": "Group Alpha",
         "logo": "",
         "players": ["claps", "art", "igneous", "makya", "caesparz"]
     },
     "SRB": {
         "name": "Sunshine and Rainbows",
         "abbr": "SRB",
+        "group": "Group Omega",
         "logo": "",
         "players": ["izz", "jaypee", "nova", "androobee", "timothy"]
     },
     "BAKA": {
         "name": "Beautiful and Kinda Adorable",
         "abbr": "BAKA",
+        "group": "Group Omega",
         "logo": "",
         "players": ["lucas", "night", "asher", "devil", "tenyaku"]
     },
     "TS": {
         "name": "Team Slugshow",
         "abbr": "TS",
+        "group": "Group Omega",
         "logo": "",
         "players": ["straight", "avi", "dino", "lore", "pants"]
     },
     "NAVI": {
         "name": "No Actual Valorant Intelligence",
         "abbr": "NAVI",
+        "group": "Group Omega",
         "logo": "",
         "players": ["stingray", "Lazy", "kaydeg", "cassie", "linus"]
     },
     "EPY": {
         "name": "Team Entropy",
         "abbr": "EPY",
+        "group": "Group Omega",
         "logo": "",
         "players": ["blitz", "solar", "apple", "robohobo", "jolly"]
     },
     "100T": {
         "name": "100 Tony's",
         "abbr": "100T",
+        "group": "Group Omega",
         "logo": "",
         "players": ["abstracq", "psyclone", "shadow", "xyn", "catsmeow"]
     },
     "DFM": {
         "name": "Dementia Found Me",
         "abbr": "DFM",
+        "group": "Group Omega",
         "logo": "",
         "players": ["masao", "nik", "longclaw", "hascan", "teklo"]
     },
     "SPG": {
         "name": "Spank Ptheory Gaming",
         "abbr": "SPG",
+        "group": "Group Omega",
         "logo": "",
         "players": ["thighs", "cooleo", "derpina", "phuzzy", "dunkn"]
     }
