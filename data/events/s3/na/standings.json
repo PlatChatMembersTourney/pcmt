@@ -27,6 +27,19 @@
       "rndDiff": 11
     },
     {
+      "abbr": "SRB",
+      "name": "Sunshine and Rainbows",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 20,
+      "rank": 3,
+      "mapDiff": 2,
+      "rndDiff": 6
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 1,
@@ -35,39 +48,26 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 5
     },
     {
-      "abbr": "T1",
-      "name": "Team 1",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 4,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "FNC",
-      "name": "cow paulo FaN Club",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 5,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "TL",
       "name": "Team Dyslexia",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 1,
+      "rndW": 39,
+      "rndL": 21,
+      "rank": 5,
+      "mapDiff": 1,
+      "rndDiff": 18
+    },
+    {
+      "abbr": "T1",
+      "name": "Team 1",
       "matchW": 0,
       "matchL": 0,
       "mapW": 0,
@@ -118,19 +118,6 @@
       "rndDiff": 0
     },
     {
-      "abbr": "SRB",
-      "name": "Sunshine and Rainbows",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 10,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 0,
@@ -139,7 +126,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 11,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -152,22 +139,22 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
     {
-      "abbr": "100T",
-      "name": "100 Tony's",
+      "abbr": "FNC",
+      "name": "cow paulo FaN Club",
       "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 13,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "matchL": 1,
+      "mapW": 1,
+      "mapL": 2,
+      "rndW": 21,
+      "rndL": 39,
+      "rank": 12,
+      "mapDiff": -1,
+      "rndDiff": -18
     },
     {
       "abbr": "C9",
@@ -178,9 +165,22 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 26,
-      "rank": 14,
+      "rank": 13,
       "mapDiff": -2,
       "rndDiff": -5
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 20,
+      "rndL": 26,
+      "rank": 14,
+      "mapDiff": -2,
+      "rndDiff": -6
     },
     {
       "abbr": "DFM",
@@ -237,6 +237,19 @@
       "rndDiff": 11
     },
     {
+      "abbr": "SRB",
+      "name": "Sunshine and Rainbows",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 20,
+      "rank": 3,
+      "mapDiff": 2,
+      "rndDiff": 6
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 1,
@@ -245,39 +258,26 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 5
     },
     {
-      "abbr": "T1",
-      "name": "Team 1",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 4,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "FNC",
-      "name": "cow paulo FaN Club",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 5,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "TL",
       "name": "Team Dyslexia",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 1,
+      "rndW": 39,
+      "rndL": 21,
+      "rank": 5,
+      "mapDiff": 1,
+      "rndDiff": 18
+    },
+    {
+      "abbr": "T1",
+      "name": "Team 1",
       "matchW": 0,
       "matchL": 0,
       "mapW": 0,
@@ -328,19 +328,6 @@
       "rndDiff": 0
     },
     {
-      "abbr": "SRB",
-      "name": "Sunshine and Rainbows",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 10,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 0,
@@ -349,7 +336,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 11,
+      "rank": 10,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -362,22 +349,22 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": 0,
       "rndDiff": 0
     },
     {
-      "abbr": "100T",
-      "name": "100 Tony's",
+      "abbr": "FNC",
+      "name": "cow paulo FaN Club",
       "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 13,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "matchL": 1,
+      "mapW": 1,
+      "mapL": 2,
+      "rndW": 21,
+      "rndL": 39,
+      "rank": 12,
+      "mapDiff": -1,
+      "rndDiff": -18
     },
     {
       "abbr": "C9",
@@ -388,9 +375,22 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 26,
-      "rank": 14,
+      "rank": 13,
       "mapDiff": -2,
       "rndDiff": -5
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 20,
+      "rndL": 26,
+      "rank": 14,
+      "mapDiff": -2,
+      "rndDiff": -6
     },
     {
       "abbr": "DFM",
