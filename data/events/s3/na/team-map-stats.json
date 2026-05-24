@@ -1020,8 +1020,8 @@
   "IHOP": {
     "team": "IHOP",
     "teamName": "I Hate Odin Party",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.176,
+    "overallDefPct": 0.5,
     "maps": [
       {
         "map": "Abyss",
@@ -1038,16 +1038,16 @@
       },
       {
         "map": "Ascent",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 17,
+        "roundsWon": 4,
+        "roundPct": 0.235,
+        "atkPct": 0.2,
+        "defPct": 0.25
       },
       {
         "map": "Bind",
@@ -1063,9 +1063,22 @@
         "defPct": 0
       },
       {
+        "map": "Breeze",
+        "pick": 0,
+        "ban": 1,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Fracture",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1079,14 +1092,14 @@
         "map": "Haven",
         "pick": 0,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 24,
+        "roundsWon": 11,
+        "roundPct": 0.458,
+        "atkPct": 0.167,
+        "defPct": 0.75
       },
       {
         "map": "Icebox",
@@ -1710,8 +1723,8 @@
   "SSG": {
     "team": "SSG",
     "teamName": "Squirtle Squad Gaming",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.5,
+    "overallDefPct": 0.824,
     "maps": [
       {
         "map": "Abyss",
@@ -1730,14 +1743,14 @@
         "map": "Ascent",
         "pick": 0,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 17,
+        "roundsWon": 13,
+        "roundPct": 0.765,
+        "atkPct": 0.75,
+        "defPct": 0.8
       },
       {
         "map": "Bind",
@@ -1767,16 +1780,16 @@
       },
       {
         "map": "Haven",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 24,
+        "roundsWon": 13,
+        "roundPct": 0.542,
+        "atkPct": 0.25,
+        "defPct": 0.833
       },
       {
         "map": "Icebox",
@@ -1794,7 +1807,7 @@
       {
         "map": "Lotus",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1807,7 +1820,7 @@
       {
         "map": "Pearl",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
