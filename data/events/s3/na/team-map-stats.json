@@ -442,8 +442,8 @@
   "DFM": {
     "team": "DFM",
     "teamName": "Dementia Found Me",
-    "overallAtkPct": 0.375,
-    "overallDefPct": 0.353,
+    "overallAtkPct": 0.377,
+    "overallDefPct": 0.434,
     "maps": [
       {
         "map": "Abyss",
@@ -462,14 +462,14 @@
         "map": "Ascent",
         "pick": 0,
         "ban": 1,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 15,
+        "roundsWon": 2,
+        "roundPct": 0.133,
+        "atkPct": 0.0,
+        "defPct": 0.167
       },
       {
         "map": "Bind",
@@ -487,7 +487,7 @@
       {
         "map": "Breeze",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -499,16 +499,16 @@
       },
       {
         "map": "Fracture",
-        "pick": 0,
+        "pick": 1,
         "ban": 1,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 22,
+        "roundsWon": 13,
+        "roundPct": 0.591,
+        "atkPct": 0.583,
+        "defPct": 0.6
       },
       {
         "map": "Haven",
@@ -540,14 +540,14 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 28,
+        "roundsWon": 13,
+        "roundPct": 0.464,
+        "atkPct": 0.286,
+        "defPct": 0.643
       },
       {
         "map": "Pearl",
@@ -565,7 +565,7 @@
       {
         "map": "Split",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1585,8 +1585,8 @@
   "SRB": {
     "team": "SRB",
     "teamName": "Sunshine and Rainbows",
-    "overallAtkPct": 0.455,
-    "overallDefPct": 0.667,
+    "overallAtkPct": 0.5,
+    "overallDefPct": 0.642,
     "maps": [
       {
         "map": "Abyss",
@@ -1603,16 +1603,16 @@
       },
       {
         "map": "Ascent",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 1,
-        "won": 1,
+        "played": 2,
+        "won": 2,
         "winPct": 1.0,
-        "rounds": 22,
-        "roundsWon": 13,
-        "roundPct": 0.591,
-        "atkPct": 0.4,
-        "defPct": 0.75
+        "rounds": 37,
+        "roundsWon": 26,
+        "roundPct": 0.703,
+        "atkPct": 0.636,
+        "defPct": 0.8
       },
       {
         "map": "Bind",
@@ -1631,19 +1631,19 @@
         "map": "Fracture",
         "pick": 0,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 22,
+        "roundsWon": 9,
+        "roundPct": 0.409,
+        "atkPct": 0.4,
+        "defPct": 0.417
       },
       {
         "map": "Haven",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1670,19 +1670,19 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 28,
+        "roundsWon": 15,
+        "roundPct": 0.536,
+        "atkPct": 0.357,
+        "defPct": 0.714
       },
       {
         "map": "Pearl",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 0,
         "won": 0,
         "winPct": 0,

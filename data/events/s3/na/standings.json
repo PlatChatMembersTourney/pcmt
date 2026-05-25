@@ -1,6 +1,19 @@
 {
   "Overall": [
     {
+      "abbr": "SRB",
+      "name": "Sunshine and Rainbows",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 1,
+      "rndW": 63,
+      "rndL": 48,
+      "rank": 1,
+      "mapDiff": 3,
+      "rndDiff": 15
+    },
+    {
       "abbr": "SPG",
       "name": "Spank Ptheory Gaming",
       "matchW": 1,
@@ -9,7 +22,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 10,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 2,
       "rndDiff": 16
     },
@@ -22,7 +35,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -35,22 +48,9 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 3,
-      "mapDiff": 2,
-      "rndDiff": 11
-    },
-    {
-      "abbr": "SRB",
-      "name": "Sunshine and Rainbows",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 20,
       "rank": 4,
       "mapDiff": 2,
-      "rndDiff": 6
+      "rndDiff": 11
     },
     {
       "abbr": "FSG",
@@ -183,19 +183,6 @@
       "rndDiff": -11
     },
     {
-      "abbr": "DFM",
-      "name": "Dementia Found Me",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 15,
-      "rndL": 26,
-      "rank": 15,
-      "mapDiff": -2,
-      "rndDiff": -11
-    },
-    {
       "abbr": "EPY",
       "name": "Team Entropy",
       "matchW": 0,
@@ -204,9 +191,22 @@
       "mapL": 2,
       "rndW": 10,
       "rndL": 26,
-      "rank": 16,
+      "rank": 15,
       "mapDiff": -2,
       "rndDiff": -16
+    },
+    {
+      "abbr": "DFM",
+      "name": "Dementia Found Me",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 1,
+      "mapL": 4,
+      "rndW": 43,
+      "rndL": 63,
+      "rank": 16,
+      "mapDiff": -3,
+      "rndDiff": -20
     }
   ],
   "Group Alpha": [
@@ -250,6 +250,19 @@
       "rndDiff": 18
     },
     {
+      "abbr": "SRB",
+      "name": "SRB",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 1,
+      "rndW": 37,
+      "rndL": 28,
+      "rank": 4,
+      "mapDiff": 1,
+      "rndDiff": 9
+    },
+    {
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 0,
@@ -258,7 +271,7 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 0
     },
@@ -271,9 +284,22 @@
       "mapL": 0,
       "rndW": 0,
       "rndL": 0,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 0
+    },
+    {
+      "abbr": "DFM",
+      "name": "DFM",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 1,
+      "mapL": 2,
+      "rndW": 28,
+      "rndL": 37,
+      "rank": 7,
+      "mapDiff": -1,
+      "rndDiff": -9
     },
     {
       "abbr": "FNC",
@@ -284,7 +310,7 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 39,
-      "rank": 6,
+      "rank": 8,
       "mapDiff": -1,
       "rndDiff": -18
     },
@@ -297,7 +323,7 @@
       "mapL": 2,
       "rndW": 21,
       "rndL": 26,
-      "rank": 7,
+      "rank": 9,
       "mapDiff": -2,
       "rndDiff": -5
     },
@@ -310,7 +336,7 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 8,
+      "rank": 10,
       "mapDiff": -2,
       "rndDiff": -11
     }
