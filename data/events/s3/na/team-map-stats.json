@@ -153,8 +153,8 @@
   "BAKA": {
     "team": "BAKA",
     "teamName": "Beautiful and Kinda Adorable",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.562,
+    "overallDefPct": 0.208,
     "maps": [
       {
         "map": "Abyss",
@@ -196,6 +196,19 @@
         "defPct": 0
       },
       {
+        "map": "Breeze",
+        "pick": 0,
+        "ban": 0,
+        "played": 1,
+        "won": 0,
+        "winPct": 0.0,
+        "rounds": 16,
+        "roundsWon": 3,
+        "roundPct": 0.188,
+        "atkPct": 0.5,
+        "defPct": 0.083
+      },
+      {
         "map": "Fracture",
         "pick": 0,
         "ban": 0,
@@ -211,7 +224,7 @@
       {
         "map": "Haven",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -236,21 +249,21 @@
       },
       {
         "map": "Lotus",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 24,
+        "roundsWon": 11,
+        "roundPct": 0.458,
+        "atkPct": 0.583,
+        "defPct": 0.333
       },
       {
         "map": "Pearl",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1171,8 +1184,8 @@
   "NAVI": {
     "team": "NAVI",
     "teamName": "No Actual Valorant Intelligence",
-    "overallAtkPct": 0,
-    "overallDefPct": 0,
+    "overallAtkPct": 0.792,
+    "overallDefPct": 0.438,
     "maps": [
       {
         "map": "Abyss",
@@ -1214,9 +1227,22 @@
         "defPct": 0
       },
       {
+        "map": "Breeze",
+        "pick": 1,
+        "ban": 0,
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 16,
+        "roundsWon": 13,
+        "roundPct": 0.812,
+        "atkPct": 0.917,
+        "defPct": 0.5
+      },
+      {
         "map": "Fracture",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1256,14 +1282,14 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 24,
+        "roundsWon": 13,
+        "roundPct": 0.542,
+        "atkPct": 0.667,
+        "defPct": 0.417
       },
       {
         "map": "Pearl",
@@ -1281,7 +1307,7 @@
       {
         "map": "Split",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,

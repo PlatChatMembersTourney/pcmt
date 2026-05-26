@@ -27,6 +27,19 @@
       "rndDiff": 15
     },
     {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 14,
+      "rank": 3,
+      "mapDiff": 2,
+      "rndDiff": 12
+    },
+    {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
@@ -35,7 +48,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -48,7 +61,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -61,7 +74,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -74,7 +87,7 @@
       "mapL": 1,
       "rndW": 39,
       "rndL": 21,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 1,
       "rndDiff": 18
     },
@@ -87,7 +100,7 @@
       "mapL": 1,
       "rndW": 28,
       "rndL": 25,
-      "rank": 7,
+      "rank": 8,
       "mapDiff": 1,
       "rndDiff": 3
     },
@@ -100,35 +113,9 @@
       "mapL": 3,
       "rndW": 58,
       "rndL": 52,
-      "rank": 8,
+      "rank": 9,
       "mapDiff": -1,
       "rndDiff": 6
-    },
-    {
-      "abbr": "BAKA",
-      "name": "Beautiful and Kinda Adorable",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 9,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 10,
-      "mapDiff": 0,
-      "rndDiff": 0
     },
     {
       "abbr": "RRQ",
@@ -139,7 +126,7 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 11,
+      "rank": 10,
       "mapDiff": -1,
       "rndDiff": -3
     },
@@ -152,9 +139,22 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": -2,
       "rndDiff": -11
+    },
+    {
+      "abbr": "BAKA",
+      "name": "Beautiful and Kinda Adorable",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 14,
+      "rndL": 26,
+      "rank": 12,
+      "mapDiff": -2,
+      "rndDiff": -12
     },
     {
       "abbr": "EPY",
@@ -343,6 +343,19 @@
       "rndDiff": 15
     },
     {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 26,
+      "rndL": 14,
+      "rank": 3,
+      "mapDiff": 2,
+      "rndDiff": 12
+    },
+    {
       "abbr": "TS",
       "name": "Team Slugshow",
       "matchW": 1,
@@ -351,7 +364,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -359,27 +372,14 @@
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 0,
-      "matchL": 0,
+      "matchL": 1,
       "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 4,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
+      "mapL": 2,
+      "rndW": 14,
+      "rndL": 26,
       "rank": 5,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": -2,
+      "rndDiff": -12
     },
     {
       "abbr": "EPY",
