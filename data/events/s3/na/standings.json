@@ -1,6 +1,19 @@
 {
   "Overall": [
     {
+      "abbr": "SPG",
+      "name": "Spank Ptheory Gaming",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 32,
+      "rank": 1,
+      "mapDiff": 4,
+      "rndDiff": 20
+    },
+    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -9,22 +22,9 @@
       "mapL": 1,
       "rndW": 63,
       "rndL": 48,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 3,
       "rndDiff": 15
-    },
-    {
-      "abbr": "SPG",
-      "name": "Spank Ptheory Gaming",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 10,
-      "rank": 2,
-      "mapDiff": 2,
-      "rndDiff": 16
     },
     {
       "abbr": "SSG",
@@ -81,28 +81,28 @@
     {
       "abbr": "T1",
       "name": "Team 1",
-      "matchW": 0,
+      "matchW": 1,
       "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
+      "mapW": 2,
+      "mapL": 1,
+      "rndW": 28,
+      "rndL": 25,
       "rank": 7,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": 1,
+      "rndDiff": 3
     },
     {
-      "abbr": "RRQ",
-      "name": "Rage Re-Queuers",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 1,
+      "matchL": 1,
+      "mapW": 2,
+      "mapL": 3,
+      "rndW": 58,
+      "rndL": 52,
       "rank": 8,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": -1,
+      "rndDiff": 6
     },
     {
       "abbr": "BAKA",
@@ -131,43 +131,17 @@
       "rndDiff": 0
     },
     {
-      "abbr": "FNC",
-      "name": "cow paulo FaN Club",
+      "abbr": "RRQ",
+      "name": "Rage Re-Queuers",
       "matchW": 0,
       "matchL": 1,
       "mapW": 1,
       "mapL": 2,
-      "rndW": 21,
-      "rndL": 39,
+      "rndW": 25,
+      "rndL": 28,
       "rank": 11,
       "mapDiff": -1,
-      "rndDiff": -18
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 21,
-      "rndL": 26,
-      "rank": 12,
-      "mapDiff": -2,
-      "rndDiff": -5
-    },
-    {
-      "abbr": "100T",
-      "name": "100 Tony's",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 20,
-      "rndL": 26,
-      "rank": 13,
-      "mapDiff": -2,
-      "rndDiff": -6
+      "rndDiff": -3
     },
     {
       "abbr": "IHOP",
@@ -178,7 +152,7 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 14,
+      "rank": 12,
       "mapDiff": -2,
       "rndDiff": -11
     },
@@ -191,9 +165,22 @@
       "mapL": 2,
       "rndW": 10,
       "rndL": 26,
-      "rank": 15,
+      "rank": 13,
       "mapDiff": -2,
       "rndDiff": -16
+    },
+    {
+      "abbr": "FNC",
+      "name": "cow paulo FaN Club",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 2,
+      "mapL": 4,
+      "rndW": 47,
+      "rndL": 76,
+      "rank": 14,
+      "mapDiff": -2,
+      "rndDiff": -29
     },
     {
       "abbr": "DFM",
@@ -204,9 +191,22 @@
       "mapL": 4,
       "rndW": 43,
       "rndL": 63,
-      "rank": 16,
+      "rank": 15,
       "mapDiff": -3,
       "rndDiff": -20
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 0,
+      "mapL": 4,
+      "rndW": 42,
+      "rndL": 52,
+      "rank": 16,
+      "mapDiff": -4,
+      "rndDiff": -10
     }
   ],
   "Group Alpha": [
@@ -252,54 +252,41 @@
     {
       "abbr": "T1",
       "name": "Team 1",
-      "matchW": 0,
+      "matchW": 1,
       "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
+      "mapW": 2,
+      "mapL": 1,
+      "rndW": 28,
+      "rndL": 25,
       "rank": 4,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": 1,
+      "rndDiff": 3
+    },
+    {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 1,
+      "matchL": 1,
+      "mapW": 2,
+      "mapL": 3,
+      "rndW": 58,
+      "rndL": 52,
+      "rank": 5,
+      "mapDiff": -1,
+      "rndDiff": 6
     },
     {
       "abbr": "RRQ",
       "name": "Rage Re-Queuers",
       "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
-      "rank": 5,
-      "mapDiff": 0,
-      "rndDiff": 0
-    },
-    {
-      "abbr": "FNC",
-      "name": "cow paulo FaN Club",
-      "matchW": 0,
       "matchL": 1,
       "mapW": 1,
       "mapL": 2,
-      "rndW": 21,
-      "rndL": 39,
+      "rndW": 25,
+      "rndL": 28,
       "rank": 6,
       "mapDiff": -1,
-      "rndDiff": -18
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 21,
-      "rndL": 26,
-      "rank": 7,
-      "mapDiff": -2,
-      "rndDiff": -5
+      "rndDiff": -3
     },
     {
       "abbr": "IHOP",
@@ -310,12 +297,38 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 8,
+      "rank": 7,
       "mapDiff": -2,
       "rndDiff": -11
+    },
+    {
+      "abbr": "FNC",
+      "name": "cow paulo FaN Club",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 2,
+      "mapL": 4,
+      "rndW": 47,
+      "rndL": 76,
+      "rank": 8,
+      "mapDiff": -2,
+      "rndDiff": -29
     }
   ],
   "Group Omega": [
+    {
+      "abbr": "SPG",
+      "name": "Spank Ptheory Gaming",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 32,
+      "rank": 1,
+      "mapDiff": 4,
+      "rndDiff": 20
+    },
     {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
@@ -325,22 +338,9 @@
       "mapL": 1,
       "rndW": 63,
       "rndL": 48,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 3,
       "rndDiff": 15
-    },
-    {
-      "abbr": "SPG",
-      "name": "Spank Ptheory Gaming",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 10,
-      "rank": 2,
-      "mapDiff": 2,
-      "rndDiff": 16
     },
     {
       "abbr": "TS",
@@ -382,19 +382,6 @@
       "rndDiff": 0
     },
     {
-      "abbr": "100T",
-      "name": "100 Tony's",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 20,
-      "rndL": 26,
-      "rank": 6,
-      "mapDiff": -2,
-      "rndDiff": -6
-    },
-    {
       "abbr": "EPY",
       "name": "Team Entropy",
       "matchW": 0,
@@ -403,7 +390,7 @@
       "mapL": 2,
       "rndW": 10,
       "rndL": 26,
-      "rank": 7,
+      "rank": 6,
       "mapDiff": -2,
       "rndDiff": -16
     },
@@ -416,9 +403,22 @@
       "mapL": 4,
       "rndW": 43,
       "rndL": 63,
-      "rank": 8,
+      "rank": 7,
       "mapDiff": -3,
       "rndDiff": -20
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 0,
+      "mapL": 4,
+      "rndW": 42,
+      "rndL": 52,
+      "rank": 8,
+      "mapDiff": -4,
+      "rndDiff": -10
     }
   ]
 }
