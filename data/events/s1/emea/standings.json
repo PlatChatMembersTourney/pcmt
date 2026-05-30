@@ -3,28 +3,28 @@
     {
       "abbr": "WFC",
       "name": "Wetherspoons FC",
-      "matchW": 3,
+      "matchW": 4,
       "matchL": 0,
-      "mapW": 6,
+      "mapW": 9,
       "mapL": 1,
-      "rndW": 80,
-      "rndL": 56,
+      "rndW": 120,
+      "rndL": 84,
       "rank": 1,
-      "mapDiff": 5,
-      "rndDiff": 24
+      "mapDiff": 8,
+      "rndDiff": 36
     },
     {
       "abbr": "MISC",
       "name": "Mischifs",
       "matchW": 3,
-      "matchL": 1,
+      "matchL": 2,
       "mapW": 6,
-      "mapL": 3,
-      "rndW": 99,
-      "rndL": 82,
+      "mapL": 6,
+      "rndW": 127,
+      "rndL": 122,
       "rank": 2,
-      "mapDiff": 3,
-      "rndDiff": 17
+      "mapDiff": 0,
+      "rndDiff": 5
     },
     {
       "abbr": "T4K",
@@ -109,6 +109,19 @@
   ],
   "Playoffs": [
     {
+      "abbr": "WFC",
+      "name": "Wetherspoons FC",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 3,
+      "mapL": 0,
+      "rndW": 40,
+      "rndL": 28,
+      "rank": 1,
+      "mapDiff": 3,
+      "rndDiff": 12
+    },
+    {
       "abbr": "<3",
       "name": "Less Than Three",
       "matchW": 1,
@@ -117,7 +130,7 @@
       "mapL": 2,
       "rndW": 57,
       "rndL": 54,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 1,
       "rndDiff": 3
     },
@@ -125,27 +138,14 @@
       "abbr": "MISC",
       "name": "Mischifs",
       "matchW": 1,
-      "matchL": 0,
+      "matchL": 1,
       "mapW": 2,
-      "mapL": 1,
-      "rndW": 31,
-      "rndL": 29,
-      "rank": 2,
-      "mapDiff": 1,
-      "rndDiff": 2
-    },
-    {
-      "abbr": "WFC",
-      "name": "Wetherspoons FC",
-      "matchW": 0,
-      "matchL": 0,
-      "mapW": 0,
-      "mapL": 0,
-      "rndW": 0,
-      "rndL": 0,
+      "mapL": 4,
+      "rndW": 59,
+      "rndL": 69,
       "rank": 3,
-      "mapDiff": 0,
-      "rndDiff": 0
+      "mapDiff": -2,
+      "rndDiff": -10
     },
     {
       "abbr": "T4K",
