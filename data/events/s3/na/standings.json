@@ -17,14 +17,27 @@
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 1,
-      "rndW": 63,
-      "rndL": 48,
+      "matchL": 1,
+      "mapW": 5,
+      "mapL": 3,
+      "rndW": 96,
+      "rndL": 84,
       "rank": 2,
-      "mapDiff": 3,
-      "rndDiff": 15
+      "mapDiff": 2,
+      "rndDiff": 12
+    },
+    {
+      "abbr": "T1",
+      "name": "Team 1",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 3,
+      "mapL": 1,
+      "rndW": 43,
+      "rndL": 38,
+      "rank": 3,
+      "mapDiff": 2,
+      "rndDiff": 5
     },
     {
       "abbr": "NAVI",
@@ -35,22 +48,9 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 14,
-      "rank": 3,
-      "mapDiff": 2,
-      "rndDiff": 12
-    },
-    {
-      "abbr": "SSG",
-      "name": "Squirtle Squad Gaming",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 15,
       "rank": 4,
       "mapDiff": 2,
-      "rndDiff": 11
+      "rndDiff": 12
     },
     {
       "abbr": "TS",
@@ -92,17 +92,17 @@
       "rndDiff": 18
     },
     {
-      "abbr": "T1",
-      "name": "Team 1",
+      "abbr": "SSG",
+      "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 0,
+      "matchL": 1,
       "mapW": 2,
       "mapL": 1,
-      "rndW": 28,
-      "rndL": 25,
+      "rndW": 39,
+      "rndL": 30,
       "rank": 8,
       "mapDiff": 1,
-      "rndDiff": 3
+      "rndDiff": 9
     },
     {
       "abbr": "C9",
@@ -118,6 +118,19 @@
       "rndDiff": 6
     },
     {
+      "abbr": "BAKA",
+      "name": "Beautiful and Kinda Adorable",
+      "matchW": 1,
+      "matchL": 1,
+      "mapW": 2,
+      "mapL": 3,
+      "rndW": 50,
+      "rndL": 59,
+      "rank": 10,
+      "mapDiff": -1,
+      "rndDiff": -9
+    },
+    {
       "abbr": "RRQ",
       "name": "Rage Re-Queuers",
       "matchW": 0,
@@ -126,7 +139,7 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 10,
+      "rank": 11,
       "mapDiff": -1,
       "rndDiff": -3
     },
@@ -139,22 +152,9 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 11,
-      "mapDiff": -2,
-      "rndDiff": -11
-    },
-    {
-      "abbr": "BAKA",
-      "name": "Beautiful and Kinda Adorable",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 14,
-      "rndL": 26,
       "rank": 12,
       "mapDiff": -2,
-      "rndDiff": -12
+      "rndDiff": -11
     },
     {
       "abbr": "EPY",
@@ -211,17 +211,17 @@
   ],
   "Group Alpha": [
     {
-      "abbr": "SSG",
-      "name": "Squirtle Squad Gaming",
-      "matchW": 1,
+      "abbr": "T1",
+      "name": "Team 1",
+      "matchW": 2,
       "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 15,
+      "mapW": 3,
+      "mapL": 1,
+      "rndW": 43,
+      "rndL": 38,
       "rank": 1,
       "mapDiff": 2,
-      "rndDiff": 11
+      "rndDiff": 5
     },
     {
       "abbr": "FSG",
@@ -250,17 +250,17 @@
       "rndDiff": 18
     },
     {
-      "abbr": "T1",
-      "name": "Team 1",
+      "abbr": "SSG",
+      "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 0,
+      "matchL": 1,
       "mapW": 2,
       "mapL": 1,
-      "rndW": 28,
-      "rndL": 25,
+      "rndW": 39,
+      "rndL": 30,
       "rank": 4,
       "mapDiff": 1,
-      "rndDiff": 3
+      "rndDiff": 9
     },
     {
       "abbr": "C9",
@@ -333,14 +333,14 @@
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 1,
-      "rndW": 63,
-      "rndL": 48,
+      "matchL": 1,
+      "mapW": 5,
+      "mapL": 3,
+      "rndW": 96,
+      "rndL": 84,
       "rank": 2,
-      "mapDiff": 3,
-      "rndDiff": 15
+      "mapDiff": 2,
+      "rndDiff": 12
     },
     {
       "abbr": "NAVI",
@@ -371,15 +371,15 @@
     {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
-      "matchW": 0,
+      "matchW": 1,
       "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 14,
-      "rndL": 26,
+      "mapW": 2,
+      "mapL": 3,
+      "rndW": 50,
+      "rndL": 59,
       "rank": 5,
-      "mapDiff": -2,
-      "rndDiff": -12
+      "mapDiff": -1,
+      "rndDiff": -9
     },
     {
       "abbr": "EPY",
