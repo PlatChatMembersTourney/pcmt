@@ -299,13 +299,13 @@
   "DFM": {
     "team": "DFM",
     "teamName": "Dementia Found Me",
-    "overallAtkPct": 0.377,
-    "overallDefPct": 0.434,
+    "overallAtkPct": 0.333,
+    "overallDefPct": 0.394,
     "maps": [
       {
         "map": "Ascent",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -358,32 +358,32 @@
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 0,
         "winPct": 0.0,
-        "rounds": 28,
-        "roundsWon": 13,
-        "roundPct": 0.464,
-        "atkPct": 0.286,
-        "defPct": 0.643
+        "rounds": 44,
+        "roundsWon": 16,
+        "roundPct": 0.364,
+        "atkPct": 0.222,
+        "defPct": 0.462
       },
       {
         "map": "Pearl",
-        "pick": 1,
+        "pick": 2,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 0,
         "winPct": 0.0,
-        "rounds": 24,
-        "roundsWon": 11,
-        "roundPct": 0.458,
-        "atkPct": 0.5,
-        "defPct": 0.417
+        "rounds": 42,
+        "roundsWon": 16,
+        "roundPct": 0.381,
+        "atkPct": 0.375,
+        "defPct": 0.389
       },
       {
         "map": "Split",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -992,8 +992,8 @@
   "SPG": {
     "team": "SPG",
     "teamName": "Spank Ptheory Gaming",
-    "overallAtkPct": 0.583,
-    "overallDefPct": 0.667,
+    "overallAtkPct": 0.621,
+    "overallDefPct": 0.712,
     "maps": [
       {
         "map": "Ascent",
@@ -1024,7 +1024,7 @@
       {
         "map": "Fracture",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1037,7 +1037,7 @@
       {
         "map": "Haven",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1049,29 +1049,29 @@
       },
       {
         "map": "Lotus",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
+        "played": 2,
+        "won": 2,
+        "winPct": 1.0,
+        "rounds": 34,
+        "roundsWon": 26,
+        "roundPct": 0.765,
+        "atkPct": 0.75,
+        "defPct": 0.8
+      },
+      {
+        "map": "Pearl",
+        "pick": 0,
+        "ban": 1,
         "played": 1,
         "won": 1,
         "winPct": 1.0,
         "rounds": 18,
         "roundsWon": 13,
         "roundPct": 0.722,
-        "atkPct": 0.75,
-        "defPct": 0.667
-      },
-      {
-        "map": "Pearl",
-        "pick": 0,
-        "ban": 1,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "atkPct": 0.667,
+        "defPct": 0.75
       },
       {
         "map": "Split",
