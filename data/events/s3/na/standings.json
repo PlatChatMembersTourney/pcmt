@@ -14,6 +14,19 @@
       "rndDiff": 38
     },
     {
+      "abbr": "TL",
+      "name": "Team Dyslexia",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 2,
+      "rndW": 67,
+      "rndL": 53,
+      "rank": 2,
+      "mapDiff": 2,
+      "rndDiff": 14
+    },
+    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -22,7 +35,7 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -35,7 +48,7 @@
       "mapL": 1,
       "rndW": 43,
       "rndL": 38,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -48,7 +61,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 14,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -61,7 +74,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -74,35 +87,22 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 2,
       "rndDiff": 5
-    },
-    {
-      "abbr": "TL",
-      "name": "Team Dyslexia",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 1,
-      "rndW": 39,
-      "rndL": 21,
-      "rank": 7,
-      "mapDiff": 1,
-      "rndDiff": 18
     },
     {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 1,
-      "mapW": 2,
-      "mapL": 1,
-      "rndW": 39,
-      "rndL": 30,
+      "matchL": 2,
+      "mapW": 3,
+      "mapL": 3,
+      "rndW": 71,
+      "rndL": 58,
       "rank": 8,
-      "mapDiff": 1,
-      "rndDiff": 9
+      "mapDiff": 0,
+      "rndDiff": 13
     },
     {
       "abbr": "C9",
@@ -211,6 +211,19 @@
   ],
   "Group Alpha": [
     {
+      "abbr": "TL",
+      "name": "Team Dyslexia",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 2,
+      "rndW": 67,
+      "rndL": 53,
+      "rank": 1,
+      "mapDiff": 2,
+      "rndDiff": 14
+    },
+    {
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 2,
@@ -219,7 +232,7 @@
       "mapL": 1,
       "rndW": 43,
       "rndL": 38,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -232,35 +245,22 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 5
-    },
-    {
-      "abbr": "TL",
-      "name": "Team Dyslexia",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 1,
-      "rndW": 39,
-      "rndL": 21,
-      "rank": 3,
-      "mapDiff": 1,
-      "rndDiff": 18
     },
     {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 1,
-      "mapW": 2,
-      "mapL": 1,
-      "rndW": 39,
-      "rndL": 30,
+      "matchL": 2,
+      "mapW": 3,
+      "mapL": 3,
+      "rndW": 71,
+      "rndL": 58,
       "rank": 4,
-      "mapDiff": 1,
-      "rndDiff": 9
+      "mapDiff": 0,
+      "rndDiff": 13
     },
     {
       "abbr": "C9",
