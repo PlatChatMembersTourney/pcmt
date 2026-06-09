@@ -43,14 +43,27 @@
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 2,
-      "matchL": 0,
-      "mapW": 3,
-      "mapL": 1,
-      "rndW": 43,
-      "rndL": 38,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 3,
+      "rndW": 73,
+      "rndL": 76,
       "rank": 4,
-      "mapDiff": 2,
-      "rndDiff": 5
+      "mapDiff": 1,
+      "rndDiff": -3
+    },
+    {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 2,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 4,
+      "rndW": 96,
+      "rndL": 82,
+      "rank": 5,
+      "mapDiff": 0,
+      "rndDiff": 14
     },
     {
       "abbr": "NAVI",
@@ -61,7 +74,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 14,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -74,7 +87,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 2,
       "rndDiff": 11
     },
@@ -87,7 +100,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 7,
+      "rank": 8,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -100,22 +113,9 @@
       "mapL": 3,
       "rndW": 71,
       "rndL": 58,
-      "rank": 8,
+      "rank": 9,
       "mapDiff": 0,
       "rndDiff": 13
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 1,
-      "matchL": 1,
-      "mapW": 2,
-      "mapL": 3,
-      "rndW": 58,
-      "rndL": 52,
-      "rank": 9,
-      "mapDiff": -1,
-      "rndDiff": 6
     },
     {
       "abbr": "BAKA",
@@ -227,14 +227,27 @@
       "abbr": "T1",
       "name": "Team 1",
       "matchW": 2,
-      "matchL": 0,
-      "mapW": 3,
-      "mapL": 1,
-      "rndW": 43,
-      "rndL": 38,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 3,
+      "rndW": 73,
+      "rndL": 76,
       "rank": 2,
-      "mapDiff": 2,
-      "rndDiff": 5
+      "mapDiff": 1,
+      "rndDiff": -3
+    },
+    {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 2,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 4,
+      "rndW": 96,
+      "rndL": 82,
+      "rank": 3,
+      "mapDiff": 0,
+      "rndDiff": 14
     },
     {
       "abbr": "FSG",
@@ -245,7 +258,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -258,22 +271,9 @@
       "mapL": 3,
       "rndW": 71,
       "rndL": 58,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 0,
       "rndDiff": 13
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 1,
-      "matchL": 1,
-      "mapW": 2,
-      "mapL": 3,
-      "rndW": 58,
-      "rndL": 52,
-      "rank": 5,
-      "mapDiff": -1,
-      "rndDiff": 6
     },
     {
       "abbr": "RRQ",
