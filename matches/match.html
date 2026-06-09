@@ -202,7 +202,7 @@
                 const row = [player.Player || ''];
                 if (hasAgent) {
                     const agent = player.Agent;
-                    row.push(agent && agent !== '-' ? `<img src="../data/agents/${agent}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'">` : '-');
+                    row.push(agent && agent !== '-' ? `<img src="../data/agents/${agent.replace('/', '')}_icon.png" alt="${agent}" class="md-agent-icon" title="${agent}" onerror="this.outerHTML='${agent}'">` : '-');
                 }
                 statCols.forEach(col => {
                     let val = player[col];
