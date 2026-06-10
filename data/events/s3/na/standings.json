@@ -118,17 +118,30 @@
       "rndDiff": 13
     },
     {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 1,
+      "matchL": 2,
+      "mapW": 2,
+      "mapL": 4,
+      "rndW": 69,
+      "rndL": 71,
+      "rank": 10,
+      "mapDiff": -2,
+      "rndDiff": -2
+    },
+    {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 1,
-      "matchL": 1,
+      "matchL": 2,
       "mapW": 2,
-      "mapL": 3,
-      "rndW": 50,
-      "rndL": 59,
-      "rank": 10,
-      "mapDiff": -1,
-      "rndDiff": -9
+      "mapL": 5,
+      "rndW": 69,
+      "rndL": 86,
+      "rank": 11,
+      "mapDiff": -3,
+      "rndDiff": -17
     },
     {
       "abbr": "RRQ",
@@ -139,7 +152,7 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 11,
+      "rank": 12,
       "mapDiff": -1,
       "rndDiff": -3
     },
@@ -152,7 +165,7 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 12,
+      "rank": 13,
       "mapDiff": -2,
       "rndDiff": -11
     },
@@ -165,7 +178,7 @@
       "mapL": 2,
       "rndW": 10,
       "rndL": 26,
-      "rank": 13,
+      "rank": 14,
       "mapDiff": -2,
       "rndDiff": -16
     },
@@ -178,22 +191,9 @@
       "mapL": 4,
       "rndW": 47,
       "rndL": 76,
-      "rank": 14,
+      "rank": 15,
       "mapDiff": -2,
       "rndDiff": -29
-    },
-    {
-      "abbr": "100T",
-      "name": "100 Tony's",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 0,
-      "mapL": 4,
-      "rndW": 42,
-      "rndL": 52,
-      "rank": 15,
-      "mapDiff": -4,
-      "rndDiff": -10
     },
     {
       "abbr": "DFM",
@@ -250,6 +250,19 @@
       "rndDiff": 14
     },
     {
+      "abbr": "100T",
+      "name": "100T",
+      "matchW": 1,
+      "matchL": 0,
+      "mapW": 2,
+      "mapL": 0,
+      "rndW": 27,
+      "rndL": 19,
+      "rank": 4,
+      "mapDiff": 2,
+      "rndDiff": 8
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 1,
@@ -258,7 +271,7 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 21,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 5
     },
@@ -271,7 +284,7 @@
       "mapL": 3,
       "rndW": 71,
       "rndL": 58,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 0,
       "rndDiff": 13
     },
@@ -284,9 +297,22 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": -1,
       "rndDiff": -3
+    },
+    {
+      "abbr": "BAKA",
+      "name": "BAKA",
+      "matchW": 0,
+      "matchL": 1,
+      "mapW": 0,
+      "mapL": 2,
+      "rndW": 19,
+      "rndL": 27,
+      "rank": 8,
+      "mapDiff": -2,
+      "rndDiff": -8
     },
     {
       "abbr": "IHOP",
@@ -297,7 +323,7 @@
       "mapL": 2,
       "rndW": 15,
       "rndL": 26,
-      "rank": 7,
+      "rank": 9,
       "mapDiff": -2,
       "rndDiff": -11
     },
@@ -310,7 +336,7 @@
       "mapL": 4,
       "rndW": 47,
       "rndL": 76,
-      "rank": 8,
+      "rank": 10,
       "mapDiff": -2,
       "rndDiff": -29
     }
