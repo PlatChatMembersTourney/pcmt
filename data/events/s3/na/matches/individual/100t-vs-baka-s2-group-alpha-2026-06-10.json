@@ -59,7 +59,7 @@
           "PlusMinus2": -2
         },
         {
-          "Player": "Art",
+          "Player": "art",
           "R1.0": 1.119,
           "ACS": 233,
           "K": 38,
@@ -362,7 +362,7 @@
               "PlusMinus2": -1
             },
             {
-              "Player": "Art",
+              "Player": "art",
               "Agent": "Jett",
               "R1.0": 1.086,
               "ACS": 233,
@@ -643,7 +643,7 @@
               "PlusMinus2": 0
             },
             {
-              "Player": "Art",
+              "Player":"art",
               "Agent": "Jett",
               "R1.0": 1.162,
               "ACS": 232,

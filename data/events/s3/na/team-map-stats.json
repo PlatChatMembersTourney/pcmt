@@ -6,6 +6,19 @@
     "overallDefPct": 0.569,
     "maps": [
       {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Ascent",
         "pick": 2,
         "ban": 0,
@@ -17,6 +30,19 @@
         "roundPct": 0.472,
         "atkPct": 0.361,
         "defPct": 0.583
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -48,6 +74,19 @@
         "map": "Haven",
         "pick": 0,
         "ban": 1,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -95,6 +134,19 @@
         "roundPct": 0.458,
         "atkPct": 0.458,
         "defPct": 0.458
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -104,6 +156,19 @@
     "overallAtkPct": 0.564,
     "overallDefPct": 0.325,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -116,6 +181,19 @@
         "roundPct": 0.449,
         "atkPct": 0.577,
         "defPct": 0.304
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -157,6 +235,19 @@
         "defPct": 0.333
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
@@ -194,6 +285,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -203,6 +307,19 @@
     "overallAtkPct": 0.511,
     "overallDefPct": 0.568,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -215,6 +332,19 @@
         "roundPct": 0.597,
         "atkPct": 0.545,
         "defPct": 0.655
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -256,6 +386,19 @@
         "defPct": 0.577
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
@@ -293,6 +436,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -302,6 +458,19 @@
     "overallAtkPct": 0.333,
     "overallDefPct": 0.394,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -314,6 +483,19 @@
         "roundPct": 0.133,
         "atkPct": 0.0,
         "defPct": 0.167
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -343,6 +525,19 @@
       },
       {
         "map": "Haven",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Icebox",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -392,6 +587,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -401,6 +609,19 @@
     "overallAtkPct": 0.25,
     "overallDefPct": 0.292,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -413,6 +634,19 @@
         "roundPct": 0.278,
         "atkPct": 0.167,
         "defPct": 0.333
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -442,6 +676,19 @@
       },
       {
         "map": "Haven",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Icebox",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -491,6 +738,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -500,6 +760,19 @@
     "overallAtkPct": 0.471,
     "overallDefPct": 0.319,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -514,7 +787,7 @@
         "defPct": 0.167
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -551,6 +824,19 @@
         "roundPct": 0.333,
         "atkPct": 0.412,
         "defPct": 0.273
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Lotus",
@@ -590,6 +876,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -599,6 +898,19 @@
     "overallAtkPct": 0.542,
     "overallDefPct": 0.565,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 1,
@@ -613,7 +925,7 @@
         "defPct": 0.583
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -642,6 +954,19 @@
         "map": "Haven",
         "pick": 0,
         "ban": 1,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -689,6 +1014,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -698,6 +1036,19 @@
     "overallAtkPct": 0.176,
     "overallDefPct": 0.5,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 1,
@@ -710,6 +1061,19 @@
         "roundPct": 0.235,
         "atkPct": 0.2,
         "defPct": 0.25
+      },
+      {
+        "map": "Bind",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Breeze",
@@ -751,6 +1115,19 @@
         "defPct": 0.75
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
@@ -788,6 +1165,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -798,7 +1188,33 @@
     "overallDefPct": 0.438,
     "maps": [
       {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Ascent",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -850,6 +1266,19 @@
         "defPct": 0
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
@@ -887,6 +1316,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -896,6 +1338,19 @@
     "overallAtkPct": 0.348,
     "overallDefPct": 0.567,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -910,7 +1365,7 @@
         "defPct": 0
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -947,6 +1402,19 @@
         "roundPct": 0.35,
         "atkPct": 0.375,
         "defPct": 0.333
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Lotus",
@@ -986,6 +1454,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -995,6 +1476,19 @@
     "overallAtkPct": 0.621,
     "overallDefPct": 0.712,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 1,
@@ -1009,7 +1503,7 @@
         "defPct": 0.778
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -1038,6 +1532,19 @@
         "map": "Haven",
         "pick": 0,
         "ban": 3,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -1085,6 +1592,19 @@
         "roundPct": 0.542,
         "atkPct": 0.583,
         "defPct": 0.5
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -1094,6 +1614,19 @@
     "overallAtkPct": 0.56,
     "overallDefPct": 0.506,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 2,
@@ -1108,7 +1641,7 @@
         "defPct": 0.593
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -1145,6 +1678,19 @@
         "roundPct": 0.458,
         "atkPct": 0.667,
         "defPct": 0.25
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Lotus",
@@ -1184,6 +1730,19 @@
         "roundPct": 0.542,
         "atkPct": 0.5,
         "defPct": 0.583
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -1193,6 +1752,19 @@
     "overallAtkPct": 0.487,
     "overallDefPct": 0.642,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 0,
@@ -1207,7 +1779,7 @@
         "defPct": 0.615
       },
       {
-        "map": "Breeze",
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -1244,6 +1816,19 @@
         "roundPct": 0.5,
         "atkPct": 0.346,
         "defPct": 0.667
+      },
+      {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       },
       {
         "map": "Lotus",
@@ -1283,6 +1868,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -1292,6 +1890,19 @@
     "overallAtkPct": 0.38,
     "overallDefPct": 0.614,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 1,
@@ -1358,6 +1969,19 @@
         "defPct": 0.7
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 0,
         "ban": 2,
@@ -1395,6 +2019,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -1404,6 +2041,19 @@
     "overallAtkPct": 0.617,
     "overallDefPct": 0.5,
     "maps": [
+      {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
       {
         "map": "Ascent",
         "pick": 1,
@@ -1470,6 +2120,19 @@
         "defPct": 0.632
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
@@ -1507,6 +2170,19 @@
         "roundPct": 0,
         "atkPct": 0,
         "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
       }
     ]
   },
@@ -1517,7 +2193,33 @@
     "overallDefPct": 0.625,
     "maps": [
       {
+        "map": "Abyss",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Ascent",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Bind",
         "pick": 0,
         "ban": 0,
         "played": 0,
@@ -1569,6 +2271,19 @@
         "defPct": 0
       },
       {
+        "map": "Icebox",
+        "pick": 0,
+        "ban": 0,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
         "map": "Lotus",
         "pick": 0,
         "ban": 0,
@@ -1598,6 +2313,19 @@
         "map": "Split",
         "pick": 0,
         "ban": 1,
+        "played": 0,
+        "won": 0,
+        "winPct": 0,
+        "rounds": 0,
+        "roundsWon": 0,
+        "roundPct": 0,
+        "atkPct": 0,
+        "defPct": 0
+      },
+      {
+        "map": "Sunset",
+        "pick": 0,
+        "ban": 0,
         "played": 0,
         "won": 0,
         "winPct": 0,
