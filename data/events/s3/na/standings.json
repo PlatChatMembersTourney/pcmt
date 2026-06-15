@@ -14,6 +14,32 @@
       "rndDiff": 38
     },
     {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 25,
+      "rank": 2,
+      "mapDiff": 4,
+      "rndDiff": 27
+    },
+    {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 1,
+      "rndW": 52,
+      "rndL": 54,
+      "rank": 3,
+      "mapDiff": 3,
+      "rndDiff": -2
+    },
+    {
       "abbr": "TL",
       "name": "Team Dyslexia",
       "matchW": 2,
@@ -22,7 +48,7 @@
       "mapL": 2,
       "rndW": 67,
       "rndL": 53,
-      "rank": 2,
+      "rank": 4,
       "mapDiff": 2,
       "rndDiff": 14
     },
@@ -35,7 +61,7 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 3,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -48,7 +74,7 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 4,
+      "rank": 6,
       "mapDiff": 1,
       "rndDiff": -3
     },
@@ -61,22 +87,9 @@
       "mapL": 4,
       "rndW": 96,
       "rndL": 82,
-      "rank": 5,
+      "rank": 7,
       "mapDiff": 0,
       "rndDiff": 14
-    },
-    {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 14,
-      "rank": 6,
-      "mapDiff": 2,
-      "rndDiff": 12
     },
     {
       "abbr": "TS",
@@ -87,22 +100,9 @@
       "mapL": 0,
       "rndW": 26,
       "rndL": 15,
-      "rank": 7,
-      "mapDiff": 2,
-      "rndDiff": 11
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 21,
       "rank": 8,
       "mapDiff": 2,
-      "rndDiff": 5
+      "rndDiff": 11
     },
     {
       "abbr": "SSG",
@@ -157,32 +157,6 @@
       "rndDiff": -3
     },
     {
-      "abbr": "IHOP",
-      "name": "I Hate Odin Party",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 15,
-      "rndL": 26,
-      "rank": 13,
-      "mapDiff": -2,
-      "rndDiff": -11
-    },
-    {
-      "abbr": "EPY",
-      "name": "Team Entropy",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 10,
-      "rndL": 26,
-      "rank": 14,
-      "mapDiff": -2,
-      "rndDiff": -16
-    },
-    {
       "abbr": "FNC",
       "name": "cow paulo FaN Club",
       "matchW": 0,
@@ -191,9 +165,35 @@
       "mapL": 4,
       "rndW": 47,
       "rndL": 76,
-      "rank": 15,
+      "rank": 13,
       "mapDiff": -2,
       "rndDiff": -29
+    },
+    {
+      "abbr": "IHOP",
+      "name": "I Hate Odin Party",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 1,
+      "mapL": 4,
+      "rndW": 48,
+      "rndL": 52,
+      "rank": 14,
+      "mapDiff": -3,
+      "rndDiff": -4
+    },
+    {
+      "abbr": "EPY",
+      "name": "Team Entropy",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 0,
+      "mapL": 4,
+      "rndW": 21,
+      "rndL": 52,
+      "rank": 15,
+      "mapDiff": -4,
+      "rndDiff": -31
     },
     {
       "abbr": "DFM",
@@ -211,6 +211,19 @@
   ],
   "Group Alpha": [
     {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 1,
+      "rndW": 52,
+      "rndL": 54,
+      "rank": 1,
+      "mapDiff": 3,
+      "rndDiff": -2
+    },
+    {
       "abbr": "TL",
       "name": "Team Dyslexia",
       "matchW": 2,
@@ -219,7 +232,7 @@
       "mapL": 2,
       "rndW": 67,
       "rndL": 53,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 2,
       "rndDiff": 14
     },
@@ -232,7 +245,7 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 1,
       "rndDiff": -3
     },
@@ -245,22 +258,9 @@
       "mapL": 4,
       "rndW": 96,
       "rndL": 82,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 0,
       "rndDiff": 14
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 21,
-      "rank": 4,
-      "mapDiff": 2,
-      "rndDiff": 5
     },
     {
       "abbr": "SSG",
@@ -289,19 +289,6 @@
       "rndDiff": -3
     },
     {
-      "abbr": "IHOP",
-      "name": "I Hate Odin Party",
-      "matchW": 0,
-      "matchL": 1,
-      "mapW": 0,
-      "mapL": 2,
-      "rndW": 15,
-      "rndL": 26,
-      "rank": 7,
-      "mapDiff": -2,
-      "rndDiff": -11
-    },
-    {
       "abbr": "FNC",
       "name": "cow paulo FaN Club",
       "matchW": 0,
@@ -310,9 +297,22 @@
       "mapL": 4,
       "rndW": 47,
       "rndL": 76,
-      "rank": 8,
+      "rank": 7,
       "mapDiff": -2,
       "rndDiff": -29
+    },
+    {
+      "abbr": "IHOP",
+      "name": "I Hate Odin Party",
+      "matchW": 0,
+      "matchL": 2,
+      "mapW": 1,
+      "mapL": 4,
+      "rndW": 48,
+      "rndL": 52,
+      "rank": 8,
+      "mapDiff": -3,
+      "rndDiff": -4
     }
   ],
   "Group Omega": [
@@ -330,6 +330,19 @@
       "rndDiff": 38
     },
     {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 25,
+      "rank": 2,
+      "mapDiff": 4,
+      "rndDiff": 27
+    },
+    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -338,19 +351,6 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 2,
-      "mapDiff": 2,
-      "rndDiff": 12
-    },
-    {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 14,
       "rank": 3,
       "mapDiff": 2,
       "rndDiff": 12
@@ -398,14 +398,14 @@
       "abbr": "EPY",
       "name": "Team Entropy",
       "matchW": 0,
-      "matchL": 1,
+      "matchL": 2,
       "mapW": 0,
-      "mapL": 2,
-      "rndW": 10,
-      "rndL": 26,
+      "mapL": 4,
+      "rndW": 21,
+      "rndL": 52,
       "rank": 7,
-      "mapDiff": -2,
-      "rndDiff": -16
+      "mapDiff": -4,
+      "rndDiff": -31
     },
     {
       "abbr": "DFM",
