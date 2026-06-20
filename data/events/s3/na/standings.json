@@ -14,6 +14,19 @@
       "rndDiff": 38
     },
     {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 3,
+      "matchL": 1,
+      "mapW": 6,
+      "mapL": 5,
+      "rndW": 136,
+      "rndL": 120,
+      "rank": 2,
+      "mapDiff": 1,
+      "rndDiff": 16
+    },
+    {
       "abbr": "NAVI",
       "name": "No Actual Valorant Intelligence",
       "matchW": 2,
@@ -22,7 +35,7 @@
       "mapL": 0,
       "rndW": 52,
       "rndL": 25,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 4,
       "rndDiff": 27
     },
@@ -35,7 +48,7 @@
       "mapL": 1,
       "rndW": 52,
       "rndL": 54,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 3,
       "rndDiff": -2
     },
@@ -48,7 +61,7 @@
       "mapL": 2,
       "rndW": 67,
       "rndL": 53,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 14
     },
@@ -61,7 +74,7 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -74,22 +87,9 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 1,
       "rndDiff": -3
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 2,
-      "matchL": 1,
-      "mapW": 4,
-      "mapL": 4,
-      "rndW": 96,
-      "rndL": 82,
-      "rank": 7,
-      "mapDiff": 0,
-      "rndDiff": 14
     },
     {
       "abbr": "TS",
@@ -108,14 +108,14 @@
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 2,
-      "mapW": 3,
-      "mapL": 3,
-      "rndW": 71,
-      "rndL": 58,
+      "matchL": 3,
+      "mapW": 4,
+      "mapL": 5,
+      "rndW": 109,
+      "rndL": 98,
       "rank": 9,
-      "mapDiff": 0,
-      "rndDiff": 13
+      "mapDiff": -1,
+      "rndDiff": 11
     },
     {
       "abbr": "100T",
@@ -211,6 +211,19 @@
   ],
   "Group Alpha": [
     {
+      "abbr": "C9",
+      "name": "Clown9",
+      "matchW": 3,
+      "matchL": 1,
+      "mapW": 6,
+      "mapL": 5,
+      "rndW": 136,
+      "rndL": 120,
+      "rank": 1,
+      "mapDiff": 1,
+      "rndDiff": 16
+    },
+    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 2,
@@ -219,7 +232,7 @@
       "mapL": 1,
       "rndW": 52,
       "rndL": 54,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 3,
       "rndDiff": -2
     },
@@ -232,7 +245,7 @@
       "mapL": 2,
       "rndW": 67,
       "rndL": 53,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 2,
       "rndDiff": 14
     },
@@ -245,35 +258,22 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 1,
       "rndDiff": -3
-    },
-    {
-      "abbr": "C9",
-      "name": "Clown9",
-      "matchW": 2,
-      "matchL": 1,
-      "mapW": 4,
-      "mapL": 4,
-      "rndW": 96,
-      "rndL": 82,
-      "rank": 4,
-      "mapDiff": 0,
-      "rndDiff": 14
     },
     {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
-      "matchL": 2,
-      "mapW": 3,
-      "mapL": 3,
-      "rndW": 71,
-      "rndL": 58,
+      "matchL": 3,
+      "mapW": 4,
+      "mapL": 5,
+      "rndW": 109,
+      "rndL": 98,
       "rank": 5,
-      "mapDiff": 0,
-      "rndDiff": 13
+      "mapDiff": -1,
+      "rndDiff": 11
     },
     {
       "abbr": "RRQ",
