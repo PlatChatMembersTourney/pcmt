@@ -1197,8 +1197,8 @@
   "NAVI": {
     "team": "NAVI",
     "teamName": "No Actual Valorant Intelligence",
-    "overallAtkPct": 0.812,
-    "overallDefPct": 0.448,
+    "overallAtkPct": 0.657,
+    "overallDefPct": 0.46,
     "maps": [
       {
         "map": "Abyss",
@@ -1256,27 +1256,27 @@
         "map": "Fracture",
         "pick": 0,
         "ban": 2,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 21,
+        "roundsWon": 8,
+        "roundPct": 0.381,
+        "atkPct": 0.417,
+        "defPct": 0.333
       },
       {
         "map": "Haven",
-        "pick": 0,
+        "pick": 1,
         "ban": 1,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 22,
+        "roundsWon": 9,
+        "roundPct": 0.409,
+        "atkPct": 0.2,
+        "defPct": 0.583
       },
       {
         "map": "Icebox",
@@ -1294,7 +1294,7 @@
       {
         "map": "Lotus",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 2,
         "won": 2,
         "winPct": 1.0,
@@ -1307,7 +1307,7 @@
       {
         "map": "Pearl",
         "pick": 1,
-        "ban": 0,
+        "ban": 1,
         "played": 1,
         "won": 1,
         "winPct": 1.0,
@@ -1486,8 +1486,8 @@
   "SPG": {
     "team": "SPG",
     "teamName": "Spank Ptheory Gaming",
-    "overallAtkPct": 0.621,
-    "overallDefPct": 0.712,
+    "overallAtkPct": 0.598,
+    "overallDefPct": 0.703,
     "maps": [
       {
         "map": "Abyss",
@@ -1529,7 +1529,7 @@
         "defPct": 0
       },
       {
-        "map": "Fracture",
+        "map": "Breeze",
         "pick": 0,
         "ban": 1,
         "played": 0,
@@ -1542,17 +1542,30 @@
         "defPct": 0
       },
       {
+        "map": "Fracture",
+        "pick": 1,
+        "ban": 1,
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 21,
+        "roundsWon": 13,
+        "roundPct": 0.619,
+        "atkPct": 0.667,
+        "defPct": 0.583
+      },
+      {
         "map": "Haven",
         "pick": 0,
         "ban": 3,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 22,
+        "roundsWon": 13,
+        "roundPct": 0.591,
+        "atkPct": 0.417,
+        "defPct": 0.8
       },
       {
         "map": "Icebox",
@@ -1596,7 +1609,7 @@
       {
         "map": "Split",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 1,
         "won": 1,
         "winPct": 1.0,

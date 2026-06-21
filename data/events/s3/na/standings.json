@@ -3,15 +3,15 @@
     {
       "abbr": "SPG",
       "name": "Spank Ptheory Gaming",
-      "matchW": 3,
+      "matchW": 4,
       "matchL": 0,
-      "mapW": 6,
+      "mapW": 8,
       "mapL": 0,
-      "rndW": 78,
-      "rndL": 40,
+      "rndW": 104,
+      "rndL": 57,
       "rank": 1,
-      "mapDiff": 6,
-      "rndDiff": 38
+      "mapDiff": 8,
+      "rndDiff": 47
     },
     {
       "abbr": "C9",
@@ -27,19 +27,6 @@
       "rndDiff": 16
     },
     {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 0,
-      "rndW": 52,
-      "rndL": 25,
-      "rank": 3,
-      "mapDiff": 4,
-      "rndDiff": 27
-    },
-    {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
       "matchW": 2,
@@ -48,9 +35,22 @@
       "mapL": 1,
       "rndW": 52,
       "rndL": 54,
-      "rank": 4,
+      "rank": 3,
       "mapDiff": 3,
       "rndDiff": -2
+    },
+    {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 2,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 2,
+      "rndW": 69,
+      "rndL": 51,
+      "rank": 4,
+      "mapDiff": 2,
+      "rndDiff": 18
     },
     {
       "abbr": "TL",
@@ -319,28 +319,28 @@
     {
       "abbr": "SPG",
       "name": "Spank Ptheory Gaming",
-      "matchW": 3,
+      "matchW": 4,
       "matchL": 0,
-      "mapW": 6,
+      "mapW": 8,
       "mapL": 0,
-      "rndW": 78,
-      "rndL": 40,
+      "rndW": 104,
+      "rndL": 57,
       "rank": 1,
-      "mapDiff": 6,
-      "rndDiff": 38
+      "mapDiff": 8,
+      "rndDiff": 47
     },
     {
       "abbr": "NAVI",
       "name": "No Actual Valorant Intelligence",
       "matchW": 2,
-      "matchL": 0,
+      "matchL": 1,
       "mapW": 4,
-      "mapL": 0,
-      "rndW": 52,
-      "rndL": 25,
+      "mapL": 2,
+      "rndW": 69,
+      "rndL": 51,
       "rank": 2,
-      "mapDiff": 4,
-      "rndDiff": 27
+      "mapDiff": 2,
+      "rndDiff": 18
     },
     {
       "abbr": "SRB",
