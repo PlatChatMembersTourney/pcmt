@@ -60,18 +60,18 @@
         },
         {
           "Player": "ender",
-          "R1.0": 0.635,
-          "ACS": 183,
-          "K": 26,
-          "D": 44,
-          "A": 8,
-          "PlusMinus": -18,
-          "KAST": 0.553,
-          "ADR": 129.4,
-          "HS%": 0.183,
-          "FK": 4,
-          "FD": 11,
-          "PlusMinus2": -7
+          "R1.0": 0.66,
+          "ACS": 162,
+          "K": 16,
+          "D": 28,
+          "A": 6,
+          "PlusMinus": -12,
+          "KAST": 0.546,
+          "ADR": 123.8,
+          "HS%": 0.199,
+          "FK": 3,
+          "FD": 7,
+          "PlusMinus2": -4
         },
         {
           "Player": "slow",
@@ -86,6 +86,21 @@
           "HS%": 0.235,
           "FK": 2,
           "FD": 5,
+          "PlusMinus2": -3
+        },
+        {
+          "Player": "claps",
+          "R1.0": 0.576,
+          "ACS": 233,
+          "K": 10,
+          "D": 16,
+          "A": 2,
+          "PlusMinus": -6,
+          "KAST": 0.571,
+          "ADR": 142.4,
+          "HS%": 0.147,
+          "FK": 1,
+          "FD": 4,
           "PlusMinus2": -3
         },
         {
@@ -546,7 +561,7 @@
           "teamName": "Team Dyslexia",
           "players": [
             {
-              "Player": "ender",
+              "Player": "claps",
               "Agent": "Clove",
               "R1.0": 0.576,
               "ACS": 233,
