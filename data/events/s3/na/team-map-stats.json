@@ -895,8 +895,8 @@
   "FSG": {
     "team": "FSG",
     "teamName": "Furry Squirrels Gaming",
-    "overallAtkPct": 0.551,
-    "overallDefPct": 0.439,
+    "overallAtkPct": 0.603,
+    "overallDefPct": 0.526,
     "maps": [
       {
         "map": "Abyss",
@@ -914,7 +914,7 @@
       {
         "map": "Ascent",
         "pick": 1,
-        "ban": 0,
+        "ban": 1,
         "played": 1,
         "won": 1,
         "winPct": 1.0,
@@ -953,7 +953,7 @@
       {
         "map": "Fracture",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -991,29 +991,29 @@
       },
       {
         "map": "Lotus",
-        "pick": 0,
-        "ban": 1,
-        "played": 2,
-        "won": 1,
-        "winPct": 0.5,
-        "rounds": 36,
-        "roundsWon": 13,
-        "roundPct": 0.361,
-        "atkPct": 0.538,
-        "defPct": 0.261
+        "pick": 2,
+        "ban": 0,
+        "played": 3,
+        "won": 2,
+        "winPct": 0.667,
+        "rounds": 50,
+        "roundsWon": 26,
+        "roundPct": 0.52,
+        "atkPct": 0.6,
+        "defPct": 0.486
       },
       {
         "map": "Pearl",
         "pick": 0,
         "ban": 0,
-        "played": 1,
-        "won": 1,
+        "played": 2,
+        "won": 2,
         "winPct": 1.0,
-        "rounds": 24,
-        "roundsWon": 13,
-        "roundPct": 0.542,
+        "rounds": 43,
+        "roundsWon": 26,
+        "roundPct": 0.605,
         "atkPct": 0.75,
-        "defPct": 0.333
+        "defPct": 0.421
       },
       {
         "map": "Split",
@@ -1155,8 +1155,8 @@
       },
       {
         "map": "Pearl",
-        "pick": 0,
-        "ban": 1,
+        "pick": 1,
+        "ban": 0,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -2064,8 +2064,8 @@
   "TL": {
     "team": "TL",
     "teamName": "Team Dyslexia",
-    "overallAtkPct": 0.617,
-    "overallDefPct": 0.5,
+    "overallAtkPct": 0.519,
+    "overallDefPct": 0.446,
     "maps": [
       {
         "map": "Abyss",
@@ -2109,7 +2109,7 @@
       {
         "map": "Breeze",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -2162,32 +2162,32 @@
         "map": "Lotus",
         "pick": 1,
         "ban": 0,
-        "played": 1,
+        "played": 2,
         "won": 0,
         "winPct": 0.0,
-        "rounds": 28,
-        "roundsWon": 13,
-        "roundPct": 0.464,
-        "atkPct": 0.571,
-        "defPct": 0.357
+        "rounds": 42,
+        "roundsWon": 14,
+        "roundPct": 0.333,
+        "atkPct": 0.346,
+        "defPct": 0.312
       },
       {
         "map": "Pearl",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 2,
+        "played": 3,
         "won": 1,
-        "winPct": 0.5,
-        "rounds": 29,
-        "roundsWon": 14,
-        "roundPct": 0.483,
-        "atkPct": 0.714,
-        "defPct": 0.267
+        "winPct": 0.333,
+        "rounds": 48,
+        "roundsWon": 20,
+        "roundPct": 0.417,
+        "atkPct": 0.619,
+        "defPct": 0.259
       },
       {
         "map": "Split",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 0,
         "won": 0,
         "winPct": 0,

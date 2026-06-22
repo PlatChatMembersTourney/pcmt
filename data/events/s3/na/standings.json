@@ -14,6 +14,19 @@
       "rndDiff": 47
     },
     {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 3,
+      "matchL": 0,
+      "mapW": 6,
+      "mapL": 1,
+      "rndW": 78,
+      "rndL": 61,
+      "rank": 2,
+      "mapDiff": 5,
+      "rndDiff": 17
+    },
+    {
       "abbr": "C9",
       "name": "Clown9",
       "matchW": 3,
@@ -22,22 +35,9 @@
       "mapL": 5,
       "rndW": 136,
       "rndL": 120,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 1,
       "rndDiff": 16
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 1,
-      "rndW": 52,
-      "rndL": 54,
-      "rank": 3,
-      "mapDiff": 3,
-      "rndDiff": -2
     },
     {
       "abbr": "NAVI",
@@ -53,19 +53,6 @@
       "rndDiff": 18
     },
     {
-      "abbr": "TL",
-      "name": "Team Dyslexia",
-      "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 2,
-      "rndW": 67,
-      "rndL": 53,
-      "rank": 5,
-      "mapDiff": 2,
-      "rndDiff": 14
-    },
-    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -74,7 +61,7 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 6,
+      "rank": 5,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -87,9 +74,22 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 7,
+      "rank": 6,
       "mapDiff": 1,
       "rndDiff": -3
+    },
+    {
+      "abbr": "TL",
+      "name": "Team Dyslexia",
+      "matchW": 2,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 4,
+      "rndW": 74,
+      "rndL": 79,
+      "rank": 7,
+      "mapDiff": 0,
+      "rndDiff": -5
     },
     {
       "abbr": "TS",
@@ -211,6 +211,19 @@
   ],
   "Group Alpha": [
     {
+      "abbr": "FSG",
+      "name": "Furry Squirrels Gaming",
+      "matchW": 3,
+      "matchL": 0,
+      "mapW": 6,
+      "mapL": 1,
+      "rndW": 78,
+      "rndL": 61,
+      "rank": 1,
+      "mapDiff": 5,
+      "rndDiff": 17
+    },
+    {
       "abbr": "C9",
       "name": "Clown9",
       "matchW": 3,
@@ -219,35 +232,9 @@
       "mapL": 5,
       "rndW": 136,
       "rndL": 120,
-      "rank": 1,
+      "rank": 2,
       "mapDiff": 1,
       "rndDiff": 16
-    },
-    {
-      "abbr": "FSG",
-      "name": "Furry Squirrels Gaming",
-      "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 1,
-      "rndW": 52,
-      "rndL": 54,
-      "rank": 2,
-      "mapDiff": 3,
-      "rndDiff": -2
-    },
-    {
-      "abbr": "TL",
-      "name": "Team Dyslexia",
-      "matchW": 2,
-      "matchL": 0,
-      "mapW": 4,
-      "mapL": 2,
-      "rndW": 67,
-      "rndL": 53,
-      "rank": 3,
-      "mapDiff": 2,
-      "rndDiff": 14
     },
     {
       "abbr": "T1",
@@ -258,9 +245,22 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 4,
+      "rank": 3,
       "mapDiff": 1,
       "rndDiff": -3
+    },
+    {
+      "abbr": "TL",
+      "name": "Team Dyslexia",
+      "matchW": 2,
+      "matchL": 1,
+      "mapW": 4,
+      "mapL": 4,
+      "rndW": 74,
+      "rndL": 79,
+      "rank": 4,
+      "mapDiff": 0,
+      "rndDiff": -5
     },
     {
       "abbr": "SSG",
