@@ -1035,8 +1035,8 @@
       },
       {
         "map": "Summit",
-        "pick": 0,
-        "ban": 1,
+        "pick": 1,
+        "ban": 0,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -1350,8 +1350,8 @@
       },
       {
         "map": "Lotus",
-        "pick": 0,
-        "ban": 1,
+        "pick": 1,
+        "ban": 0,
         "played": 2,
         "won": 2,
         "winPct": 1.0,
