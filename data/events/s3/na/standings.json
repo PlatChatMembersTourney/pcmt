@@ -105,6 +105,19 @@
       "rndDiff": 11
     },
     {
+      "abbr": "IHOP",
+      "name": "I Hate Odin Party",
+      "matchW": 1,
+      "matchL": 2,
+      "mapW": 3,
+      "mapL": 4,
+      "rndW": 74,
+      "rndL": 60,
+      "rank": 9,
+      "mapDiff": -1,
+      "rndDiff": 14
+    },
+    {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
@@ -113,7 +126,7 @@
       "mapL": 5,
       "rndW": 109,
       "rndL": 98,
-      "rank": 9,
+      "rank": 10,
       "mapDiff": -1,
       "rndDiff": 11
     },
@@ -126,7 +139,7 @@
       "mapL": 4,
       "rndW": 69,
       "rndL": 71,
-      "rank": 10,
+      "rank": 11,
       "mapDiff": -2,
       "rndDiff": -2
     },
@@ -139,7 +152,7 @@
       "mapL": 5,
       "rndW": 69,
       "rndL": 86,
-      "rank": 11,
+      "rank": 12,
       "mapDiff": -3,
       "rndDiff": -17
     },
@@ -152,35 +165,9 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 12,
+      "rank": 13,
       "mapDiff": -1,
       "rndDiff": -3
-    },
-    {
-      "abbr": "FNC",
-      "name": "cow paulo FaN Club",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 2,
-      "mapL": 4,
-      "rndW": 47,
-      "rndL": 76,
-      "rank": 13,
-      "mapDiff": -2,
-      "rndDiff": -29
-    },
-    {
-      "abbr": "IHOP",
-      "name": "I Hate Odin Party",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 1,
-      "mapL": 4,
-      "rndW": 48,
-      "rndL": 52,
-      "rank": 14,
-      "mapDiff": -3,
-      "rndDiff": -4
     },
     {
       "abbr": "EPY",
@@ -191,9 +178,22 @@
       "mapL": 4,
       "rndW": 21,
       "rndL": 52,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": -4,
       "rndDiff": -31
+    },
+    {
+      "abbr": "FNC",
+      "name": "cow paulo FaN Club",
+      "matchW": 0,
+      "matchL": 3,
+      "mapW": 2,
+      "mapL": 6,
+      "rndW": 55,
+      "rndL": 102,
+      "rank": 15,
+      "mapDiff": -4,
+      "rndDiff": -47
     },
     {
       "abbr": "DFM",
@@ -263,6 +263,19 @@
       "rndDiff": -5
     },
     {
+      "abbr": "IHOP",
+      "name": "I Hate Odin Party",
+      "matchW": 1,
+      "matchL": 2,
+      "mapW": 3,
+      "mapL": 4,
+      "rndW": 74,
+      "rndL": 60,
+      "rank": 5,
+      "mapDiff": -1,
+      "rndDiff": 14
+    },
+    {
       "abbr": "SSG",
       "name": "Squirtle Squad Gaming",
       "matchW": 1,
@@ -271,7 +284,7 @@
       "mapL": 5,
       "rndW": 109,
       "rndL": 98,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": -1,
       "rndDiff": 11
     },
@@ -284,7 +297,7 @@
       "mapL": 2,
       "rndW": 25,
       "rndL": 28,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": -1,
       "rndDiff": -3
     },
@@ -292,27 +305,14 @@
       "abbr": "FNC",
       "name": "cow paulo FaN Club",
       "matchW": 0,
-      "matchL": 2,
+      "matchL": 3,
       "mapW": 2,
-      "mapL": 4,
-      "rndW": 47,
-      "rndL": 76,
-      "rank": 7,
-      "mapDiff": -2,
-      "rndDiff": -29
-    },
-    {
-      "abbr": "IHOP",
-      "name": "I Hate Odin Party",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 1,
-      "mapL": 4,
-      "rndW": 48,
-      "rndL": 52,
+      "mapL": 6,
+      "rndW": 55,
+      "rndL": 102,
       "rank": 8,
-      "mapDiff": -3,
-      "rndDiff": -4
+      "mapDiff": -4,
+      "rndDiff": -47
     }
   ],
   "Group Omega": [
