@@ -7,10 +7,10 @@
   "score1": 2,
   "score2": 0,
   "completed": true,
-  "bestOf": 1,
+  "bestOf": 3,
   "date": "2026-06-26T01:00:00Z",
   "stage": "Group Alpha",
-  "veto": "IHOP bans Sunset, FNC bans Haven, IHOP bans Lotus, FNC bans Summit, IHOP bans Ascent, FNC bans Split, Breeze remains",
+  "veto": "IHOP bans Sunset, FNC bans Haven, IHOP picks Lotus, FNC picks Summit, IHOP bans Ascent, FNC bans Split, Breeze remains",
   "maps": [
     {
       "name": "Lotus",
