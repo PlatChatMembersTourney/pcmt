@@ -27,6 +27,19 @@
       "rndDiff": 17
     },
     {
+      "abbr": "NAVI",
+      "name": "No Actual Valorant Intelligence",
+      "matchW": 3,
+      "matchL": 1,
+      "mapW": 6,
+      "mapL": 2,
+      "rndW": 95,
+      "rndL": 71,
+      "rank": 3,
+      "mapDiff": 4,
+      "rndDiff": 24
+    },
+    {
       "abbr": "C9",
       "name": "Clown9",
       "matchW": 3,
@@ -35,22 +48,9 @@
       "mapL": 5,
       "rndW": 136,
       "rndL": 120,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 1,
       "rndDiff": 16
-    },
-    {
-      "abbr": "NAVI",
-      "name": "No Actual Valorant Intelligence",
-      "matchW": 2,
-      "matchL": 1,
-      "mapW": 4,
-      "mapL": 2,
-      "rndW": 69,
-      "rndL": 51,
-      "rank": 4,
-      "mapDiff": 2,
-      "rndDiff": 18
     },
     {
       "abbr": "SRB",
@@ -131,19 +131,6 @@
       "rndDiff": 11
     },
     {
-      "abbr": "100T",
-      "name": "100 Tony's",
-      "matchW": 1,
-      "matchL": 2,
-      "mapW": 2,
-      "mapL": 4,
-      "rndW": 69,
-      "rndL": 71,
-      "rank": 11,
-      "mapDiff": -2,
-      "rndDiff": -2
-    },
-    {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 1,
@@ -152,9 +139,22 @@
       "mapL": 5,
       "rndW": 69,
       "rndL": 86,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": -3,
       "rndDiff": -17
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 1,
+      "matchL": 3,
+      "mapW": 2,
+      "mapL": 6,
+      "rndW": 89,
+      "rndL": 97,
+      "rank": 12,
+      "mapDiff": -4,
+      "rndDiff": -8
     },
     {
       "abbr": "RRQ",
@@ -332,15 +332,15 @@
     {
       "abbr": "NAVI",
       "name": "No Actual Valorant Intelligence",
-      "matchW": 2,
+      "matchW": 3,
       "matchL": 1,
-      "mapW": 4,
+      "mapW": 6,
       "mapL": 2,
-      "rndW": 69,
-      "rndL": 51,
+      "rndW": 95,
+      "rndL": 71,
       "rank": 2,
-      "mapDiff": 2,
-      "rndDiff": 18
+      "mapDiff": 4,
+      "rndDiff": 24
     },
     {
       "abbr": "SRB",
@@ -369,19 +369,6 @@
       "rndDiff": 11
     },
     {
-      "abbr": "100T",
-      "name": "100 Tony's",
-      "matchW": 1,
-      "matchL": 2,
-      "mapW": 2,
-      "mapL": 4,
-      "rndW": 69,
-      "rndL": 71,
-      "rank": 5,
-      "mapDiff": -2,
-      "rndDiff": -2
-    },
-    {
       "abbr": "BAKA",
       "name": "Beautiful and Kinda Adorable",
       "matchW": 1,
@@ -390,9 +377,22 @@
       "mapL": 5,
       "rndW": 69,
       "rndL": 86,
-      "rank": 6,
+      "rank": 5,
       "mapDiff": -3,
       "rndDiff": -17
+    },
+    {
+      "abbr": "100T",
+      "name": "100 Tony's",
+      "matchW": 1,
+      "matchL": 3,
+      "mapW": 2,
+      "mapL": 6,
+      "rndW": 89,
+      "rndL": 97,
+      "rank": 6,
+      "mapDiff": -4,
+      "rndDiff": -8
     },
     {
       "abbr": "EPY",
