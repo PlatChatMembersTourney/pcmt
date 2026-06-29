@@ -16,15 +16,15 @@
     {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
-      "matchW": 3,
+      "matchW": 4,
       "matchL": 0,
-      "mapW": 6,
-      "mapL": 1,
-      "rndW": 78,
-      "rndL": 61,
+      "mapW": 8,
+      "mapL": 2,
+      "rndW": 119,
+      "rndL": 96,
       "rank": 2,
-      "mapDiff": 5,
-      "rndDiff": 17
+      "mapDiff": 6,
+      "rndDiff": 23
     },
     {
       "abbr": "SRB",
@@ -160,14 +160,14 @@
       "abbr": "RRQ",
       "name": "Rage Re-Queuers",
       "matchW": 0,
-      "matchL": 1,
-      "mapW": 1,
-      "mapL": 2,
-      "rndW": 25,
-      "rndL": 28,
+      "matchL": 2,
+      "mapW": 2,
+      "mapL": 4,
+      "rndW": 60,
+      "rndL": 69,
       "rank": 13,
-      "mapDiff": -1,
-      "rndDiff": -3
+      "mapDiff": -2,
+      "rndDiff": -9
     },
     {
       "abbr": "FNC",
@@ -213,15 +213,15 @@
     {
       "abbr": "FSG",
       "name": "Furry Squirrels Gaming",
-      "matchW": 3,
+      "matchW": 4,
       "matchL": 0,
-      "mapW": 6,
-      "mapL": 1,
-      "rndW": 78,
-      "rndL": 61,
+      "mapW": 8,
+      "mapL": 2,
+      "rndW": 119,
+      "rndL": 96,
       "rank": 1,
-      "mapDiff": 5,
-      "rndDiff": 17
+      "mapDiff": 6,
+      "rndDiff": 23
     },
     {
       "abbr": "C9",
@@ -292,14 +292,14 @@
       "abbr": "RRQ",
       "name": "Rage Re-Queuers",
       "matchW": 0,
-      "matchL": 1,
-      "mapW": 1,
-      "mapL": 2,
-      "rndW": 25,
-      "rndL": 28,
+      "matchL": 2,
+      "mapW": 2,
+      "mapL": 4,
+      "rndW": 60,
+      "rndL": 69,
       "rank": 7,
-      "mapDiff": -1,
-      "rndDiff": -3
+      "mapDiff": -2,
+      "rndDiff": -9
     },
     {
       "abbr": "FNC",
