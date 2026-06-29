@@ -27,6 +27,19 @@
       "rndDiff": 17
     },
     {
+      "abbr": "SRB",
+      "name": "Sunshine and Rainbows",
+      "matchW": 3,
+      "matchL": 1,
+      "mapW": 7,
+      "mapL": 3,
+      "rndW": 122,
+      "rndL": 98,
+      "rank": 3,
+      "mapDiff": 4,
+      "rndDiff": 24
+    },
+    {
       "abbr": "NAVI",
       "name": "No Actual Valorant Intelligence",
       "matchW": 3,
@@ -35,7 +48,7 @@
       "mapL": 2,
       "rndW": 95,
       "rndL": 71,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 4,
       "rndDiff": 24
     },
@@ -48,7 +61,7 @@
       "mapL": 5,
       "rndW": 136,
       "rndL": 120,
-      "rank": 4,
+      "rank": 5,
       "mapDiff": 1,
       "rndDiff": 16
     },
@@ -61,22 +74,9 @@
       "mapL": 0,
       "rndW": 52,
       "rndL": 35,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 4,
       "rndDiff": 17
-    },
-    {
-      "abbr": "SRB",
-      "name": "Sunshine and Rainbows",
-      "matchW": 2,
-      "matchL": 1,
-      "mapW": 5,
-      "mapL": 3,
-      "rndW": 96,
-      "rndL": 84,
-      "rank": 6,
-      "mapDiff": 2,
-      "rndDiff": 12
     },
     {
       "abbr": "T1",
@@ -170,19 +170,6 @@
       "rndDiff": -3
     },
     {
-      "abbr": "EPY",
-      "name": "Team Entropy",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 0,
-      "mapL": 4,
-      "rndW": 21,
-      "rndL": 52,
-      "rank": 14,
-      "mapDiff": -4,
-      "rndDiff": -31
-    },
-    {
       "abbr": "FNC",
       "name": "cow paulo FaN Club",
       "matchW": 0,
@@ -191,7 +178,7 @@
       "mapL": 6,
       "rndW": 55,
       "rndL": 102,
-      "rank": 15,
+      "rank": 14,
       "mapDiff": -4,
       "rndDiff": -47
     },
@@ -204,9 +191,22 @@
       "mapL": 6,
       "rndW": 51,
       "rndL": 89,
-      "rank": 16,
+      "rank": 15,
       "mapDiff": -5,
       "rndDiff": -38
+    },
+    {
+      "abbr": "EPY",
+      "name": "Team Entropy",
+      "matchW": 0,
+      "matchL": 3,
+      "mapW": 0,
+      "mapL": 6,
+      "rndW": 35,
+      "rndL": 78,
+      "rank": 16,
+      "mapDiff": -6,
+      "rndDiff": -43
     }
   ],
   "Group Alpha": [
@@ -330,6 +330,19 @@
       "rndDiff": 47
     },
     {
+      "abbr": "SRB",
+      "name": "Sunshine and Rainbows",
+      "matchW": 3,
+      "matchL": 1,
+      "mapW": 7,
+      "mapL": 3,
+      "rndW": 122,
+      "rndL": 98,
+      "rank": 2,
+      "mapDiff": 4,
+      "rndDiff": 24
+    },
+    {
       "abbr": "NAVI",
       "name": "No Actual Valorant Intelligence",
       "matchW": 3,
@@ -338,7 +351,7 @@
       "mapL": 2,
       "rndW": 95,
       "rndL": 71,
-      "rank": 2,
+      "rank": 3,
       "mapDiff": 4,
       "rndDiff": 24
     },
@@ -351,22 +364,9 @@
       "mapL": 0,
       "rndW": 52,
       "rndL": 35,
-      "rank": 3,
+      "rank": 4,
       "mapDiff": 4,
       "rndDiff": 17
-    },
-    {
-      "abbr": "SRB",
-      "name": "Sunshine and Rainbows",
-      "matchW": 2,
-      "matchL": 1,
-      "mapW": 5,
-      "mapL": 3,
-      "rndW": 96,
-      "rndL": 84,
-      "rank": 4,
-      "mapDiff": 2,
-      "rndDiff": 12
     },
     {
       "abbr": "100T",
@@ -395,19 +395,6 @@
       "rndDiff": -23
     },
     {
-      "abbr": "EPY",
-      "name": "Team Entropy",
-      "matchW": 0,
-      "matchL": 2,
-      "mapW": 0,
-      "mapL": 4,
-      "rndW": 21,
-      "rndL": 52,
-      "rank": 7,
-      "mapDiff": -4,
-      "rndDiff": -31
-    },
-    {
       "abbr": "DFM",
       "name": "Dementia Found Me",
       "matchW": 0,
@@ -416,9 +403,22 @@
       "mapL": 6,
       "rndW": 51,
       "rndL": 89,
-      "rank": 8,
+      "rank": 7,
       "mapDiff": -5,
       "rndDiff": -38
+    },
+    {
+      "abbr": "EPY",
+      "name": "Team Entropy",
+      "matchW": 0,
+      "matchL": 3,
+      "mapW": 0,
+      "mapL": 6,
+      "rndW": 35,
+      "rndL": 78,
+      "rank": 8,
+      "mapDiff": -6,
+      "rndDiff": -43
     }
   ]
 }
