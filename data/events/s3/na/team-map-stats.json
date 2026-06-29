@@ -179,8 +179,8 @@
   "BAKA": {
     "team": "BAKA",
     "teamName": "Beautiful and Kinda Adorable",
-    "overallAtkPct": 0.564,
-    "overallDefPct": 0.325,
+    "overallAtkPct": 0.53,
+    "overallDefPct": 0.356,
     "maps": [
       {
         "map": "Abyss",
@@ -224,7 +224,7 @@
       {
         "map": "Breeze",
         "pick": 0,
-        "ban": 2,
+        "ban": 3,
         "played": 1,
         "won": 0,
         "winPct": 0.0,
@@ -262,16 +262,16 @@
       },
       {
         "map": "Haven",
-        "pick": 1,
+        "pick": 2,
         "ban": 1,
-        "played": 1,
+        "played": 2,
         "won": 1,
-        "winPct": 1.0,
-        "rounds": 24,
-        "roundsWon": 13,
-        "roundPct": 0.542,
-        "atkPct": 0.75,
-        "defPct": 0.333
+        "winPct": 0.5,
+        "rounds": 46,
+        "roundsWon": 22,
+        "roundPct": 0.478,
+        "atkPct": 0.545,
+        "defPct": 0.417
       },
       {
         "map": "Icebox",
@@ -329,19 +329,19 @@
         "map": "Summit",
         "pick": 0,
         "ban": 0,
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "winPct": 0.0,
+        "rounds": 24,
+        "roundsWon": 11,
+        "roundPct": 0.458,
+        "atkPct": 0.5,
+        "defPct": 0.417
       },
       {
         "map": "Sunset",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -2657,8 +2657,8 @@
   "TS": {
     "team": "TS",
     "teamName": "Team Slugshow",
-    "overallAtkPct": 0.647,
-    "overallDefPct": 0.625,
+    "overallAtkPct": 0.585,
+    "overallDefPct": 0.609,
     "maps": [
       {
         "map": "Abyss",
@@ -2676,7 +2676,7 @@
       {
         "map": "Ascent",
         "pick": 0,
-        "ban": 0,
+        "ban": 1,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -2742,14 +2742,14 @@
         "map": "Haven",
         "pick": 0,
         "ban": 1,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 22,
+        "roundsWon": 13,
+        "roundPct": 0.591,
+        "atkPct": 0.5,
+        "defPct": 0.7
       },
       {
         "map": "Icebox",
@@ -2793,7 +2793,7 @@
       {
         "map": "Split",
         "pick": 0,
-        "ban": 1,
+        "ban": 2,
         "played": 0,
         "won": 0,
         "winPct": 0,
@@ -2805,16 +2805,16 @@
       },
       {
         "map": "Summit",
-        "pick": 0,
+        "pick": 1,
         "ban": 0,
-        "played": 0,
-        "won": 0,
-        "winPct": 0,
-        "rounds": 0,
-        "roundsWon": 0,
-        "roundPct": 0,
-        "atkPct": 0,
-        "defPct": 0
+        "played": 1,
+        "won": 1,
+        "winPct": 1.0,
+        "rounds": 24,
+        "roundsWon": 13,
+        "roundPct": 0.542,
+        "atkPct": 0.583,
+        "defPct": 0.5
       },
       {
         "map": "Sunset",

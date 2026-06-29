@@ -53,6 +53,19 @@
       "rndDiff": 16
     },
     {
+      "abbr": "TS",
+      "name": "Team Slugshow",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 35,
+      "rank": 5,
+      "mapDiff": 4,
+      "rndDiff": 17
+    },
+    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -61,7 +74,7 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 5,
+      "rank": 6,
       "mapDiff": 2,
       "rndDiff": 12
     },
@@ -74,7 +87,7 @@
       "mapL": 3,
       "rndW": 73,
       "rndL": 76,
-      "rank": 6,
+      "rank": 7,
       "mapDiff": 1,
       "rndDiff": -3
     },
@@ -87,22 +100,9 @@
       "mapL": 4,
       "rndW": 74,
       "rndL": 79,
-      "rank": 7,
+      "rank": 8,
       "mapDiff": 0,
       "rndDiff": -5
-    },
-    {
-      "abbr": "TS",
-      "name": "Team Slugshow",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 15,
-      "rank": 8,
-      "mapDiff": 2,
-      "rndDiff": 11
     },
     {
       "abbr": "IHOP",
@@ -131,19 +131,6 @@
       "rndDiff": 11
     },
     {
-      "abbr": "BAKA",
-      "name": "Beautiful and Kinda Adorable",
-      "matchW": 1,
-      "matchL": 2,
-      "mapW": 2,
-      "mapL": 5,
-      "rndW": 69,
-      "rndL": 86,
-      "rank": 11,
-      "mapDiff": -3,
-      "rndDiff": -17
-    },
-    {
       "abbr": "100T",
       "name": "100 Tony's",
       "matchW": 1,
@@ -152,9 +139,22 @@
       "mapL": 6,
       "rndW": 89,
       "rndL": 97,
-      "rank": 12,
+      "rank": 11,
       "mapDiff": -4,
       "rndDiff": -8
+    },
+    {
+      "abbr": "BAKA",
+      "name": "Beautiful and Kinda Adorable",
+      "matchW": 1,
+      "matchL": 3,
+      "mapW": 2,
+      "mapL": 7,
+      "rndW": 89,
+      "rndL": 112,
+      "rank": 12,
+      "mapDiff": -5,
+      "rndDiff": -23
     },
     {
       "abbr": "RRQ",
@@ -343,6 +343,19 @@
       "rndDiff": 24
     },
     {
+      "abbr": "TS",
+      "name": "Team Slugshow",
+      "matchW": 2,
+      "matchL": 0,
+      "mapW": 4,
+      "mapL": 0,
+      "rndW": 52,
+      "rndL": 35,
+      "rank": 3,
+      "mapDiff": 4,
+      "rndDiff": 17
+    },
+    {
       "abbr": "SRB",
       "name": "Sunshine and Rainbows",
       "matchW": 2,
@@ -351,35 +364,9 @@
       "mapL": 3,
       "rndW": 96,
       "rndL": 84,
-      "rank": 3,
-      "mapDiff": 2,
-      "rndDiff": 12
-    },
-    {
-      "abbr": "TS",
-      "name": "Team Slugshow",
-      "matchW": 1,
-      "matchL": 0,
-      "mapW": 2,
-      "mapL": 0,
-      "rndW": 26,
-      "rndL": 15,
       "rank": 4,
       "mapDiff": 2,
-      "rndDiff": 11
-    },
-    {
-      "abbr": "BAKA",
-      "name": "Beautiful and Kinda Adorable",
-      "matchW": 1,
-      "matchL": 2,
-      "mapW": 2,
-      "mapL": 5,
-      "rndW": 69,
-      "rndL": 86,
-      "rank": 5,
-      "mapDiff": -3,
-      "rndDiff": -17
+      "rndDiff": 12
     },
     {
       "abbr": "100T",
@@ -390,9 +377,22 @@
       "mapL": 6,
       "rndW": 89,
       "rndL": 97,
-      "rank": 6,
+      "rank": 5,
       "mapDiff": -4,
       "rndDiff": -8
+    },
+    {
+      "abbr": "BAKA",
+      "name": "Beautiful and Kinda Adorable",
+      "matchW": 1,
+      "matchL": 3,
+      "mapW": 2,
+      "mapL": 7,
+      "rndW": 89,
+      "rndL": 112,
+      "rank": 6,
+      "mapDiff": -5,
+      "rndDiff": -23
     },
     {
       "abbr": "EPY",
