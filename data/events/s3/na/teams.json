@@ -1,114 +1,72 @@
 {
-    "T1": {
-        "name": "Team 1",
-        "abbr": "T1",
-        "logo": "../../../icons/s3_teams/na/Team 1.png",
+    "FaZe": {
+        "name": "Fabulous and Zesty",
+        "abbr": "FaZe",
+        "logo": "../../../icons/s3_teams/na/Fabulous and Zesty.png",
         "group": "Group Alpha",
-        "players": ["MrCrocMan", "Pi", "Ceiliuir", "radical", "roro"]
+        "players": ["heef", "dragonflyod", "Kramvi", "thorny", "nana"]
     },
-    "FNC": {
-        "name": "cow paulo FaN Club",
-        "abbr": "FNC",
-        "logo": "../../../icons/s3_teams/na/cow paulo FaN Club.png",
+    "ATLC": {
+        "name": "ATLNTIC Esports",
+        "abbr": "ATLC",
+        "logo": "../../../icons/s3_teams/na/ATLNTIC Esports.png",
         "group": "Group Alpha",
-        "players": ["james", "niboos", "li", "adeline", "xixi"]
+        "players": ["Night", "Optimus", "Sky", "bonkashi", "ria"]
     },
-    "TL": {
-        "name": "Team Dyslexia",
-        "abbr": "TL",
-        "logo": "../../../icons/s3_teams/na/Team Dyslexia.png",
+    "HOT": {
+        "name": "Honestly Outrageous Temperatures",
+        "abbr": "HOT",
+        "logo": "../../../icons/s3_teams/na/Honestly Outrageous Temperatures.png",
         "group": "Group Alpha",
-        "players": ["haych", "caleb", "ender", "slow", "tans"]
+        "players": ["shipty", "Tonnoman", "Sovaraa", "Hioz", "Duck"]
     },
-    "SSG": {
-        "name": "Squirtle Squad Gaming",
-        "abbr": "SSG",
-        "logo": "../../../icons/s3_teams/na/Squirtle Squad Gaming.png",
+    "NIP": {
+        "name": "Name in Progress",
+        "abbr": "NIP",
+        "logo": "../../../icons/s3_teams/na/Name in Progress.png",
         "group": "Group Alpha",
-        "players": ["colt", "aleks", "darshan", "nameless", "cardamom"]
+        "players": ["Kai", "Pandyro", "SB", "goofy", "jinno"]
     },
-    "IHOP": {
-        "name": "I Hate Odin Party",
-        "abbr": "IHOP",
-        "logo": "../../../icons/s3_teams/na/I Hate Odin Party.png",
+    "XTC": {
+        "name": "Extra Traditional Comps",
+        "abbr": "XTC",
+        "logo": "../../../icons/s3_teams/na/Extra Traditional Comps.png",
         "group": "Group Alpha",
-        "players": ["pavel", "eve", "platinum", "ethan", "maple"]
+        "players": ["sinderinho", "alexx", "Ani", "Yessi", "Riyako"]
     },
-    "RRQ": {
-        "name": "Rage Re-Queuers",
-        "abbr": "RRQ",
-        "logo": "../../../icons/s3_teams/na/Rage Re-Queuers.png",
-        "group": "Group Alpha",
-        "players": ["angus", "snowfall", "platy", "twon", "tery"]
-    },
-    "FSG": {
-        "name": "Furry Squirrels Gaming",
-        "abbr": "FSG",
-        "logo": "../../../icons/s3_teams/na/Furry Squirrels Gaming.png",
-        "group": "Group Alpha",
-        "players": ["amara", "nolan", "skye", "rudra", "corina"]
-    },
-    "C9": {
-        "name": "Clown9",
-        "abbr": "C9",
-        "logo": "../../../icons/s3_teams/na/Clown9.png",
-        "group": "Group Alpha",
-        "players": ["claps", "art", "igneous", "makya", "caesparz"]
-    },
-    "SRB": {
-        "name": "Sunshine and Rainbows",
-        "abbr": "SRB",
-        "logo": "../../../icons/s3_teams/na/Sunshine and Rainbows.png",
+    "SEAL": {
+        "name": "Stay Seally",
+        "abbr": "SEAL",
+        "logo": "../../../icons/s3_teams/na/Stay Seally.png",
         "group": "Group Omega",
-        "players": ["izz", "jaypee", "nova", "androobee", "timothy"]
+        "players": ["Gino", "hmmmdead", "reoken", "otaka", "Spolen"]
     },
-    "BAKA": {
-        "name": "Beautiful and Kinda Adorable",
-        "abbr": "BAKA",
-        "logo": "../../../icons/s3_teams/na/Beautiful and Kinda Adorable.png",
+    "NATS": {
+        "name": "Never Available To Scrim",
+        "abbr": "NATS",
+        "logo": "../../../icons/s3_teams/na/Never Available To Scrim.png",
         "group": "Group Omega",
-        "players": ["lucas", "night", "asher", "devil", "tenyaku"]
+        "players": ["danaxa", "Haych", "Dovie", "Eva", "Fee"]
     },
-    "TS": {
-        "name": "Team Slugshow",
-        "abbr": "TS",
-        "logo": "../../../icons/s3_teams/na/Team Slugshow.png",
+    "LARP": {
+        "name": "Larpiat\u00e1n",
+        "abbr": "LARP",
+        "logo": "../../../icons/s3_teams/na/Larpiat\u00e1n.png",
         "group": "Group Omega",
-        "players": ["straight", "avi", "dino", "lore", "pants"]
+        "players": ["mide", "oddlqt", "Kaiser", "Ellie", "synth"]
     },
-    "NAVI": {
-        "name": "No Actual Valorant Intelligence",
-        "abbr": "NAVI",
-        "logo": "../../../icons/s3_teams/na/No Actual Valorant Intelligence.png",
+    "NOOT": {
+        "name": "Penguin Patrol",
+        "abbr": "NOOT",
+        "logo": "../../../icons/s3_teams/na/Penguin Patrol.png",
         "group": "Group Omega",
-        "players": ["stingray", "Lazy", "kaydeg", "cassie", "linus"]
+        "players": ["Jamit", "Haike", "King", "taylorgzz", "Pengu"]
     },
-    "EPY": {
-        "name": "Team Entropy",
-        "abbr": "EPY",
-        "logo": "../../../icons/s3_teams/na/Team Entropy.png",
+    "SOG": {
+        "name": "The SOG",
+        "abbr": "SOG",
+        "logo": "../../../icons/s3_teams/na/The SOG.png",
         "group": "Group Omega",
-        "players": ["blitz", "solar", "apple", "robohobo", "jolly"]
-    },
-    "100T": {
-        "name": "100 Tony's",
-        "abbr": "100T",
-        "logo": "../../../icons/s3_teams/na/100 Tony's.png",
-        "group": "Group Omega",
-        "players": ["abstracq", "psyclone", "shadow", "xyn", "catsmeow"]
-    },
-    "DFM": {
-        "name": "Dementia Found Me",
-        "abbr": "DFM",
-        "logo": "../../../icons/s3_teams/na/Dementia Found Me.png",
-        "group": "Group Omega",
-        "players": ["masao", "nik", "longclaw", "hascan", "teklo"]
-    },
-    "SPG": {
-        "name": "Spank Ptheory Gaming",
-        "abbr": "SPG",
-        "logo": "../../../icons/s3_teams/na/Spank Ptheory Gaming.png",
-        "group": "Group Omega",
-        "players": ["thighs", "cooleo", "derpina", "phuzzy", "dunkn"]
+        "players": ["autumn", "Luna", "faye", "magmoz", "Charlotte"]
     }
 }
